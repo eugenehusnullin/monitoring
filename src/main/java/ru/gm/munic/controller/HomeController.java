@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -68,8 +70,7 @@ public class HomeController {
 				JSONObject jsonObject = jsonArray.getJSONObject(i);
 
 				Message message = new Message();
-				message.setId(getMessageId(jsonObject));
-				message.setValue(jsonObject.toString());
+				initMessage(jsonObject, message);
 				messageService.process(message);
 
 				response.setStatus(200);
@@ -78,12 +79,26 @@ public class HomeController {
 			response.setStatus(403);
 		} catch (IOException e) {
 			response.setStatus(500);
+		} catch (ParseException e) {
+			response.setStatus(500);
 		}
 	}
 
-	private Long getMessageId(JSONObject jsonObject) {
+	private void initMessage(JSONObject jsonObject, Message message) throws ParseException {
+		message.setValue(jsonObject.toString());
+
 		JSONObject payload = jsonObject.getJSONObject("payload");
-		return payload.getLong("id");
+
+		message.setId(payload.getLong("id"));
+		message.setAsset(Long.parseLong(payload.getString("asset")));
+
+		// // 2014-03-26T11:42:01Z
+		String recordedAtString = payload.getString("recorded_at").replace("Z", "").replace('T', ' ');
+		String recievedAtString = payload.getString("recieved_at").replace("Z", "").replace('T', ' ');
+
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		message.setRecordedAt(dateFormatter.parse(recordedAtString));
+		message.setRecievedAt(dateFormatter.parse(recievedAtString));
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
@@ -127,5 +142,10 @@ public class HomeController {
 		}
 
 		return "test";
+	}
+
+	@RequestMapping(value = "/utils", method = RequestMethod.GET)
+	public String utils() {
+		return "utils";
 	}
 }

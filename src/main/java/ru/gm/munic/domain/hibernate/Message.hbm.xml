@@ -4,8 +4,11 @@
 		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="ru.gm.munic.domain">
-	<class name="Message" table="message">
+	<class name="Message" table="message2">
 		<id name="id" />
-		<property name="value" length="2048" />
+		<property name="asset" not-null="true" index="message2_idx1"></property>
+		<property name="recordedAt" not-null="true"></property>
+		<property name="recievedAt" not-null="true"></property>
+		<property name="value" not-null="true" length="2048" />
 	</class>
 </hibernate-mapping>

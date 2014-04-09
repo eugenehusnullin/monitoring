@@ -1,6 +1,7 @@
 package ru.gm.munic.service.processing;
 
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,34 +11,30 @@ import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import ru.gm.munic.domain.Message;
-import ru.gm.munic.service.sender.Client;
+import ru.gm.munic.domain.MunicItemRawData;
+import ru.gm.munic.service.processing.utils.ThreadFactorySecuenceNaming;
+import ru.gm.munic.service.sender.Sender;
 
 @Service
-public class MessageProcessing {
-	private static final Logger logger = LoggerFactory.getLogger(MessageProcessing.class);
+public class MunicItemRawDataProcessing {
+	private static final Logger logger = LoggerFactory.getLogger(MunicItemRawDataProcessing.class);
 
 	@Value("#{mainSettings['messageprocessing.threads.count']}")
 	private Integer threadsCount = 1;
 
 	@Value("#{mainSettings['wialonb3.enabled']}")
 	private Integer wialonb3Enabled = 1;
-	
-	@Value("#{mainSettings['wialonb3.host']}")
-	private String wialonb3Host;
-	
-	@Value("#{mainSettings['wialonb3.port']}")
-	private Integer wialonb3Port;
 
-	class RecieverMessageRunnable implements Runnable {
+	class RecieverMunicItemRawDataRunnable implements Runnable {
 		@Override
 		public void run() {
 			while (processing) {
 				try {
-					Message message = null;
+					List<MunicItemRawData> list = null;
 					synchronized (queue) {
 						if (queue.isEmpty()) {
 							try {
@@ -46,11 +43,11 @@ public class MessageProcessing {
 								break;
 							}
 						}
-						message = queue.poll();
+						list = queue.poll();
 					}
 
-					if (message != null) {
-						MesssageRunnable messageRunnable = new MesssageRunnable(message);
+					if (list != null) {
+						MunicItemRawDataRunnable messageRunnable = new MunicItemRawDataRunnable(list);
 						executor.execute(messageRunnable);
 					}
 				} catch (Exception e) {
@@ -60,37 +57,38 @@ public class MessageProcessing {
 		}
 	}
 
-	class MesssageRunnable implements Runnable {
-		private Message message;
+	class MunicItemRawDataRunnable implements Runnable {
+		private List<MunicItemRawData> list;
 
-		public MesssageRunnable(Message message) {
-			this.message = message;
+		public MunicItemRawDataRunnable(List<MunicItemRawData> list) {
+			this.list = list;
 		}
 
 		@Override
 		public void run() {
-			Client client = new Client(wialonb3Host, wialonb3Port, message);
-			client.send();
+			sender.send(list);
 		}
 	}
 
-	private Queue<Message> queue;
+	private Queue<List<MunicItemRawData>> queue;
 	private Thread mainThread;
 	private volatile boolean processing = true;
 	private ExecutorService executor;
+	@Autowired
+	private Sender sender;
 
-	public MessageProcessing() {
-		queue = new ArrayDeque<Message>();
+	public MunicItemRawDataProcessing() {
+		queue = new ArrayDeque<List<MunicItemRawData>>();
 	}
 
 	@PostConstruct
 	public void startProcessing() {
 		executor = Executors.newFixedThreadPool(threadsCount, new ThreadFactorySecuenceNaming(
-				"MessageProcessing EXECUTOR #"));
+				"MunicItemRawDataProcessing EXECUTOR #"));
 
-		Runnable processRunnable = new RecieverMessageRunnable();
+		Runnable processRunnable = new RecieverMunicItemRawDataRunnable();
 		mainThread = new Thread(processRunnable);
-		mainThread.setName("MessageProcessing MAIN THREAD");
+		mainThread.setName("MunicItemRawDataProcessing MAIN THREAD");
 		mainThread.start();
 	}
 
@@ -105,12 +103,10 @@ public class MessageProcessing {
 		}
 	}
 
-	public void add(Message message) {
-		if (wialonb3Enabled == 1) {
-			synchronized (queue) {
-				queue.add(message);
-				queue.notifyAll();
-			}
+	public void add(List<MunicItemRawData> list) {
+		synchronized (queue) {
+			queue.add(list);
+			queue.notifyAll();
 		}
 	}
 }

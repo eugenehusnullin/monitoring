@@ -2,23 +2,19 @@ package ru.gm.munic.controller;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.gm.munic.domain.Message;
-import ru.gm.munic.service.MessageService;
+import ru.gm.munic.service.processing.MessageService;
 
 /**
  * Handles requests for the application home page.
@@ -37,6 +32,7 @@ import ru.gm.munic.service.MessageService;
 @Controller
 public class HomeController {
 
+	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	@Autowired
@@ -47,8 +43,6 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 
@@ -59,47 +53,38 @@ public class HomeController {
 		return "home";
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public void home(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/rawdata", method = RequestMethod.POST)
+	public void rawdata(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			JSONTokener jsonTokener = new JSONTokener(request.getInputStream());
-			logger.info(jsonTokener.toString());
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(request.getInputStream(), writer);
+			messageService.processRawData(writer.toString());
 
-			JSONArray jsonArray = (JSONArray) jsonTokener.nextValue();
-			for (int i = 0; i < jsonArray.length(); i++) {
-				JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-				Message message = new Message();
-				initMessage(jsonObject, message);
-				messageService.process(message);
-
-				response.setStatus(200);
-			}
-		} catch (UnsupportedEncodingException e) {
-			response.setStatus(403);
+			response.setStatus(200);
 		} catch (IOException e) {
-			response.setStatus(500);
-		} catch (ParseException e) {
 			response.setStatus(500);
 		}
 	}
 
-	private void initMessage(JSONObject jsonObject, Message message) throws ParseException {
-		message.setValue(jsonObject.toString());
-
-		JSONObject payload = jsonObject.getJSONObject("payload");
-
-		message.setId(payload.getLong("id"));
-		message.setAsset(Long.parseLong(payload.getString("asset")));
-
-		// // 2014-03-26T11:42:01Z
-		String recordedAtString = payload.getString("recorded_at").replace("Z", "").replace('T', ' ');
-		String recievedAtString = payload.getString("recieved_at").replace("Z", "").replace('T', ' ');
-
-		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		message.setRecordedAt(dateFormatter.parse(recordedAtString));
-		message.setRecievedAt(dateFormatter.parse(recievedAtString));
-	}
+//	private Message createMessage(JSONObject jsonObject) throws ParseException {
+//		Message message = new Message();
+//		message.setValue(jsonObject.toString());
+//
+//		JSONObject payload = jsonObject.getJSONObject("payload");
+//
+//		message.setId(payload.getLong("id"));
+//		message.setAsset(Long.parseLong(payload.getString("asset")));
+//
+//		// // 2014-03-26T11:42:01Z
+//		String recordedAtString = payload.getString("recorded_at").replace("Z", "").replace('T', ' ');
+//		String recievedAtString = payload.getString("recieved_at").replace("Z", "").replace('T', ' ');
+//
+//		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		message.setRecordedAt(dateFormatter.parse(recordedAtString));
+//		message.setRecievedAt(dateFormatter.parse(recievedAtString));
+//
+//		return message;
+//	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String test() {
@@ -108,7 +93,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/test", method = RequestMethod.POST)
 	public String test(@RequestParam("value") String value, Model model) {
-		String url = "http://localhost:8080/munic/";
+		String url = "http://localhost:8080/munic/rawdata";
 		URL obj;
 		try {
 			obj = new URL(url);
@@ -144,8 +129,4 @@ public class HomeController {
 		return "test";
 	}
 
-	@RequestMapping(value = "/utils", method = RequestMethod.GET)
-	public String utils() {
-		return "utils";
-	}
 }

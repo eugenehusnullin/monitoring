@@ -1,4 +1,4 @@
-package ru.gm.munic.service.processing;
+package ru.gm.munic.service.processing.utils;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

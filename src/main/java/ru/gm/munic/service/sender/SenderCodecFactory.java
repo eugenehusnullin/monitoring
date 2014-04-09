@@ -9,13 +9,13 @@ import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.codec.prefixedstring.PrefixedStringDecoder;
 import org.apache.mina.filter.codec.prefixedstring.PrefixedStringEncoder;
 
-public class MunicCodecFactory implements ProtocolCodecFactory {
+public class SenderCodecFactory implements ProtocolCodecFactory {
 
 	private ProtocolEncoder encoder;
 	private ProtocolDecoder decoder;
 	private Charset charset;
 
-	public MunicCodecFactory() {
+	public SenderCodecFactory() {
 		charset = Charset.forName("ASCII");
 		encoder = new PrefixedStringEncoder(charset, 2, 0xFFFF);
 		decoder = new PrefixedStringDecoder(charset, 2);

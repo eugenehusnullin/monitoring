@@ -1,13 +1,10 @@
-package ru.gm.munic.service.processing;
+package ru.gm.munic.service.processing.utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.postgresql.util.Base64;
 
-import ru.gm.munic.domain.Message;
-
-public class MessageJson {
+public class ItemRawDataJson {
 	private String event;
 	private String asset;
 	private String recorded_at;
@@ -15,12 +12,13 @@ public class MessageJson {
 	private JSONArray loc;
 	private JSONObject fields;
 
-	public MessageJson(Message message) {
-		JSONTokener jsonTokener = new JSONTokener(message.getValue());
-		setMessageJsonObject((JSONObject) jsonTokener.nextValue());
+	public ItemRawDataJson(String itemRawData) {
+		JSONTokener tokener = new JSONTokener(itemRawData);
+		JSONObject jsonObject = (JSONObject) tokener.nextValue();
+		setMessageJsonObject(jsonObject);
 	}
 
-	public MessageJson(JSONObject messsageJsonValue) {
+	public ItemRawDataJson(JSONObject messsageJsonValue) {
 		setMessageJsonObject(messsageJsonValue);
 	}
 
@@ -35,69 +33,11 @@ public class MessageJson {
 		fields = payload.optJSONObject("fields");
 	}
 
-	public String getEvent() {
-		return event;
+	public boolean isTrack() {
+		return event.equals("track");
 	}
 
-	private int decodeBase64Integer(String value) {
-		int result = 0;
-		if (value != null && value != "") {
-			byte[] values = Base64.decode(value);
-			if (values.length > 0) {
-				for (int i = 0; i < values.length; i++) {
-					result <<= 8;
-					result += values[i] < 0 ? 256 + values[i] : values[i];
-				}
-			}
-		}
-		return result;
-	}
-
-	@SuppressWarnings("unused")
-	private String decodeBase64String(String value) {
-		String result = "";
-		if (value != null && value != "") {
-			byte[] values = Base64.decode(value);
-			for (int i = 0; i < values.length; i++) {
-				result += (char) values[i];
-			}
-		}
-		return result;
-	}
-
-	private boolean decodeBase64Boolean(String value) {
-		boolean result = false;
-		if (value != null && value != "") {
-			byte[] values = Base64.decode(value);
-			result = values[0] != 0;
-		}
-		return result;
-	}
-
-	private void insertIntegerFieldIfExists(String key, StringBuilder sb) {
-		JSONObject jsonObject = fields.optJSONObject(key);
-		if (jsonObject != null) {
-			String value = Integer.toString(decodeBase64Integer(jsonObject.getString("b64_value")));
-			insertPair(key, value, sb);
-		}
-	}
-	
-	private void insertBooleanFieldIfExists(String key, StringBuilder sb) {
-		JSONObject jsonObject = fields.optJSONObject(key);
-		if (jsonObject != null) {
-			String value = decodeBase64Boolean(jsonObject.getString("b64_value")) ? "1" : "0";
-			insertPair(key, value, sb);
-		}
-	}
-
-	private void insertPair(String key, String value, StringBuilder sb) {
-		sb.append("|");
-		sb.append(key);
-		sb.append("=");
-		sb.append(value);
-	}
-
-	public String getString4Tcp() {
+	public String getString4Wialon() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("|asset=");
 		sb.append(asset);
@@ -140,6 +80,29 @@ public class MessageJson {
 		insertIntegerFieldIfExists("BEHAVE_GPS_HEADING_END", sb);
 
 		return sb.toString();
+	}
+
+	private void insertIntegerFieldIfExists(String key, StringBuilder sb) {
+		JSONObject jsonObject = fields.optJSONObject(key);
+		if (jsonObject != null) {
+			String value = Integer.toString(Base64Utils.decodeBase64Integer(jsonObject.getString("b64_value")));
+			insertPair(key, value, sb);
+		}
+	}
+
+	private void insertBooleanFieldIfExists(String key, StringBuilder sb) {
+		JSONObject jsonObject = fields.optJSONObject(key);
+		if (jsonObject != null) {
+			String value = Base64Utils.decodeBase64Boolean(jsonObject.getString("b64_value")) ? "1" : "0";
+			insertPair(key, value, sb);
+		}
+	}
+
+	private void insertPair(String key, String value, StringBuilder sb) {
+		sb.append("|");
+		sb.append(key);
+		sb.append("=");
+		sb.append(value);
 	}
 
 }

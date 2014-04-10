@@ -34,7 +34,7 @@ public class ClientSessionHandler extends IoHandlerAdapter {
 		send(session);
 	}
 
-	private void send(IoSession session) {
+	private void send(IoSession session) throws InterruptedException {
 		while (index < list.size()) {
 			MunicItemRawData municItemRawData = list.get(index);
 			index = index + 1;
@@ -43,21 +43,16 @@ public class ClientSessionHandler extends IoHandlerAdapter {
 				session.write(itemRawDataJson.getString4Wialon());
 				municItemRawData.setWialonSended(true);
 				lowService.updateMunicItemRawData(municItemRawData);
-				// TODO: говно ход
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-				}
-				
+
+				Thread.sleep(1000);// TODO: говно ход
+
 				return;
+			} else {
+				lowService.updateMunicItemRawData(municItemRawData);
 			}
 		}
 
-		// TODO: говно ход
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-		}
+		Thread.sleep(1000); // TODO: говно ход
 		session.close(true);
 		callback.allsended(container);
 	}

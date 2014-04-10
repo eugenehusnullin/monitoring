@@ -16,7 +16,8 @@ public class ClientSessionHandler extends IoHandlerAdapter {
 	private int index = 0;
 	private LowService lowService;
 
-	public ClientSessionHandler(List<MunicItemRawData> list, SocketContainer container, CallbackSender callback, LowService lowService) {
+	public ClientSessionHandler(List<MunicItemRawData> list, SocketContainer container, CallbackSender callback,
+			LowService lowService) {
 		this.list = list;
 		this.container = container;
 		this.callback = callback;
@@ -34,27 +35,30 @@ public class ClientSessionHandler extends IoHandlerAdapter {
 	}
 
 	private void send(IoSession session) {
-		if (index < list.size()) {
+		while (index < list.size()) {
 			MunicItemRawData municItemRawData = list.get(index);
 			index = index + 1;
 			ItemRawDataJson itemRawDataJson = new ItemRawDataJson(municItemRawData.getItemRawData());
-			session.write(itemRawDataJson.getString4Wialon());
-			
-			municItemRawData.setWialonSended(true);
-			lowService.updateMunicItemRawData(municItemRawData);
-			//TODO: говно ход
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
+			if (itemRawDataJson.isTrack()) {
+				session.write(itemRawDataJson.getString4Wialon());
+				municItemRawData.setWialonSended(true);
+				lowService.updateMunicItemRawData(municItemRawData);
+				// TODO: говно ход
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
+				
+				return;
 			}
-		} else {
-			//TODO: говно ход
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
-			session.close(true);
-			callback.allsended(container);
 		}
+
+		// TODO: говно ход
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
+		session.close(true);
+		callback.allsended(container);
 	}
 }

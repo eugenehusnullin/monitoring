@@ -20,35 +20,40 @@ public class Sender implements CallbackSender {
 	private String wialonb3Host;
 	@Value("#{mainSettings['wialonb3.port']}")
 	private Integer wialonb3Port;
-	private Set<SocketContainer> socketContainers;
+	@Value("#{mainSettings['wialonb3.enabled']}")
+	private Integer wialonb3Enabled = 1;
+
 	@Autowired
 	private LowService lowService;
+	private Set<SocketContainer> socketContainers;
 
 	public Sender() {
 		socketContainers = new HashSet<SocketContainer>();
 	}
 
 	public void send(List<MunicItemRawData> list) {
-		NioSocketConnector connector = new NioSocketConnector();
-		SocketContainer container = new SocketContainer(connector);
-		synchronized (socketContainers) {
-			socketContainers.add(container);
-			socketContainers.notifyAll();
+		if (wialonb3Enabled == 1) {
+			NioSocketConnector connector = new NioSocketConnector();
+			SocketContainer container = new SocketContainer(connector);
+			synchronized (socketContainers) {
+				socketContainers.add(container);
+				socketContainers.notifyAll();
+			}
+			connector.setConnectTimeoutMillis(3000);
+			connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new SenderCodecFactory()));
+			connector.setHandler(new ClientSessionHandler(list, container, this, lowService));
+
+			connector.connect(new InetSocketAddress(wialonb3Host, wialonb3Port));
+
+			// IoSession session;
+			// ConnectFuture future = connector.connect(new
+			// InetSocketAddress(wialonb3Host, wialonb3Port));
+			// future.awaitUninterruptibly();
+			// session = future.getSession();
+			//
+			// session.getCloseFuture().awaitUninterruptibly();
+			// connector.dispose();
 		}
-		connector.setConnectTimeoutMillis(3000);
-		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new SenderCodecFactory()));
-		connector.setHandler(new ClientSessionHandler(list, container, this, lowService));
-
-		connector.connect(new InetSocketAddress(wialonb3Host, wialonb3Port));
-
-		// IoSession session;
-		// ConnectFuture future = connector.connect(new
-		// InetSocketAddress(wialonb3Host, wialonb3Port));
-		// future.awaitUninterruptibly();
-		// session = future.getSession();
-		//
-		// session.getCloseFuture().awaitUninterruptibly();
-		// connector.dispose();
 	}
 
 	@Override

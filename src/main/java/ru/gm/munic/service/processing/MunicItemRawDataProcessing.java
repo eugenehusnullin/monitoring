@@ -26,9 +26,6 @@ public class MunicItemRawDataProcessing {
 	@Value("#{mainSettings['messageprocessing.threads.count']}")
 	private Integer threadsCount = 1;
 
-	@Value("#{mainSettings['wialonb3.enabled']}")
-	private Integer wialonb3Enabled = 1;
-
 	class RecieverMunicItemRawDataRunnable implements Runnable {
 		@Override
 		public void run() {

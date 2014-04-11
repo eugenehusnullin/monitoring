@@ -30,6 +30,10 @@ public class ClientSessionHandler extends IoHandlerAdapter {
 	}
 
 	@Override
+	public void sessionClosed(IoSession session) throws Exception {
+	}
+
+	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
 		send(session);
 	}
@@ -53,7 +57,7 @@ public class ClientSessionHandler extends IoHandlerAdapter {
 		}
 
 		Thread.sleep(1000); // TODO: говно ход
-		session.close(true);
+		session.close(false);
 		callback.allsended(container);
 	}
 }

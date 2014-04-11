@@ -113,4 +113,13 @@ public class MunicRawDataProcessing {
 			queue.notifyAll();
 		}
 	}
+	
+	public void addList(List<MunicRawData> list) {
+		synchronized (queue) {
+			for (MunicRawData municRawData : list) {
+				queue.add(municRawData);
+			}
+			queue.notifyAll();
+		}
+	}
 }

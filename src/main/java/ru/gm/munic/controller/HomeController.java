@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.gm.munic.service.processing.MessageService;
+import ru.gm.munic.service.processing.ProcessFailedItems;
 
 /**
  * Handles requests for the application home page.
@@ -37,6 +38,8 @@ public class HomeController {
 
 	@Autowired
 	private MessageService messageService;
+	@Autowired
+	private ProcessFailedItems processFailedItems;
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -66,25 +69,29 @@ public class HomeController {
 		}
 	}
 
-//	private Message createMessage(JSONObject jsonObject) throws ParseException {
-//		Message message = new Message();
-//		message.setValue(jsonObject.toString());
-//
-//		JSONObject payload = jsonObject.getJSONObject("payload");
-//
-//		message.setId(payload.getLong("id"));
-//		message.setAsset(Long.parseLong(payload.getString("asset")));
-//
-//		// // 2014-03-26T11:42:01Z
-//		String recordedAtString = payload.getString("recorded_at").replace("Z", "").replace('T', ' ');
-//		String recievedAtString = payload.getString("recieved_at").replace("Z", "").replace('T', ' ');
-//
-//		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		message.setRecordedAt(dateFormatter.parse(recordedAtString));
-//		message.setRecievedAt(dateFormatter.parse(recievedAtString));
-//
-//		return message;
-//	}
+	// private Message createMessage(JSONObject jsonObject) throws
+	// ParseException {
+	// Message message = new Message();
+	// message.setValue(jsonObject.toString());
+	//
+	// JSONObject payload = jsonObject.getJSONObject("payload");
+	//
+	// message.setId(payload.getLong("id"));
+	// message.setAsset(Long.parseLong(payload.getString("asset")));
+	//
+	// // // 2014-03-26T11:42:01Z
+	// String recordedAtString = payload.getString("recorded_at").replace("Z",
+	// "").replace('T', ' ');
+	// String recievedAtString = payload.getString("recieved_at").replace("Z",
+	// "").replace('T', ' ');
+	//
+	// SimpleDateFormat dateFormatter = new
+	// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	// message.setRecordedAt(dateFormatter.parse(recordedAtString));
+	// message.setRecievedAt(dateFormatter.parse(recievedAtString));
+	//
+	// return message;
+	// }
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String test() {
@@ -126,6 +133,12 @@ public class HomeController {
 			e.printStackTrace();
 		}
 
+		return "test";
+	}
+
+	@RequestMapping(value = "/reprocess", method = RequestMethod.POST)
+	public String reprocess() {
+		processFailedItems.processMunicRawData(null, null, false);
 		return "test";
 	}
 

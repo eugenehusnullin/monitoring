@@ -71,6 +71,7 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 			if (itemRawDataJson.isTrack()) {
 				ioSession.write(itemRawDataJson.getString4Wialon());
 			} else {
+				lowService.setWialonSended(currentItem);
 				sendNextItem();
 			}
 		}
@@ -112,10 +113,7 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		if (currentItem != null) {
-			currentItem.setWialonSended(true);
-			lowService.updateMunicItemRawData(currentItem);
-		}
+		lowService.setWialonSended(currentItem);
 
 		errorsCount = 0;
 		sendNextItem();

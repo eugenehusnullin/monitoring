@@ -50,7 +50,8 @@ public class LowService {
 	}
 	
 	@Transactional
-	public void updateMunicItemRawData(MunicItemRawData municItemRawData) {
+	public void setWialonSended(MunicItemRawData municItemRawData) {
+		municItemRawData.setWialonSended(true);
 		sessionFactory.getCurrentSession().update(municItemRawData);
 	}
 

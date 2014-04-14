@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import ru.gm.munic.domain.MunicItemRawData;
 import ru.gm.munic.service.processing.utils.ThreadFactorySecuenceNaming;
-import ru.gm.munic.service.sender.Sender;
+import ru.gm.munic.service.sender.SendDispatcher;
 
 @Service
 public class MunicItemRawDataProcessing {
@@ -63,7 +63,7 @@ public class MunicItemRawDataProcessing {
 
 		@Override
 		public void run() {
-			sender.send(list);
+			sendDispatcher.send(list);
 		}
 	}
 
@@ -72,7 +72,7 @@ public class MunicItemRawDataProcessing {
 	private volatile boolean processing = true;
 	private ExecutorService executor;
 	@Autowired
-	private Sender sender;
+	private SendDispatcher sendDispatcher;
 
 	public MunicItemRawDataProcessing() {
 		queue = new ArrayDeque<List<MunicItemRawData>>();

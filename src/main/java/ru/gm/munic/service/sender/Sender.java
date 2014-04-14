@@ -1,67 +1,153 @@
 package ru.gm.munic.service.sender;
 
 import java.net.InetSocketAddress;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Queue;
 
+import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.core.future.IoFutureListener;
+import org.apache.mina.core.service.IoHandlerAdapter;
+import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
 
 import ru.gm.munic.domain.MunicItemRawData;
 import ru.gm.munic.service.processing.LowService;
+import ru.gm.munic.service.processing.utils.ItemRawDataJson;
 
-@Service
-public class Sender implements CallbackSender {
-	@Value("#{mainSettings['wialonb3.host']}")
+public class Sender extends IoHandlerAdapter implements IoFutureListener<ConnectFuture> {
+	private Logger logger;
+
 	private String wialonb3Host;
-	@Value("#{mainSettings['wialonb3.port']}")
 	private Integer wialonb3Port;
-	@Value("#{mainSettings['wialonb3.enabled']}")
-	private Integer wialonb3Enabled = 1;
-
-	@Autowired
 	private LowService lowService;
-	private Set<SocketContainer> socketContainers;
 
-	public Sender() {
-		socketContainers = new HashSet<SocketContainer>();
+	private Queue<MunicItemRawData> queue;
+	private boolean processed;
+
+	private IoSession ioSession;
+	private MunicItemRawData currentItem;
+
+	private NioSocketConnector connector;
+
+	private int errorsCount;
+
+	public Sender(String wialonb3Host, Integer wialonb3Port, LowService lowService, Logger logger) {
+		this.wialonb3Host = wialonb3Host;
+		this.wialonb3Port = wialonb3Port;
+		this.lowService = lowService;
+		this.logger = logger;
+
+		queue = new LinkedList<MunicItemRawData>();
+		processed = false;
+		currentItem = null;
+		ioSession = null;
+		connector = null;
+
+		errorsCount = 0;
+
+		connector = new NioSocketConnector();
+		connector.setConnectTimeoutMillis(10000);
+		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new SenderCodecFactory()));
+		connector.setHandler(this);
 	}
 
-	public void send(List<MunicItemRawData> list) {
-		if (wialonb3Enabled == 1) {
-			NioSocketConnector connector = new NioSocketConnector();
-			SocketContainer container = new SocketContainer(connector);
-			synchronized (socketContainers) {
-				socketContainers.add(container);
-				socketContainers.notifyAll();
+	private boolean connect() {
+		if (ioSession == null || !ioSession.isConnected()) {
+			ConnectFuture future = connector.connect(new InetSocketAddress(wialonb3Host, wialonb3Port));
+			future.addListener(this);
+
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private void sendCurrentItem() {
+		if (currentItem != null && connect()) {
+			ItemRawDataJson itemRawDataJson = new ItemRawDataJson(currentItem.getItemRawData());
+			if (itemRawDataJson.isTrack()) {
+				ioSession.write(itemRawDataJson.getString4Wialon());
+			} else {
+				sendNextItem();
 			}
-			connector.setConnectTimeoutMillis(3000);
-			connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new SenderCodecFactory()));
-			connector.setHandler(new ClientSessionHandler(list, container, this, lowService));
+		}
+	}
 
-			connector.connect(new InetSocketAddress(wialonb3Host, wialonb3Port));
+	private void sendNextItem() {
+		synchronized (queue) {
+			currentItem = queue.poll();
+			if (currentItem == null) {
+				processed = false;
+			} else {
+				processed = true;
+				sendCurrentItem();
+			}
+			queue.notify();
+		}
+	}
 
-			// IoSession session;
-			// ConnectFuture future = connector.connect(new
-			// InetSocketAddress(wialonb3Host, wialonb3Port));
-			// future.awaitUninterruptibly();
-			// session = future.getSession();
-			//
-			// session.getCloseFuture().awaitUninterruptibly();
-			// connector.dispose();
+	public void addItems(List<MunicItemRawData> list) {
+		synchronized (queue) {
+			for (MunicItemRawData item : list) {
+				queue.add(item);
+			}
+
+			if (!processed) {
+				sendNextItem();
+			}
+
+			queue.notify();
 		}
 	}
 
 	@Override
-	public void allsended(SocketContainer container) {
-		synchronized (socketContainers) {
-			socketContainers.remove(container);
-			socketContainers.notifyAll();
+	public void sessionOpened(IoSession session) throws Exception {
+		errorsCount = 0;
+		ioSession = session;
+		sendCurrentItem();
+	}
+
+	@Override
+	public void messageSent(IoSession session, Object message) throws Exception {
+		if (currentItem != null) {
+			currentItem.setWialonSended(true);
+			lowService.updateMunicItemRawData(currentItem);
 		}
-		container.getConnector().dispose();
+
+		errorsCount = 0;
+		sendNextItem();
+	}
+
+	@Override
+	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
+		logger.error(cause.toString());
+
+		session.close(true);
+		session = null;
+
+		errorsCount++;
+		Thread.sleep(errorsCount * 1000);
+		sendCurrentItem();
+	}
+
+	@Override
+	public void operationComplete(ConnectFuture future) {
+		if (!future.isConnected()) {
+			errorsCount++;
+
+			if (future.getException() != null) {
+				logger.error(future.getException().toString());
+			}
+
+			try {
+				Thread.sleep(errorsCount * 1000);
+			} catch (InterruptedException e) {
+			}
+
+			sendCurrentItem();
+		}
 	}
 }

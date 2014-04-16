@@ -107,7 +107,7 @@ public class ItemRawDataJson {
 			int crc = gprmcCRC(sb.toString().getBytes(Charset.forName("ASCII")));
 			sb.insert(0, '$');
 			sb.append('*');
-			sb.append(crc);
+			sb.append(Integer.toHexString(crc));
 
 			return sb.toString();
 		}

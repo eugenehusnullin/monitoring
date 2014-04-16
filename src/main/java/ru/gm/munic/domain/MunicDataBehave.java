@@ -24,6 +24,10 @@ public class MunicDataBehave implements Serializable {
 	private Integer behaveAccZBegin;
 	private Integer behaveAccZPeak;
 	private Integer behaveAccZEnd;
+	private Integer behaveLong;
+	private Integer behaveLat;
+	private Integer behaveDayOfYear;
+	private Integer behaveTimeOfDay;
 
 	public MunicData getMunicData() {
 		return municData;
@@ -179,5 +183,37 @@ public class MunicDataBehave implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public Integer getBehaveLong() {
+		return behaveLong;
+	}
+
+	public void setBehaveLong(Integer behaveLong) {
+		this.behaveLong = behaveLong;
+	}
+
+	public Integer getBehaveLat() {
+		return behaveLat;
+	}
+
+	public void setBehaveLat(Integer behaveLat) {
+		this.behaveLat = behaveLat;
+	}
+
+	public Integer getBehaveDayOfYear() {
+		return behaveDayOfYear;
+	}
+
+	public void setBehaveDayOfYear(Integer behaveDayOfYear) {
+		this.behaveDayOfYear = behaveDayOfYear;
+	}
+
+	public Integer getBehaveTimeOfDay() {
+		return behaveTimeOfDay;
+	}
+
+	public void setBehaveTimeOfDay(Integer behaveTimeOfDay) {
+		this.behaveTimeOfDay = behaveTimeOfDay;
 	}
 }

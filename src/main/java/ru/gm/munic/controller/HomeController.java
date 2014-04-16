@@ -55,6 +55,11 @@ public class HomeController {
 
 		return "home";
 	}
+	
+	@RequestMapping(value = "/", method = RequestMethod.POST)
+	public void home(HttpServletRequest request, HttpServletResponse response) {
+		rawdata(request, response);
+	}
 
 	@RequestMapping(value = "/rawdata", method = RequestMethod.POST)
 	public void rawdata(HttpServletRequest request, HttpServletResponse response) {
@@ -68,30 +73,6 @@ public class HomeController {
 			response.setStatus(500);
 		}
 	}
-
-	// private Message createMessage(JSONObject jsonObject) throws
-	// ParseException {
-	// Message message = new Message();
-	// message.setValue(jsonObject.toString());
-	//
-	// JSONObject payload = jsonObject.getJSONObject("payload");
-	//
-	// message.setId(payload.getLong("id"));
-	// message.setAsset(Long.parseLong(payload.getString("asset")));
-	//
-	// // // 2014-03-26T11:42:01Z
-	// String recordedAtString = payload.getString("recorded_at").replace("Z",
-	// "").replace('T', ' ');
-	// String recievedAtString = payload.getString("recieved_at").replace("Z",
-	// "").replace('T', ' ');
-	//
-	// SimpleDateFormat dateFormatter = new
-	// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	// message.setRecordedAt(dateFormatter.parse(recordedAtString));
-	// message.setRecievedAt(dateFormatter.parse(recievedAtString));
-	//
-	// return message;
-	// }
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String test() {
@@ -138,7 +119,8 @@ public class HomeController {
 
 	@RequestMapping(value = "/reprocess", method = RequestMethod.POST)
 	public String reprocess() {
-		processFailedItems.processMunicRawData(null, null, false);
+		//processFailedItems.processMunicRawData(null, null, false);
+		processFailedItems.processAllMunicRawData();
 		return "test";
 	}
 

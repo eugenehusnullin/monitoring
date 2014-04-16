@@ -4,31 +4,50 @@ import java.io.Serializable;
 
 public class MunicDataMdi implements Serializable {
 	private static final long serialVersionUID = -7504880117857146427L;
-
 	private MunicData municData;
 
 	private Boolean mdiExtBattLow;
 	private Integer mdiExtBattVoltage;
+	private String mdiAreaList;
+	private String mdiCrashDetected;
+
+	// DTC
 	private Boolean mdiDtcMil;
 	private Integer mdiDtcNumber;
 	private String mdiDtcList;
 
+	// RpmStatistic
 	private Integer mdiRpmMax;
 	private Integer mdiRpmMin;
 	private Integer mdiRpmAverage;
 	private Boolean mdiRpmOver;
 
+	// CarDiagnostic
 	private Integer mdiObdSpeed;
 	private Integer mdiObdRpm;
 	private Integer mdiObdFuel;
 	private String mdiObdVin;
 	private Integer mdiObdMileage;
 
-	private Boolean mdiOverSpeed;
+	// Easyconnect
+	private Integer mdiJourneyTime;
+	private Integer mdiIdleJourney;
+	private Integer mdiDrivingJorney;
 	private Integer mdiOverSpeedCounter;
+	private Boolean mdiTowAway;
 	private Integer mdiOdoJourney;
-	private String mdiRecordReason;
+	private Boolean mdiOverSpeed;
+	private Integer mdiMaxSpeedJourney;
+	private Boolean mdiJourneyState;
+
 	private String mdiVehicleState;
+
+	private String mdiRecordReason;
+	private String mdiBootReason;
+	private String mdiShutdownReason;
+
+	private Boolean mdiPanicState;
+	private String mdiPanicMessage;
 
 	public MunicData getMunicData() {
 		return municData;
@@ -192,5 +211,101 @@ public class MunicDataMdi implements Serializable {
 
 	public void setMdiOverSpeed(Boolean mdiOverSpeed) {
 		this.mdiOverSpeed = mdiOverSpeed;
+	}
+
+	public String getMdiAreaList() {
+		return mdiAreaList;
+	}
+
+	public void setMdiAreaList(String mdiAreaList) {
+		this.mdiAreaList = mdiAreaList;
+	}
+
+	public String getMdiCrashDetected() {
+		return mdiCrashDetected;
+	}
+
+	public void setMdiCrashDetected(String mdiCrashDetected) {
+		this.mdiCrashDetected = mdiCrashDetected;
+	}
+
+	public Integer getMdiJourneyTime() {
+		return mdiJourneyTime;
+	}
+
+	public void setMdiJourneyTime(Integer mdiJourneyTime) {
+		this.mdiJourneyTime = mdiJourneyTime;
+	}
+
+	public Integer getMdiIdleJourney() {
+		return mdiIdleJourney;
+	}
+
+	public void setMdiIdleJourney(Integer mdiIdleJourney) {
+		this.mdiIdleJourney = mdiIdleJourney;
+	}
+
+	public Integer getMdiDrivingJorney() {
+		return mdiDrivingJorney;
+	}
+
+	public void setMdiDrivingJorney(Integer mdiDrivingJorney) {
+		this.mdiDrivingJorney = mdiDrivingJorney;
+	}
+
+	public Boolean getMdiTowAway() {
+		return mdiTowAway;
+	}
+
+	public void setMdiTowAway(Boolean mdiTowAway) {
+		this.mdiTowAway = mdiTowAway;
+	}
+
+	public Integer getMdiMaxSpeedJourney() {
+		return mdiMaxSpeedJourney;
+	}
+
+	public void setMdiMaxSpeedJourney(Integer mdiMaxSpeedJourney) {
+		this.mdiMaxSpeedJourney = mdiMaxSpeedJourney;
+	}
+
+	public Boolean getMdiJourneyState() {
+		return mdiJourneyState;
+	}
+
+	public void setMdiJourneyState(Boolean mdiJourneyState) {
+		this.mdiJourneyState = mdiJourneyState;
+	}
+
+	public String getMdiBootReason() {
+		return mdiBootReason;
+	}
+
+	public void setMdiBootReason(String mdiBootReason) {
+		this.mdiBootReason = mdiBootReason;
+	}
+
+	public String getMdiShutdownReason() {
+		return mdiShutdownReason;
+	}
+
+	public void setMdiShutdownReason(String mdiShutdownReason) {
+		this.mdiShutdownReason = mdiShutdownReason;
+	}
+
+	public Boolean getMdiPanicState() {
+		return mdiPanicState;
+	}
+
+	public void setMdiPanicState(Boolean mdiPanicState) {
+		this.mdiPanicState = mdiPanicState;
+	}
+
+	public String getMdiPanicMessage() {
+		return mdiPanicMessage;
+	}
+
+	public void setMdiPanicMessage(String mdiPanicMessage) {
+		this.mdiPanicMessage = mdiPanicMessage;
 	}
 }

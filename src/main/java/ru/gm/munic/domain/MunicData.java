@@ -12,10 +12,19 @@ public class MunicData implements Serializable {
 	private Double lat;
 	private Double lon;
 
+	private String gprmcValid;
 	private Integer gpsSpeed;
 	private Integer gpsDir;
 	private Boolean dioIgnition;
 	private Integer odoFull;
+	private Boolean dioAlarm;
+	private String driverId;
+	private Integer dioInTor;
+	private Integer batt;
+	private Integer gprsHeader;
+	private Integer rssi;
+	private Integer battVolt;
+	private Boolean mvtState;
 
 	private MunicDataBehave municDataBehave;
 	private MunicDataMdi municDataMdi;
@@ -118,5 +127,77 @@ public class MunicData implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getGprmcValid() {
+		return gprmcValid;
+	}
+
+	public void setGprmcValid(String gprmcValid) {
+		this.gprmcValid = gprmcValid;
+	}
+
+	public Boolean getDioAlarm() {
+		return dioAlarm;
+	}
+
+	public void setDioAlarm(Boolean dioAlarm) {
+		this.dioAlarm = dioAlarm;
+	}
+
+	public String getDriverId() {
+		return driverId;
+	}
+
+	public void setDriverId(String driverId) {
+		this.driverId = driverId;
+	}
+
+	public Integer getDioInTor() {
+		return dioInTor;
+	}
+
+	public void setDioInTor(Integer dioInTor) {
+		this.dioInTor = dioInTor;
+	}
+
+	public Integer getBatt() {
+		return batt;
+	}
+
+	public void setBatt(Integer batt) {
+		this.batt = batt;
+	}
+
+	public Integer getGprsHeader() {
+		return gprsHeader;
+	}
+
+	public void setGprsHeader(Integer gprsHeader) {
+		this.gprsHeader = gprsHeader;
+	}
+
+	public Integer getRssi() {
+		return rssi;
+	}
+
+	public void setRssi(Integer rssi) {
+		this.rssi = rssi;
+	}
+
+	public Integer getBattVolt() {
+		return battVolt;
+	}
+
+	public void setBattVolt(Integer battVolt) {
+		this.battVolt = battVolt;
+	}
+
+	public Boolean getMvtState() {
+		return mvtState;
+	}
+
+	public void setMvtState(Boolean mvtState) {
+		this.mvtState = mvtState;
 	}
 }

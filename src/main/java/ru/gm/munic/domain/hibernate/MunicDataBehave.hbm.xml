@@ -26,5 +26,9 @@
 		<property name="behaveAccZBegin"></property>
 		<property name="behaveAccZPeak"></property>
 		<property name="behaveAccZEnd"></property>
+		<property name="behaveLong"></property>
+		<property name="behaveLat"></property>
+		<property name="behaveDayOfYear"></property>
+		<property name="behaveTimeOfDay"></property>
 	</class>
 </hibernate-mapping>

@@ -1,5 +1,6 @@
 package ru.gm.munic.service.processing.utils;
 
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,8 +44,8 @@ public class ItemRawDataJson {
 			recorded_at = payload.getString("recorded_at"); // 2014-03-26T11:42:01Z
 			loc = payload.optJSONArray("loc");
 			if (loc != null) {
-				lat = loc.getDouble(0);
-				lon = loc.getDouble(1);
+				lon = loc.getDouble(0);
+				lat = loc.getDouble(1);
 			}
 		}
 	}
@@ -57,18 +58,92 @@ public class ItemRawDataJson {
 		return asset;
 	}
 
+	private String getGPRMC() {
+		// $GPRMC,180933.000,A,5544.0903,N,3736.7949,E,25.00,194.00,160414,0,N,A*15
+		Date recordedAt = getRecordedAt();
+		Integer gpsSpeed = getIntegerField("GPS_SPEED");
+		Integer gpsDir = getIntegerField("GPS_DIR");
+
+		if (recordedAt != null && loc != null && gpsSpeed != null && gpsDir != null) {
+			SimpleDateFormat sdfTime = new SimpleDateFormat("HHmmss.SSS");
+			SimpleDateFormat sdfDate = new SimpleDateFormat("ddMMyy");
+
+			StringBuffer sb = new StringBuffer();
+			sb.append("GPRMC,");
+			sb.append(sdfTime.format(recordedAt));
+			sb.append(",A,");
+
+			double lat1 = convertDecDegToDecMin(lat);
+			sb.append((int) lat1);
+			sb.append('.');
+			sb.append((int) ((lat1 - (int) lat1) * 10000));
+			sb.append(',');
+			sb.append(lat > 0 ? 'N' : 'S');
+			sb.append(',');
+
+			double lon1 = convertDecDegToDecMin(lon);
+			sb.append((int) lon1);
+			sb.append('.');
+			sb.append((int) ((lon1 - (int) lon1) * 10000));
+			sb.append(',');
+			sb.append(lon > 0 ? 'E' : 'W');
+			sb.append(',');
+
+			double gpsSpeed1 = gpsSpeed / 1000;
+			sb.append((int) gpsSpeed1);
+			sb.append('.');
+			sb.append((int) ((gpsSpeed1 - (int) gpsSpeed1) * 100));
+			sb.append(',');
+
+			double gpsDir1 = gpsDir / 100;
+			sb.append((int) gpsDir1);
+			sb.append('.');
+			sb.append((int) ((gpsDir1 - (int) gpsDir1) * 100));
+			sb.append(',');
+
+			sb.append(sdfDate.format(recordedAt));
+			sb.append(",0,N,A");
+
+			int crc = gprmcCRC(sb.toString().getBytes(Charset.forName("ASCII")));
+			sb.insert(0, '$');
+			sb.append('*');
+			sb.append(crc);
+
+			return sb.toString();
+		}
+		return null;
+	}
+
+	private int gprmcCRC(byte[] bytes) {
+		int crc = 0x0;
+		for (int i = 0; i < bytes.length; i++) {
+			crc = crc ^ (bytes[i] < 0 ? 256 + bytes[i] : bytes[i]);
+		}
+		return crc;
+	}
+
+	private double convertDecDegToDecMin(double number) {
+		int decimal = (int) number;
+		double fractional = number - decimal;
+		double result = (decimal * 100) + (fractional * 60);
+		return result;
+	}
+
+	private Date getRecordedAt() {
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			return dateFormatter.parse(recorded_at.replace('T', ' ').replace("Z", ""));
+		} catch (ParseException e) {
+		}
+		return null;
+	}
+
 	public MunicData getMunicData() {
 		if (isTrack()) {
 			MunicData data = new MunicData();
 			data.setEvent(event);
 			data.setAsset(Long.parseLong(asset));
-
-			SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			try {
-				Date recorderAt = dateFormatter.parse(recorded_at.replace('T', ' ').replace("Z", ""));
-				data.setRecordedAt(recorderAt);
-			} catch (ParseException e) {
-			}
+			data.setRecordedAt(getRecordedAt());
 
 			if (loc != null) {
 				data.setLon(lon);
@@ -79,60 +154,88 @@ public class ItemRawDataJson {
 			data.setGpsSpeed(getIntegerField("GPS_SPEED"));
 			data.setDioIgnition(getBooleanField("DIO_IGNITION"));
 			data.setOdoFull(getIntegerField("ODO_FULL"));
+			data.setGprmcValid(getStringField("GPRMC_VALID"));
+			data.setDioAlarm(getBooleanField("DIO_ALARM"));
+			data.setDriverId(getStringField("DRIVER_ID"));
+			data.setDioInTor(getIntegerField("DIO_IN_TOR"));
+			data.setBatt(getIntegerField("BATT"));
+			data.setGprsHeader(getIntegerField("GPRS_HEADER"));
+			data.setRssi(getIntegerField("RSSI"));
+			data.setBattVolt(getIntegerField("BATT_VOLT"));
+			data.setMvtState(getBooleanField("MVT_STATE"));
 
 			if (containsFieldStartsWith("BEHAVE_")) {
-				MunicDataBehave dataBehave = new MunicDataBehave();
-				data.setMunicDataBehave(dataBehave);
-				dataBehave.setMunicData(data);
+				MunicDataBehave behave = new MunicDataBehave();
+				data.setMunicDataBehave(behave);
+				behave.setMunicData(data);
 
-				dataBehave.setBehaveUniqueId(getIntegerField("BEHAVE_UNIQUE_ID"));
-				dataBehave.setBehaveId(getIntegerField("BEHAVE_ID"));
-				dataBehave.setBehaveElapsed(getIntegerField("BEHAVE_ELAPSED"));
-				dataBehave.setBehaveAccXBegin(getIntegerField("BEHAVE_ACC_X_BEGIN"));
-				dataBehave.setBehaveAccXPeak(getIntegerField("BEHAVE_ACC_X_PEAK"));
-				dataBehave.setBehaveAccXEnd(getIntegerField("BEHAVE_ACC_X_END"));
-				dataBehave.setBehaveAccYBegin(getIntegerField("BEHAVE_ACC_Y_BEGIN"));
-				dataBehave.setBehaveAccYPeak(getIntegerField("BEHAVE_ACC_Y_PEAK"));
-				dataBehave.setBehaveAccYEnd(getIntegerField("BEHAVE_ACC_Y_END"));
-				dataBehave.setBehaveAccZBegin(getIntegerField("BEHAVE_ACC_Z_BEGIN"));
-				dataBehave.setBehaveAccZPeak(getIntegerField("BEHAVE_ACC_Z_PEAK"));
-				dataBehave.setBehaveAccZEnd(getIntegerField("BEHAVE_ACC_Z_END"));
-				dataBehave.setBehaveGpsSpeedBegin(getIntegerField("BEHAVE_GPS_SPEED_BEGIN"));
-				dataBehave.setBehaveGpsSpeedPeak(getIntegerField("BEHAVE_GPS_SPEED_PEAK"));
-				dataBehave.setBehaveGpsSpeedEnd(getIntegerField("BEHAVE_GPS_SPEED_END"));
-				dataBehave.setBehaveGpsHeadingBegin(getIntegerField("BEHAVE_GPS_HEADING_BEGIN"));
-				dataBehave.setBehaveGpsHeadingPeak(getIntegerField("BEHAVE_GPS_HEADING_PEAK"));
-				dataBehave.setBehaveGpsHeadingEnd(getIntegerField("BEHAVE_GPS_HEADING_END"));
+				behave.setBehaveUniqueId(getIntegerField("BEHAVE_UNIQUE_ID"));
+				behave.setBehaveId(getIntegerField("BEHAVE_ID"));
+				behave.setBehaveElapsed(getIntegerField("BEHAVE_ELAPSED"));
+				behave.setBehaveAccXBegin(getIntegerField("BEHAVE_ACC_X_BEGIN"));
+				behave.setBehaveAccXPeak(getIntegerField("BEHAVE_ACC_X_PEAK"));
+				behave.setBehaveAccXEnd(getIntegerField("BEHAVE_ACC_X_END"));
+				behave.setBehaveAccYBegin(getIntegerField("BEHAVE_ACC_Y_BEGIN"));
+				behave.setBehaveAccYPeak(getIntegerField("BEHAVE_ACC_Y_PEAK"));
+				behave.setBehaveAccYEnd(getIntegerField("BEHAVE_ACC_Y_END"));
+				behave.setBehaveAccZBegin(getIntegerField("BEHAVE_ACC_Z_BEGIN"));
+				behave.setBehaveAccZPeak(getIntegerField("BEHAVE_ACC_Z_PEAK"));
+				behave.setBehaveAccZEnd(getIntegerField("BEHAVE_ACC_Z_END"));
+				behave.setBehaveGpsSpeedBegin(getIntegerField("BEHAVE_GPS_SPEED_BEGIN"));
+				behave.setBehaveGpsSpeedPeak(getIntegerField("BEHAVE_GPS_SPEED_PEAK"));
+				behave.setBehaveGpsSpeedEnd(getIntegerField("BEHAVE_GPS_SPEED_END"));
+				behave.setBehaveGpsHeadingBegin(getIntegerField("BEHAVE_GPS_HEADING_BEGIN"));
+				behave.setBehaveGpsHeadingPeak(getIntegerField("BEHAVE_GPS_HEADING_PEAK"));
+				behave.setBehaveGpsHeadingEnd(getIntegerField("BEHAVE_GPS_HEADING_END"));
+				behave.setBehaveLong(getIntegerField("BEHAVE_LONG"));
+				behave.setBehaveLat(getIntegerField("BEHAVE_LAT"));
+				behave.setBehaveDayOfYear(getIntegerField("BEHAVE_DAY_OF_YEAR"));
+				behave.setBehaveTimeOfDay(getIntegerField("BEHAVE_TIME_OF_DAY"));
 			}
 
 			if (containsFieldStartsWith("MDI_")) {
-				MunicDataMdi dataMdi = new MunicDataMdi();
-				data.setMunicDataMdi(dataMdi);
-				dataMdi.setMunicData(data);
+				MunicDataMdi mdi = new MunicDataMdi();
+				data.setMunicDataMdi(mdi);
+				mdi.setMunicData(data);
 
-				dataMdi.setMdiExtBattLow(getBooleanField("MDI_EXT_BATT_LOW"));
-				dataMdi.setMdiExtBattVoltage(getIntegerField("MDI_EXT_BATT_VOLTAGE"));
+				mdi.setMdiExtBattLow(getBooleanField("MDI_EXT_BATT_LOW"));
+				mdi.setMdiExtBattVoltage(getIntegerField("MDI_EXT_BATT_VOLTAGE"));
+				mdi.setMdiAreaList(getStringField("MDI_AREA_LIST"));
+				mdi.setMdiCrashDetected(getStringField("MDI_CRASH_DETECTED"));
 
-				dataMdi.setMdiDtcList(getStringField("MDI_DTC_LIST"));
-				dataMdi.setMdiDtcMil(getBooleanField("MDI_DTC_MIL"));
-				dataMdi.setMdiDtcNumber(getIntegerField("MDI_DTC_NUMBER"));
+				mdi.setMdiDtcList(getStringField("MDI_DTC_LIST"));
+				mdi.setMdiDtcMil(getBooleanField("MDI_DTC_MIL"));
+				mdi.setMdiDtcNumber(getIntegerField("MDI_DTC_NUMBER"));
 
-				dataMdi.setMdiRpmMax(getIntegerField("MDI_RPM_MAX"));
-				dataMdi.setMdiRpmMin(getIntegerField("MDI_RPM_MIN"));
-				dataMdi.setMdiRpmAverage(getIntegerField("MDI_RPM_AVERAGE"));
-				dataMdi.setMdiRpmOver(getBooleanField("MDI_RPM_OVER"));
+				mdi.setMdiRpmMax(getIntegerField("MDI_RPM_MAX"));
+				mdi.setMdiRpmMin(getIntegerField("MDI_RPM_MIN"));
+				mdi.setMdiRpmAverage(getIntegerField("MDI_RPM_AVERAGE"));
+				mdi.setMdiRpmOver(getBooleanField("MDI_RPM_OVER"));
 
-				dataMdi.setMdiObdSpeed(getIntegerField("MDI_OBD_SPEED"));
-				dataMdi.setMdiObdRpm(getIntegerField("MDI_OBD_RPM"));
-				dataMdi.setMdiObdFuel(getIntegerField("MDI_OBD_FUEL"));
-				dataMdi.setMdiObdVin(getStringField("MDI_OBD_VIN"));
-				dataMdi.setMdiObdMileage(getIntegerField("MDI_OBD_MILEAGE"));
+				mdi.setMdiObdSpeed(getIntegerField("MDI_OBD_SPEED"));
+				mdi.setMdiObdRpm(getIntegerField("MDI_OBD_RPM"));
+				mdi.setMdiObdFuel(getIntegerField("MDI_OBD_FUEL"));
+				mdi.setMdiObdVin(getStringField("MDI_OBD_VIN"));
+				mdi.setMdiObdMileage(getIntegerField("MDI_OBD_MILEAGE"));
 
-				dataMdi.setMdiOdoJourney(getIntegerField("MDI_ODO_JOURNEY"));
-				dataMdi.setMdiOverSpeedCounter(getIntegerField("MDI_OVERSPEED_COUNTER"));
-				dataMdi.setMdiOverSpeed(getBooleanField("MDI_OVERSPEED"));
-				dataMdi.setMdiRecordReason(getStringField("MDI_RECORD_REASON"));
-				dataMdi.setMdiVehicleState(getStringField("MDI_VEHICLE_STATE"));
+				mdi.setMdiJourneyTime(getIntegerField("MDI_JOURNEY_TIME"));
+				mdi.setMdiIdleJourney(getIntegerField("MDI_IDLE_JOURNEY"));
+				mdi.setMdiDrivingJorney(getIntegerField("MDI_DRIVING_JOURNEY"));
+				mdi.setMdiTowAway(getBooleanField("MDI_TOW_AWAY"));
+				mdi.setMdiMaxSpeedJourney(getIntegerField("MDI_MAX_SPEED_JOURNEY"));
+				mdi.setMdiJourneyState(getBooleanField("MDI_JOURNEY_STATE"));
+				mdi.setMdiOdoJourney(getIntegerField("MDI_ODO_JOURNEY"));
+				mdi.setMdiOverSpeedCounter(getIntegerField("MDI_OVERSPEED_COUNTER"));
+				mdi.setMdiOverSpeed(getBooleanField("MDI_OVERSPEED"));
+
+				mdi.setMdiVehicleState(getStringField("MDI_VEHICLE_STATE"));
+
+				mdi.setMdiRecordReason(getStringField("MDI_RECORD_REASON"));
+				mdi.setMdiBootReason(getStringField("MDI_BOOT_REASON"));
+				mdi.setMdiShutdownReason(getStringField("MDI_SHUTDOWN_REASON"));
+
+				mdi.setMdiPanicState(getBooleanField("MDI_PANIC_STATE"));
+				mdi.setMdiPanicMessage(getStringField("MDI_PANIC_MESSAGE"));
 			}
 
 			return data;
@@ -149,6 +252,11 @@ public class ItemRawDataJson {
 			if (loc != null) {
 				insertPair("lat", String.valueOf(lat), sb);
 				insertPair("lon", String.valueOf(lon), sb);
+			}
+
+			String gprmc = getGPRMC();
+			if (gprmc != null) {
+				insertPair("gprmc", gprmc, sb);
 			}
 
 			insertIntegerFieldIfExists("GPS_DIR", sb);

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -49,5 +50,17 @@ public class ProcessFailedItems {
 		}
 
 		municRawDataProcessing.addList(listMunicRawDatas);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public void processAllMunicRawData() {
+		Session session = sessionFactory.getCurrentSession();
+		session.createQuery("delete MunicDataMdi").executeUpdate();
+		session.createQuery("delete MunicDataBehave").executeUpdate();
+		session.createQuery("delete MunicData").executeUpdate();
+		session.createQuery("delete MunicItemRawData").executeUpdate();
+		municRawDataProcessing
+				.addList(session.createCriteria(MunicRawData.class).addOrder(Order.asc("arrived")).list());
 	}
 }

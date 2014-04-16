@@ -14,10 +14,19 @@
 		<property name="recordedAt" index="municdata_idx2"></property>
 		<property name="lat"></property>
 		<property name="lon"></property>
+		<property name="gprmcValid" length="1"></property>
 		<property name="gpsSpeed"></property>
 		<property name="gpsDir"></property>
 		<property name="dioIgnition"></property>
 		<property name="odoFull"></property>
+		<property name="dioAlarm"></property>
+		<property name="driverId" length="15"></property>
+		<property name="dioInTor"></property>
+		<property name="batt"></property>
+		<property name="gprsHeader"></property>
+		<property name="rssi"></property>
+		<property name="battVolt"></property>
+		<property name="mvtState"></property>
 		<one-to-one name="municDataBehave" cascade="all"></one-to-one>
 		<one-to-one name="municDataMdi" cascade="all"></one-to-one>
 	</class>

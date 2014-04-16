@@ -43,3 +43,13 @@ hibernate.dialect=org.hibernate.dialect.MySQLDialect
 hibernate.show_sql=false
 hibernate.hbm2ddl.auto=create-drop
 
+; munic in postgres
+jdbc.driverClassName=org.postgresql.Driver
+jdbc.url=jdbc:postgresql://localhost:5432/munic
+jdbc.username=munic
+jdbc.password=munic
+hibernate.dialect=org.hibernate.dialect.PostgreSQL82Dialect
+hibernate.show_sql=false
+hibernate.hbm2ddl.auto=update
+;hibernate.hbm2ddl.auto=create-drop
+

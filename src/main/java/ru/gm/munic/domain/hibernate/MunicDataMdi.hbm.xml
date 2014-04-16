@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ru.gm.munic.domain">
+	<class name="MunicDataMdi" table="municdatamdi">
+		<composite-id>
+			<key-many-to-one name="municData" column="municdataid"></key-many-to-one>
+		</composite-id>
+		<property name="mdiExtBattLow"></property>
+		<property name="mdiExtBattVoltage"></property>
+		<property name="mdiDtcMil"></property>
+		<property name="mdiDtcNumber"></property>
+		<property name="mdiDtcList" length="128"></property>
+
+		<property name="mdiRpmMax"></property>
+		<property name="mdiRpmMin"></property>
+		<property name="mdiRpmAverage"></property>
+		<property name="mdiRpmOver"></property>
+
+		<property name="mdiObdSpeed"></property>
+		<property name="mdiObdRpm"></property>
+		<property name="mdiObdFuel"></property>
+		<property name="mdiObdVin" length="64"></property>
+		<property name="mdiObdMileage"></property>
+
+		<property name="mdiOverSpeed"></property>
+		<property name="mdiOverSpeedCounter"></property>
+		<property name="mdiOdoJourney"></property>
+		<property name="mdiRecordReason" length="32"></property>
+		<property name="mdiVehicleState" length="32"></property>
+	</class>
+</hibernate-mapping>

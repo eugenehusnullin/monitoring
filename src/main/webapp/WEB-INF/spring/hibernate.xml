@@ -7,5 +7,8 @@
 	<session-factory>
 		<mapping resource="ru/gm/munic/domain/hibernate/MunicRawData.hbm.xml" />
 		<mapping resource="ru/gm/munic/domain/hibernate/MunicItemRawData.hbm.xml" />
+		<mapping resource="ru/gm/munic/domain/hibernate/MunicData.hbm.xml" />
+		<mapping resource="ru/gm/munic/domain/hibernate/MunicDataBehave.hbm.xml" />
+		<mapping resource="ru/gm/munic/domain/hibernate/MunicDataMdi.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import ru.gm.munic.domain.MunicData;
 import ru.gm.munic.domain.MunicItemRawData;
+import ru.gm.munic.service.processing.utils.ItemRawDataJson;
 import ru.gm.munic.service.processing.utils.ThreadFactorySecuenceNaming;
 import ru.gm.munic.service.sender.SendDispatcher;
 
@@ -64,6 +66,15 @@ public class MunicItemRawDataProcessing {
 		@Override
 		public void run() {
 			sendDispatcher.send(list);
+			
+			for (MunicItemRawData item : list) {
+				ItemRawDataJson itemRawDataJson = new ItemRawDataJson(item.getItemRawData());
+				MunicData municData = itemRawDataJson.getMunicData();
+				if (municData != null) {
+					municData.setMunicItemRawData(item);
+					lowService.saveMunicData(municData);
+				}
+			}
 		}
 	}
 
@@ -73,6 +84,8 @@ public class MunicItemRawDataProcessing {
 	private ExecutorService executor;
 	@Autowired
 	private SendDispatcher sendDispatcher;
+	@Autowired
+	private LowService lowService;
 
 	public MunicItemRawDataProcessing() {
 		queue = new ArrayDeque<List<MunicItemRawData>>();

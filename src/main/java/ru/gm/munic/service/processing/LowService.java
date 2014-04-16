@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.gm.munic.domain.MunicData;
 import ru.gm.munic.domain.MunicItemRawData;
 import ru.gm.munic.domain.MunicRawData;
 
@@ -43,16 +44,24 @@ public class LowService {
 
 			list.add(municItemRawData);
 		}
+		
 		municRawData.setProcessed(true);
-		session.update(municRawData);
+		session.merge(municRawData);
 
 		return list;
 	}
-	
+
 	@Transactional
 	public void setWialonSended(MunicItemRawData municItemRawData) {
 		municItemRawData.setWialonSended(true);
 		sessionFactory.getCurrentSession().update(municItemRawData);
+	}
+
+	@Transactional
+	public void saveMunicData(MunicData municData) {
+		sessionFactory.getCurrentSession().save(municData);
+		municData.getMunicItemRawData().setProcessed(true);
+		sessionFactory.getCurrentSession().update(municData.getMunicItemRawData());
 	}
 
 }

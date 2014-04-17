@@ -17,9 +17,9 @@
 		<br /> <input type="submit" value="Send" />
 	</form>
 
-	<br />
-	<form method="POST" action="reprocess">
-		<input type="submit" value="ReProcess all items" />
-	</form>
+<!-- 	<br /> -->
+<!-- 	<form method="POST" action="reprocess"> -->
+<!-- 		<input type="submit" value="ReProcess all items" /> -->
+<!-- 	</form> -->
 </body>
 </html>

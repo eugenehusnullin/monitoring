@@ -117,11 +117,11 @@ public class HomeController {
 		return "test";
 	}
 
-	@RequestMapping(value = "/reprocess", method = RequestMethod.POST)
-	public String reprocess() {
-		//processFailedItems.processMunicRawData(null, null, false);
-		processFailedItems.processAllMunicRawData();
-		return "test";
-	}
+//	@RequestMapping(value = "/reprocess", method = RequestMethod.POST)
+//	public String reprocess() {
+//		//processFailedItems.processMunicRawData(null, null, false);
+//		processFailedItems.processAllMunicRawData();
+//		return "test";
+//	}
 
 }

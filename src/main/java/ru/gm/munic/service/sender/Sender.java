@@ -69,7 +69,11 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 		if (currentItem != null && connect()) {
 			ItemRawDataJson itemRawDataJson = new ItemRawDataJson(currentItem.getItemRawData());
 			if (itemRawDataJson.isTrack()) {
-				ioSession.write(itemRawDataJson.getString4Wialon());
+				try {
+					Thread.sleep(1000);
+					ioSession.write(itemRawDataJson.getString4Wialon());
+				} catch (InterruptedException e) {
+				}
 			} else {
 				lowService.setWialonSended(currentItem);
 				sendNextItem();

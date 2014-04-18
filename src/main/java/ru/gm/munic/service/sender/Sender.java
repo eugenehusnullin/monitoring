@@ -25,7 +25,7 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 	private LowService lowService;
 
 	private Queue<MunicItemRawData> queue;
-	private boolean processed;
+	private volatile boolean processed;
 
 	private IoSession ioSession;
 	private MunicItemRawData currentItem;

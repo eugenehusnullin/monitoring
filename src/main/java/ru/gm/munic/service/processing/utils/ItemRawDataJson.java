@@ -22,6 +22,7 @@ public class ItemRawDataJson {
 	private JSONObject fields;
 	private double lat;
 	private double lon;
+	private Boolean dioIgnition = null;
 
 	public ItemRawDataJson(String itemRawData) {
 		JSONTokener tokener = new JSONTokener(itemRawData);
@@ -46,6 +47,9 @@ public class ItemRawDataJson {
 			if (loc != null) {
 				lon = loc.getDouble(0);
 				lat = loc.getDouble(1);
+			}
+			if (fields != null) {
+				dioIgnition = getBooleanField("DIO_IGNITION");
 			}
 		}
 	}
@@ -261,7 +265,8 @@ public class ItemRawDataJson {
 
 			insertIntegerFieldIfExists("GPS_DIR", sb);
 			insertIntegerFieldIfExists("GPS_SPEED", sb);
-			insertBooleanFieldIfExists("DIO_IGNITION", sb);
+			//insertBooleanFieldIfExists("DIO_IGNITION", sb);
+			insertBooleanPair("DIO_IGNITION", dioIgnition, sb);
 			insertIntegerFieldIfExists("ODO_FULL", sb);
 			insertIntegerFieldIfExists("BEHAVE_ID", sb);
 			insertIntegerFieldIfExists("BEHAVE_ELAPSED", sb);
@@ -311,6 +316,7 @@ public class ItemRawDataJson {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void insertBooleanFieldIfExists(String key, StringBuilder sb) {
 		JSONObject jsonObject = fields.optJSONObject(key);
 		if (jsonObject != null) {
@@ -324,6 +330,12 @@ public class ItemRawDataJson {
 		sb.append(key);
 		sb.append("=");
 		sb.append(value);
+	}
+	
+	private void insertBooleanPair(String key, Boolean value, StringBuilder sb) {
+		if (value != null) {
+			insertPair(key, value ? "1" : "0", sb);
+		}
 	}
 
 	private Integer getIntegerField(String key) {
@@ -351,6 +363,14 @@ public class ItemRawDataJson {
 		} else {
 			return null;
 		}
+	}
+
+	public Boolean getDioIgnition() {
+		return dioIgnition;
+	}
+
+	public void setDioIgnition(Boolean previousDioIgnition) {
+		dioIgnition = previousDioIgnition;
 	}
 
 }

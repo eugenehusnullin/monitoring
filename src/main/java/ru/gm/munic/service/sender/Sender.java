@@ -33,6 +33,8 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 	private NioSocketConnector connector;
 
 	private int errorsCount;
+	
+	private Boolean previousDioIgnition = false;
 
 	public Sender(String wialonb3Host, Integer wialonb3Port, LowService lowService, Logger logger) {
 		this.wialonb3Host = wialonb3Host;
@@ -69,6 +71,11 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 		if (currentItem != null && connect()) {
 			ItemRawDataJson itemRawDataJson = new ItemRawDataJson(currentItem.getItemRawData());
 			if (itemRawDataJson.isTrack()) {
+				if (itemRawDataJson.getDioIgnition() == null) {
+					itemRawDataJson.setDioIgnition(previousDioIgnition);
+				} else {
+					previousDioIgnition = itemRawDataJson.getDioIgnition();
+				}
 				ioSession.write(itemRawDataJson.getString4Wialon());
 			} else {
 				lowService.setWialonSended(currentItem);

@@ -34,7 +34,7 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 
 	private int errorsCount;
 	
-	private Boolean previousDioIgnition = false;
+	private Boolean previousDioIgnition = null;
 
 	public Sender(String wialonb3Host, Integer wialonb3Port, LowService lowService, Logger logger) {
 		this.wialonb3Host = wialonb3Host;

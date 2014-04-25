@@ -10,6 +10,8 @@ public class MunicDataMdi implements Serializable {
 	private Integer mdiExtBattVoltage;
 	private String mdiAreaList;
 	private String mdiCrashDetected;
+	
+	private String mdiVehicleState;
 
 	// DTC
 	private Boolean mdiDtcMil;
@@ -39,8 +41,6 @@ public class MunicDataMdi implements Serializable {
 	private Boolean mdiOverSpeed;
 	private Integer mdiMaxSpeedJourney;
 	private Boolean mdiJourneyState;
-
-	private String mdiVehicleState;
 
 	private String mdiRecordReason;
 	private String mdiBootReason;

@@ -11,11 +11,11 @@
 		<property name="mdiExtBattLow"></property>
 		<property name="mdiExtBattVoltage"></property>
 		<property name="mdiAreaList" length="32"></property>
-		<property name="mdiCrashDetected" length="32"></property>
+		<property name="mdiCrashDetected" length="8"></property>
 
 		<property name="mdiDtcMil"></property>
 		<property name="mdiDtcNumber"></property>
-		<property name="mdiDtcList" length="128"></property>
+		<property name="mdiDtcList" length="255"></property>
 
 		<property name="mdiRpmMax"></property>
 		<property name="mdiRpmMin"></property>
@@ -38,7 +38,7 @@
 		<property name="mdiMaxSpeedJourney"></property>
 		<property name="mdiJourneyState"></property>
 
-		<property name="mdiVehicleState" length="32"></property>
+		<property name="mdiVehicleState" length="3"></property>
 
 		<property name="mdiRecordReason" length="32"></property>
 		<property name="mdiBootReason" length="32"></property>

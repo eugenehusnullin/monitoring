@@ -17,7 +17,7 @@ import ru.gm.munic.service.processing.utils.ItemRawDataJson;
 @Service
 public class SendDispatcher {
 	private static final Logger logger = LoggerFactory.getLogger(SendDispatcher.class);
-	
+
 	private Map<Long, Sender> connectionsMap = new HashMap<Long, Sender>();
 
 	@Value("#{mainSettings['wialonb3.host']}")
@@ -37,20 +37,23 @@ public class SendDispatcher {
 		if (list == null || list.size() == 0) {
 			return;
 		}
+		for (MunicItemRawData municItemRawData : list) {
+			ItemRawDataJson itemRawDataJson = new ItemRawDataJson(municItemRawData.getItemRawData());
+			Long imei = Long.parseLong(itemRawDataJson.getAsset());
 
-		MunicItemRawData firstItem = list.get(0);
-		ItemRawDataJson itemRawDataJson = new ItemRawDataJson(firstItem.getItemRawData());
-		Long imei = Long.parseLong(itemRawDataJson.getAsset());
-
-		synchronized (connectionsMap) {
-			Sender sender = connectionsMap.get(imei);
-			if (sender == null) {
-				sender = createSender();
+			Sender sender = null;
+			synchronized (connectionsMap) {
+				sender = connectionsMap.get(imei);
+				if (sender == null) {
+					sender = createSender();
+					connectionsMap.put(imei, sender);
+				}
+				connectionsMap.notifyAll();
 			}
-			connectionsMap.put(imei, sender);
-			sender.addItems(list);
-			connectionsMap.notifyAll();
+			municItemRawData.setItemRawDataJson(itemRawDataJson);
+			sender.addItem(municItemRawData);
 		}
+
 	}
 
 }

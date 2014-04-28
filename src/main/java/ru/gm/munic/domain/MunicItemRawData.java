@@ -1,11 +1,14 @@
 package ru.gm.munic.domain;
 
+import ru.gm.munic.service.processing.utils.ItemRawDataJson;
+
 public class MunicItemRawData {
 	private Long id;
 	private Boolean processed;
 	private Boolean wialonSended;
 	private MunicRawData municRawData;
 	private String itemRawData;
+	private ItemRawDataJson itemRawDataJson;
 
 	public MunicItemRawData() {
 		processed = false;
@@ -52,4 +55,11 @@ public class MunicItemRawData {
 		this.wialonSended = wialonSended;
 	}
 
+	public ItemRawDataJson getItemRawDataJson() {
+		return itemRawDataJson;
+	}
+
+	public void setItemRawDataJson(ItemRawDataJson itemRawDataJson) {
+		this.itemRawDataJson = itemRawDataJson;
+	}
 }

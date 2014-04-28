@@ -2,7 +2,6 @@ package ru.gm.munic.service.sender;
 
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import org.apache.mina.core.future.ConnectFuture;
@@ -69,7 +68,7 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 
 	private void sendCurrentItem() {
 		if (currentItem != null && connect()) {
-			ItemRawDataJson itemRawDataJson = new ItemRawDataJson(currentItem.getItemRawData());
+			ItemRawDataJson itemRawDataJson = currentItem.getItemRawDataJson();
 			if (itemRawDataJson.isTrack()) {
 				if (itemRawDataJson.getDioIgnition() == null) {
 					itemRawDataJson.setDioIgnition(previousDioIgnition);
@@ -97,11 +96,9 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 		}
 	}
 
-	public void addItems(List<MunicItemRawData> list) {
+	public void addItem(MunicItemRawData municItemRawData) {
 		synchronized (queue) {
-			for (MunicItemRawData item : list) {
-				queue.add(item);
-			}
+			queue.add(municItemRawData);
 
 			if (!processed) {
 				sendNextItem();

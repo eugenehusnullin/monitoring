@@ -22,11 +22,22 @@ public class OlapService {
 	@Transactional
 	@Scheduled(cron = "0 30 * * * *")
 	public void olapBehave() {
-		logger.info("olapBehave called.");
+		logger.info("olapBehave executing.");
 
 		Session session = sessionFactory.getCurrentSession();
 
 		SQLQuery sqlQuery = session.createSQLQuery("call olap_behave_calc();");
+		sqlQuery.executeUpdate();
+	}
+	
+	@Transactional
+	@Scheduled(cron = "0 30 * * * *")
+	public void olapDistance() {
+		logger.info("olapDistance executing.");
+
+		Session session = sessionFactory.getCurrentSession();
+
+		SQLQuery sqlQuery = session.createSQLQuery("call olap_distance_calc();");
 		sqlQuery.executeUpdate();
 	}
 }

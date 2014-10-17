@@ -25,6 +25,8 @@ public class MunicData implements Serializable {
 	private Integer rssi;
 	private Integer battVolt;
 	private Boolean mvtState;
+	
+	private Integer topAutoId;
 
 	private MunicDataBehave municDataBehave;
 	private MunicDataMdi municDataMdi;
@@ -199,5 +201,13 @@ public class MunicData implements Serializable {
 
 	public void setMvtState(Boolean mvtState) {
 		this.mvtState = mvtState;
+	}
+
+	public Integer getTopAutoId() {
+		return topAutoId;
+	}
+
+	public void setTopAutoId(Integer topAutoId) {
+		this.topAutoId = topAutoId;
 	}
 }

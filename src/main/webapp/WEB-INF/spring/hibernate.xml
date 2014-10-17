@@ -10,5 +10,6 @@
 		<mapping resource="ru/gm/munic/domain/hibernate/MunicData.hbm.xml" />
 		<mapping resource="ru/gm/munic/domain/hibernate/MunicDataBehave.hbm.xml" />
 		<mapping resource="ru/gm/munic/domain/hibernate/MunicDataMdi.hbm.xml" />
+		<mapping resource="ru/gm/munic/domain/hibernate/TopAuto.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

@@ -29,5 +29,6 @@
 		<property name="mvtState"></property>
 		<one-to-one name="municDataBehave" cascade="all"></one-to-one>
 		<one-to-one name="municDataMdi" cascade="all"></one-to-one>
+		<property name="topAutoId"></property>
 	</class>
 </hibernate-mapping>

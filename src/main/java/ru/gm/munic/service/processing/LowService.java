@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.gm.munic.domain.MunicData;
 import ru.gm.munic.domain.MunicItemRawData;
 import ru.gm.munic.domain.MunicRawData;
+import ru.gm.munic.domain.TopAuto;
 
 @Service
 public class LowService {
@@ -44,7 +46,7 @@ public class LowService {
 
 			list.add(municItemRawData);
 		}
-		
+
 		municRawData.setProcessed(true);
 		session.merge(municRawData);
 
@@ -59,9 +61,16 @@ public class LowService {
 
 	@Transactional
 	public void saveMunicData(MunicData municData) {
-		sessionFactory.getCurrentSession().save(municData);
+		Session s = sessionFactory.getCurrentSession();
+		TopAuto topAuto = (TopAuto) s.createCriteria(TopAuto.class).add(Restrictions.eq("asset", municData.getAsset()))
+				.uniqueResult();
+		if (topAuto != null) {
+			municData.setTopAutoId(topAuto.getTopAutoId());
+		}
+		s.save(municData);
+
 		municData.getMunicItemRawData().setProcessed(true);
-		sessionFactory.getCurrentSession().update(municData.getMunicItemRawData());
+		s.update(municData.getMunicItemRawData());
 	}
 
 }

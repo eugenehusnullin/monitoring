@@ -1,0 +1,22 @@
+package ru.gm.munic.domain;
+
+public class TopAuto {
+	private Integer topAutoId;
+	private Long asset;
+
+	public Integer getTopAutoId() {
+		return topAutoId;
+	}
+
+	public void setTopAutoId(Integer topAutoId) {
+		this.topAutoId = topAutoId;
+	}
+
+	public Long getAsset() {
+		return asset;
+	}
+
+	public void setAsset(Long asset) {
+		this.asset = asset;
+	}
+}

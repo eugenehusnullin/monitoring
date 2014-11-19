@@ -30,6 +30,13 @@ public class MunicData implements Serializable {
 
 	private MunicDataBehave municDataBehave;
 	private MunicDataMdi municDataMdi;
+	
+	private Integer mapzoneId;
+	private Integer mapzoneType;
+	
+	public boolean hasLocation() {
+		return lat != null && lon != null;
+	}
 
 	public MunicItemRawData getMunicItemRawData() {
 		return municItemRawData;
@@ -209,5 +216,21 @@ public class MunicData implements Serializable {
 
 	public void setTopAutoId(Integer topAutoId) {
 		this.topAutoId = topAutoId;
+	}
+
+	public Integer getMapzoneId() {
+		return mapzoneId;
+	}
+
+	public void setMapzoneId(Integer mapzoneId) {
+		this.mapzoneId = mapzoneId;
+	}
+
+	public Integer getMapzoneType() {
+		return mapzoneType;
+	}
+
+	public void setMapzoneType(Integer mapzoneType) {
+		this.mapzoneType = mapzoneType;
 	}
 }

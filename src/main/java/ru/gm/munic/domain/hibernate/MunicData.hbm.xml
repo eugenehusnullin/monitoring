@@ -30,5 +30,7 @@
 		<one-to-one name="municDataBehave" cascade="all"></one-to-one>
 		<one-to-one name="municDataMdi" cascade="all"></one-to-one>
 		<property name="topAutoId"></property>
+		<property name="mapzoneId"></property>
+		<property name="mapzoneType"></property>
 	</class>
 </hibernate-mapping>

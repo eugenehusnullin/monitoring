@@ -62,8 +62,9 @@ public class LowService {
 	@Transactional
 	public void saveMunicData(MunicData municData) {
 		Session s = sessionFactory.getCurrentSession();
-		TopAuto topAuto = (TopAuto) s.createCriteria(TopAuto.class).add(Restrictions.eq("asset", municData.getAsset()))
-				.uniqueResult();
+		TopAuto topAuto = (TopAuto) s.createCriteria(TopAuto.class).add(
+				Restrictions.eq("asset", municData.getAsset())
+			).uniqueResult();
 		if (topAuto != null) {
 			municData.setTopAutoId(topAuto.getTopAutoId());
 		}

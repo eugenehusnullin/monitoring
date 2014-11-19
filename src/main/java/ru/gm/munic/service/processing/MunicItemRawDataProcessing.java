@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import ru.gm.munic.domain.MunicData;
 import ru.gm.munic.domain.MunicItemRawData;
+import ru.gm.munic.domain.TopMapzone;
 import ru.gm.munic.service.processing.utils.ItemRawDataJson;
 import ru.gm.munic.service.processing.utils.ThreadFactorySecuenceNaming;
 import ru.gm.munic.service.sender.SendDispatcher;
@@ -72,6 +73,15 @@ public class MunicItemRawDataProcessing {
 				MunicData municData = itemRawDataJson.getMunicData();
 				if (municData != null) {
 					municData.setMunicItemRawData(item);
+					
+					if (municData.hasLocation()) {
+						TopMapzone mapzone = geoService.checkMapzone(municData.getLat(), municData.getLon());
+						if (mapzone != null) {
+							municData.setMapzoneId(mapzone.getId());
+							municData.setMapzoneType(mapzone.getType());
+						}
+					}
+					
 					lowService.saveMunicData(municData);
 				}
 			}
@@ -86,6 +96,8 @@ public class MunicItemRawDataProcessing {
 	private SendDispatcher sendDispatcher;
 	@Autowired
 	private LowService lowService;
+	@Autowired
+	private GeoService geoService;
 
 	public MunicItemRawDataProcessing() {
 		queue = new ArrayDeque<List<MunicItemRawData>>();

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ru.gm.munic.domain">
+	<class name="TopMapzone" table="top_mapzone">
+		<id name="id" column="id"></id>
+		<property name="name" column="mapzoneName"></property>
+		<property name="type" column="mapzoneType"></property>
+		<list name="points">
+			<key column="mapzoneId"></key>
+			<list-index column="sort"></list-index>
+			<one-to-many class="TopMapzonePoint"/>
+		</list>
+	</class>
+</hibernate-mapping>

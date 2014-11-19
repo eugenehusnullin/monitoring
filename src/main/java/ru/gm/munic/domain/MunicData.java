@@ -37,6 +37,13 @@ public class MunicData implements Serializable {
 	public boolean hasLocation() {
 		return lat != null && lon != null;
 	}
+	
+	public boolean hasVIN() {
+		if (municDataMdi != null) {
+			return municDataMdi.getMdiObdVin() != null;
+		}
+		return false;
+	}
 
 	public MunicItemRawData getMunicItemRawData() {
 		return municItemRawData;

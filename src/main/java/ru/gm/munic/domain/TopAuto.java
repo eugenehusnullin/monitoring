@@ -3,6 +3,7 @@ package ru.gm.munic.domain;
 public class TopAuto {
 	private Integer topAutoId;
 	private Long asset;
+	private String VIN;
 
 	public Integer getTopAutoId() {
 		return topAutoId;
@@ -18,5 +19,13 @@ public class TopAuto {
 
 	public void setAsset(Long asset) {
 		this.asset = asset;
+	}
+
+	public String getVIN() {
+		return VIN;
+	}
+
+	public void setVIN(String vIN) {
+		VIN = vIN;
 	}
 }

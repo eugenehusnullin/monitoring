@@ -7,5 +7,6 @@
 	<class name="TopAuto" table="top_auto">
 		<id name="topAutoId" column="autoId"></id>
 		<property name="asset" column="IMEI"></property>
+		<property name="VIN" column="VIN"></property>
 	</class>
 </hibernate-mapping>

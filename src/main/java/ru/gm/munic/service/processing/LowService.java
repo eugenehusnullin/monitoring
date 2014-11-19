@@ -67,6 +67,12 @@ public class LowService {
 			).uniqueResult();
 		if (topAuto != null) {
 			municData.setTopAutoId(topAuto.getTopAutoId());
+			
+			if (municData.hasVIN()) {
+				if (!municData.getMunicDataMdi().getMdiObdVin().equals(topAuto.getVIN())) {
+					// TODO: reactions on change VIN code can place here
+				}
+			}
 		}
 		s.save(municData);
 

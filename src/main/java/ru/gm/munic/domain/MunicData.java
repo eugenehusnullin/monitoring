@@ -25,22 +25,29 @@ public class MunicData implements Serializable {
 	private Integer rssi;
 	private Integer battVolt;
 	private Boolean mvtState;
-	
+
 	private Integer topAutoId;
 
 	private MunicDataBehave municDataBehave;
 	private MunicDataMdi municDataMdi;
-	
+
 	private Integer mapzoneId;
 	private Integer mapzoneType;
-	
+
 	public boolean hasLocation() {
 		return lat != null && lon != null;
 	}
-	
+
 	public boolean hasVIN() {
 		if (municDataMdi != null) {
 			return municDataMdi.getMdiObdVin() != null;
+		}
+		return false;
+	}
+
+	public boolean hasMileage() {
+		if (municDataMdi != null) {
+			return municDataMdi.getMdiObdMileage() != null;
 		}
 		return false;
 	}

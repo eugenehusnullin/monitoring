@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="ru.gm.munic.domain">
+	<class name="TopBlockAlert" table="top_block_alert">
+		<id name="id" column="alertId"></id>
+		<many-to-one name="topAuto" column="autoId"></many-to-one>
+		<property name="alertType" column="alertType"></property>
+		<property name="addDate" column="addDate"></property>
+		<property name="status" column="status"></property>
+		<property name="message" column="alertJSON"></property>
+	</class>
+</hibernate-mapping>

@@ -1,5 +1,7 @@
 package ru.gm.munic.service.processing;
 
+import java.util.List;
+
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,6 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import ru.gm.munic.domain.TopAuto;
 
 @Service
 @EnableScheduling
@@ -39,5 +43,15 @@ public class OlapService {
 
 		SQLQuery sqlQuery = session.createSQLQuery("call olap_distance_calc();");
 		sqlQuery.executeUpdate();
+	}
+	
+	private void calcDicstance() {
+		Session session = sessionFactory.getCurrentSession();
+		
+		List<TopAuto> blocks = session.createCriteria(TopAuto.class).list();
+		
+		for (TopAuto block : blocks) {
+			
+		}
 	}
 }

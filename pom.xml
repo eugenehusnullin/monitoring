@@ -32,6 +32,12 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.mina</groupId>
+			<artifactId>mina-core</artifactId>
+			<version>2.0.9</version>
+		</dependency>
 				
 		<!-- AspectJ -->
 		<dependency>
@@ -127,11 +133,6 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>org.apache.directory.studio</groupId>
-			<artifactId>org.apache.mina.core</artifactId>
-			<version>2.0.7</version>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-io</artifactId>

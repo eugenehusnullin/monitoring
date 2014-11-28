@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.gm.munic.domain.MunicData;
 import ru.gm.munic.domain.MunicItemRawData;
 import ru.gm.munic.domain.MunicRawData;
+import ru.gm.munic.domain.Position;
 import ru.gm.munic.domain.TopAuto;
 import ru.gm.munic.domain.TopBlockAlert;
 
@@ -33,6 +34,20 @@ public class LowService {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Transactional
+	public void catchPosition(Position position) {
+		Session session = sessionFactory.getCurrentSession();
+		TopAuto topAuto = (TopAuto) session.createCriteria(TopAuto.class)
+				.add(Restrictions.eq("asset", position.getImei()))
+				.uniqueResult();
+		
+		if (topAuto != null) {
+			position.setTopAuto(topAuto);
+		}
+		
+		session.save(position);
+	}
 
 	@Transactional
 	public List<MunicItemRawData> processMunicRawData(MunicRawData municRawData) {

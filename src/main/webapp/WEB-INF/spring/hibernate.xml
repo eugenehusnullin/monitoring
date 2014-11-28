@@ -14,5 +14,6 @@
 		<mapping resource="ru/gm/munic/domain/hibernate/TopMapzone.hbm.xml" />
 		<mapping resource="ru/gm/munic/domain/hibernate/TopMapzonePoint.hbm.xml" />
 		<mapping resource="ru/gm/munic/domain/hibernate/TopBlockAlert.hbm.xml" />
+		<mapping resource="ru/gm/munic/domain/hibernate/Position.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

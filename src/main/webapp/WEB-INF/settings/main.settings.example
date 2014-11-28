@@ -2,3 +2,9 @@ wialonb3.enabled = 1
 wialonb3.host = 194.28.112.5
 wialonb3.port = 50381
 messageprocessing.threads.count = 10
+
+
+block.distance.percent = 20
+
+cguard.host = localhost
+cguard.port = 9091

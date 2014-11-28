@@ -7,11 +7,15 @@ import java.util.regex.Pattern;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ru.gm.munic.domain.Position;
 import ru.gm.munic.service.processing.LowService;
 
 public class Handler implements IoHandler {
+	private static final Logger logger = LoggerFactory.getLogger(Handler.class);
+	
 	private final String NAN = "NAN";
 	private final String ID = "ID";
 	private LowService lowService;
@@ -22,13 +26,13 @@ public class Handler implements IoHandler {
 
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
+		logger.info("cguard. sessionCreated");
 
 	}
 
 	@Override
 	public void sessionOpened(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
+		logger.info("cguard. sessionOpened");
 
 	}
 
@@ -46,13 +50,14 @@ public class Handler implements IoHandler {
 
 	@Override
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-		// TODO Auto-generated method stub
-
+		logger.error(cause.toString());
 	}
 
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		String strMessage = (String)message;
+		logger.info("cguard. messageReceived. " + strMessage);
+		
 		
 		if(strMessage == "") {
 			return;

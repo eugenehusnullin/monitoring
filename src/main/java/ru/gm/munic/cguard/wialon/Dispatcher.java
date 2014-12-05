@@ -12,10 +12,10 @@ public class Dispatcher {
 
 	private Map<Long, Sender> connectionsMap = new ConcurrentHashMap<Long, Sender>();
 
-	@Value("#{mainSettings['wialonb3.host']}")
-	private String wialonb5Host;
-	@Value("#{mainSettings['wialonb3.port']}")
-	private Integer wialonb5Port;
+	@Value("#{mainSettings['wialonb3.cguard.host']}")
+	private String host;
+	@Value("#{mainSettings['wialonb3.cguard.port']}")
+	private Integer port;
 
 	public void send(Long imei, String message) {
 		if (message == null || message.isEmpty()) {
@@ -24,7 +24,7 @@ public class Dispatcher {
 
 		Sender sender = connectionsMap.get(imei);
 		if (sender == null) {
-			sender = new Sender(wialonb5Host, wialonb5Port);
+			sender = new Sender(host, port);
 			connectionsMap.put(imei, sender);
 		}
 

@@ -8,3 +8,6 @@ block.distance.percent = 20
 
 cguard.host = localhost
 cguard.port = 9091
+
+wialonb3.cguard.host = remote_ip
+wialonb3.cguard.port = remote_port

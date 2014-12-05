@@ -53,7 +53,5 @@ public class SendDispatcher {
 			municItemRawData.setItemRawDataJson(itemRawDataJson);
 			sender.addItem(municItemRawData);
 		}
-
 	}
-
 }

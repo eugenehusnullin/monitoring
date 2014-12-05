@@ -1,4 +1,4 @@
-package ru.gm.munic.service.sender;
+package ru.gm.munic.cguard.wialon;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
@@ -11,39 +11,33 @@ import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
-
-import ru.gm.munic.domain.MunicItemRawData;
-import ru.gm.munic.service.processing.LowService;
-import ru.gm.munic.service.processing.utils.ItemRawDataJson;
+import org.slf4j.LoggerFactory;
 
 public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
-	private Logger logger;
 
-	private String wialonb3Host;
-	private Integer wialonb3Port;
-	private LowService lowService;
+	private Logger logger = LoggerFactory.getLogger(Sender.class);
 
-	private Queue<MunicItemRawData> queue;
+	private String host;
+	private Integer port;
+
+	private Queue<String> queue;
 	private volatile boolean processed;
 
 	private IoSession ioSession;
-	private MunicItemRawData currentItem;
+	private String currentItem;
 
 	private NioSocketConnector connector;
 
 	private int errorsCount;
-	
-	private Boolean previousDioIgnition = null;
 
-	public Sender(String wialonb3Host, Integer wialonb3Port, LowService lowService, Logger logger) {
-		this.wialonb3Host = wialonb3Host;
-		this.wialonb3Port = wialonb3Port;
-		this.lowService = lowService;
-		this.logger = logger;
+	public Sender(String host, Integer port) {
+		this.host = host;
+		this.port = port;
 
-		queue = new LinkedList<MunicItemRawData>();
+		queue = new LinkedList<String>();
 		processed = false;
 		currentItem = null;
 		ioSession = null;
@@ -53,13 +47,14 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 
 		connector = new NioSocketConnector();
 		connector.setConnectTimeoutMillis(10000);
-		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new PrefixedStringCodecFactory(Charset.forName("ASCII"), 2)));
+		connector.getFilterChain().addLast("codec",
+				new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"), "\n", "\n")));
 		connector.setHandler(this);
 	}
 
 	private boolean connect() {
 		if (ioSession == null || !ioSession.isConnected()) {
-			ConnectFuture future = connector.connect(new InetSocketAddress(wialonb3Host, wialonb3Port));
+			ConnectFuture future = connector.connect(new InetSocketAddress(host, port));
 			future.addListener(this);
 
 			return false;
@@ -70,18 +65,7 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 
 	private void sendCurrentItem() {
 		if (currentItem != null && connect()) {
-			ItemRawDataJson itemRawDataJson = currentItem.getItemRawDataJson();
-			if (itemRawDataJson.isTrack()) {
-				if (itemRawDataJson.getDioIgnition() == null) {
-					itemRawDataJson.setDioIgnition(previousDioIgnition);
-				} else {
-					previousDioIgnition = itemRawDataJson.getDioIgnition();
-				}
-				ioSession.write(itemRawDataJson.getString4Wialon());
-			} else {
-				lowService.setWialonSended(currentItem);
-				sendNextItem();
-			}
+			ioSession.write(currentItem);
 		}
 	}
 
@@ -98,9 +82,9 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 		}
 	}
 
-	public void addItem(MunicItemRawData municItemRawData) {
+	public void addItem(String message) {
 		synchronized (queue) {
-			queue.add(municItemRawData);
+			queue.add(message);
 
 			if (!processed) {
 				sendNextItem();
@@ -137,8 +121,6 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		lowService.setWialonSended(currentItem);
-
 		errorsCount = 0;
 		sendNextItem();
 	}
@@ -174,4 +156,5 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 	@Override
 	public void inputClosed(IoSession session) throws Exception {
 	}
+
 }

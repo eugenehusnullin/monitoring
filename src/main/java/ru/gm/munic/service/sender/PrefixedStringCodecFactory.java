@@ -9,16 +9,14 @@ import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.codec.prefixedstring.PrefixedStringDecoder;
 import org.apache.mina.filter.codec.prefixedstring.PrefixedStringEncoder;
 
-public class SenderCodecFactory implements ProtocolCodecFactory {
+public class PrefixedStringCodecFactory implements ProtocolCodecFactory {
 
 	private ProtocolEncoder encoder;
 	private ProtocolDecoder decoder;
-	private Charset charset;
 
-	public SenderCodecFactory() {
-		charset = Charset.forName("ASCII");
-		encoder = new PrefixedStringEncoder(charset, 2, 0xFFFF);
-		decoder = new PrefixedStringDecoder(charset, 2);
+	public PrefixedStringCodecFactory(Charset charset, int prefixLength) {
+		encoder = new PrefixedStringEncoder(charset, prefixLength);
+		decoder = new PrefixedStringDecoder(charset, prefixLength);
 	}
 
 	@Override

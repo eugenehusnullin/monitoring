@@ -9,20 +9,23 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import ru.gm.munic.cguard.wialon.Dispatcher;
 import ru.gm.munic.domain.Position;
 import ru.gm.munic.service.processing.LowService;
 
+@Service
 public class Handler implements IoHandler {
 	private static final Logger logger = LoggerFactory.getLogger(Handler.class);
 	
 	private final String NAN = "NAN";
 	private final String ID = "ID";
+	@Autowired
 	private LowService lowService;
-	
-	public Handler(LowService lowService) {
-		this.lowService = lowService;
-	}
+	@Autowired
+	private Dispatcher cguardDispatcher;
 
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
@@ -55,6 +58,12 @@ public class Handler implements IoHandler {
 
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
+		if(message == null) {
+			return;
+		}
+		
+		
+		
 		String strMessage = (String)message;
 		logger.info("cguard. messageReceived. " + strMessage);
 		
@@ -67,6 +76,7 @@ public class Handler implements IoHandler {
 		if (i <= 0) {
 			return;
 		}
+		
 		
 		String commandType = strMessage.substring(0, i-1);
 		String commanData = strMessage.substring(i+1, strMessage.length()-1);
@@ -94,11 +104,14 @@ public class Handler implements IoHandler {
 			}
 		}
 		
+		Long imei;
 		if (commandType.equals("ID") || commandType.equals("IDRO")) {
-			session.setAttribute(ID, Long.parseLong(messArr[0].trim()));
+			imei = Long.parseLong(messArr[0].trim());
+			session.setAttribute(ID, imei);
 
-		} else if (commandType.equals("NAV") || commandType.equals("NV")) {
-			Long imei = (Long) session.getAttribute(ID);
+		} else //if (commandType.equals("NAV") || commandType.equals("NV")) 
+		{
+			imei = (Long) session.getAttribute(ID);
 			if (imei == null || messageDate == null || messArr.length < 4) {
 				return;
 			}
@@ -131,6 +144,8 @@ public class Handler implements IoHandler {
 				lowService.catchPosition(position);
 			}
 		}
+		
+		cguardDispatcher.send(imei, strMessage);
 	}
 
 	@Override

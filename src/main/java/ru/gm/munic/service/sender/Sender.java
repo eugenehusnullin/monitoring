@@ -34,7 +34,7 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 	private NioSocketConnector connector;
 
 	private int errorsCount;
-	
+
 	private Boolean previousDioIgnition = null;
 
 	public Sender(String wialonb3Host, Integer wialonb3Port, LowService lowService, Logger logger) {
@@ -53,7 +53,8 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 
 		connector = new NioSocketConnector();
 		connector.setConnectTimeoutMillis(10000);
-		connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new PrefixedStringCodecFactory(Charset.forName("ASCII"), 2)));
+		connector.getFilterChain().addLast("codec",
+				new ProtocolCodecFilter(new PrefixedStringCodecFactory(Charset.forName("ASCII"), 2)));
 		connector.setHandler(this);
 	}
 
@@ -79,8 +80,11 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 				}
 				ioSession.write(itemRawDataJson.getString4Wialon());
 			} else {
-				lowService.setWialonSended(currentItem);
-				sendNextItem();
+				try {
+					lowService.setWialonSended(currentItem);
+				} finally {
+					sendNextItem();
+				}
 			}
 		}
 	}
@@ -137,10 +141,12 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		lowService.setWialonSended(currentItem);
-
-		errorsCount = 0;
-		sendNextItem();
+		try {
+			lowService.setWialonSended(currentItem);
+		} finally {
+			errorsCount = 0;
+			sendNextItem();
+		}
 	}
 
 	@Override

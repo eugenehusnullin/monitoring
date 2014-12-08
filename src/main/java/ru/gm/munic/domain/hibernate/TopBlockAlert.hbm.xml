@@ -5,7 +5,9 @@
 
 <hibernate-mapping package="ru.gm.munic.domain">
 	<class name="TopBlockAlert" table="top_block_alert">
-		<id name="id" column="alertId"></id>
+		<id name="id" column="alertId">
+			<generator class="identity" />
+		</id>
 		<many-to-one name="topAuto" column="autoId"></many-to-one>
 		<property name="alertType" column="alertType"></property>
 		<property name="addDate" column="addDate"></property>

@@ -11,3 +11,6 @@ cguard.port = 9091
 
 wialonb3.cguard.host = remote_ip
 wialonb3.cguard.port = remote_port
+
+tekobd2.host = localhost
+tekobd2.port = 9093

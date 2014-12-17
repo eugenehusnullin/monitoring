@@ -13,6 +13,10 @@ public class Decoder extends CumulativeProtocolDecoder {
 	private static final int MIN_MESS_SIZE = 15;
 	public static final byte MARKER_BYTE = (byte) 0x7e;
 	public static final byte ESCAPE_BYTE = (byte) 0x7d;
+//	
+//	DEBUG: ru.gm.munic.tekobd2.Decoder - BYTES:: 7E3000001981408735143201F6000000000000000000000000000000000000000000000000008B7E
+//	DEBUG: ru.gm.munic.tekobd2.Decoder - PACKET:: 7E3000001981408735143201F6000000000000000000000000000000000000000000000000008B
+//	WARN : ru.gm.munic.tekobd2.Decoder - WRONG SIZE OF BODY :: 7E3000001981408735143201F6000000000000000000000000000000000000000000000000008B
 
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
@@ -39,7 +43,7 @@ public class Decoder extends CumulativeProtocolDecoder {
 				if (endIndex - startIndex >= MIN_MESS_SIZE) {
 					// покажем пакет в логе
 					if (logger.isDebugEnabled()) {
-						String str = bytesToHex(bytes, startIndex, endIndex - startIndex);
+						String str = bytesToHex(bytes, startIndex, endIndex - startIndex + 1);
 						logger.debug("PACKET:: " + str);
 					}
 
@@ -48,7 +52,7 @@ public class Decoder extends CumulativeProtocolDecoder {
 					in.position(in.position() - (bytes.length - 1 - endIndex));
 
 					try {
-						Message message = Message.parseMessage(bytes, startIndex + 1, endIndex - startIndex - 2);
+						Message message = Message.parseMessage(bytes, startIndex + 1, endIndex - startIndex - 1);
 						out.write(message);
 					} catch (Exception e) {
 						String str = bytesToHex(bytes, startIndex, endIndex - startIndex);

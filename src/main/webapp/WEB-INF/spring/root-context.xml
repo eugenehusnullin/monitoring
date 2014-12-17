@@ -46,5 +46,6 @@
 	
 	<context:component-scan base-package="ru.gm.munic.service" />
 	<context:component-scan base-package="ru.gm.munic.cguard" />
+	<context:component-scan base-package="ru.gm.munic.tekobd2" />
 	<context:annotation-config />
 </beans>

@@ -57,6 +57,10 @@ public class Handlertekobd2 implements IoHandler {
 	public void messageSent(IoSession session, Object message) throws Exception {
 		logger.info("tekobd2. messageSend");
 
+		Message m = (Message) message;
+		byte[] outBytes = m.makeResponse();
+		String outString = Decoder.bytesToHex(outBytes);
+		logger.info("tekobd2. messageSend :: " + outString);
 	}
 
 	@Override

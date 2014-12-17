@@ -9,8 +9,7 @@ public class CodecFactory implements ProtocolCodecFactory {
 
 	@Override
 	public ProtocolEncoder getEncoder(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return new Encoder();
 	}
 
 	@Override

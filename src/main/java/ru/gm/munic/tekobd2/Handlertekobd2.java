@@ -43,11 +43,19 @@ public class Handlertekobd2 implements IoHandler {
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		logger.info("tekobd2. messageReceived");
+
+		Message m = (Message) message;
+
+		if (m.getId() == 0x3000) {
+			// Terminal registration
+			// need response
+			session.write(message);
+		}
 	}
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		// TODO Auto-generated method stub
+		logger.info("tekobd2. messageSend");
 
 	}
 

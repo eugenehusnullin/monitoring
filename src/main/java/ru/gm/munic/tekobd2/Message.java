@@ -15,8 +15,11 @@ public class Message {
 	private byte encyptWay;
 	private byte subPackage;
 	private byte checkCode;
-	private static final String AUTH_KEY = "SCO";
+	public static final String AUTH_KEY = "SCO";
 	private static byte[] AUTH_KEY_BYTES;
+	private static final int BLUNK_MESSAGE_SIZE = 13;
+
+	private String authKey;
 
 	static {
 		AUTH_KEY_BYTES = AUTH_KEY.getBytes(Charset.forName("GBK"));
@@ -148,9 +151,7 @@ public class Message {
 		if (bb.remaining() != message.getBodyLength() + 1) {
 			throw new Exception("bad packet!");
 		} else {
-			byte[] messageBody = new byte[message.getBodyLength()];
-			bb.get(messageBody);
-			parseMessageBody(messageBody, message);
+			parseMessageBody(bb, message);
 
 			message.setCheckCode(bb.get());
 
@@ -158,38 +159,91 @@ public class Message {
 		}
 	}
 
-	private static void parseMessageBody(byte[] messageBody, Message message) {
-		if (message.getId() == 0x3000) {
-			// Terminal registration
+	private static void parseMessageBody(ByteBuffer bb, Message message) {
+		byte[] messageBody = new byte[message.getBodyLength()];
 
+		switch (message.getId()) {
+
+		case 0x3000:
+			// Terminal registration
+			bb.get(messageBody);
+			break;
+
+		case 0x3001:
+			// Terminal logout
+			break;
+
+		case 0x3002:
+			// Terminal login / authentication
+			bb.get(messageBody);
+			message.setAuthKey(new String(messageBody, Charset.forName("GBK")));
+			break;
+
+		case 0x3003:
+			// Terminal general response
+			break;
+
+		case 0x3004:
+			// Terminal heartbeat
+			break;
+
+		default:
+			break;
 		}
 	}
 
 	public byte[] makeResponse() {
 		if (getId() == 0x3000) {
-			return makeRegistrationResponse();
+			return make3000Response();
 		} else {
-			return null;
+			return makeGeneralResponse();
 		}
 	}
 
-	private byte[] makeRegistrationResponse() {
-		int messageBodyLength = 3 + AUTH_KEY_BYTES.length;
-		ByteBuffer bb = ByteBuffer.allocate(13 + messageBodyLength);
-		bb.order(ByteOrder.BIG_ENDIAN);
-		bb.position(0);
+	private byte[] makeGeneralResponse() {
+		ByteBuffer bb = initHeader(5, (short) 0xb003);
 
-		bb.putShort((short) 0xb000);
-		bb.putShort((short) messageBodyLength);
-		bb.put(inBytes, 4, 6);
+		// message body
 		bb.putShort(serialNumber);
+		bb.putShort(id);
+		bb.put((byte) 0);
+
+		byte[] outBytes = initBottom(bb);
+		return outBytes;
+	}
+
+	private byte[] make3000Response() {
+		ByteBuffer bb = initHeader(3 + AUTH_KEY_BYTES.length, (short) 0xb000);
+
+		// message body
 		bb.putShort(serialNumber);
 		bb.put((byte) 0);
 		bb.put(AUTH_KEY_BYTES);
 
+		byte[] outBytes = initBottom(bb);
+		return outBytes;
+	}
+
+	private ByteBuffer initHeader(int messageBodyLength, short messageId) {
+		ByteBuffer bb = ByteBuffer.allocate(BLUNK_MESSAGE_SIZE + messageBodyLength);
+		bb.order(ByteOrder.BIG_ENDIAN);
+		bb.position(0);
+
+		// message header
+		bb.putShort(messageId);
+		bb.putShort((short) messageBodyLength);
+		bb.put(inBytes, 4, 6);
+		bb.putShort(serialNumber);
+
+		return bb;
+	}
+
+	private byte[] initBottom(ByteBuffer bb) {
+		// check code
 		bb.position(0);
 		bb.put(createCheckCode(bb, bb.limit() - 1));
 
+		// escape
 		bb.position(0);
 		byte[] outBytes = escape4Out(bb);
 		return outBytes;
@@ -266,6 +320,14 @@ public class Message {
 
 	public void setBytesLength(int bytesLength) {
 		this.bytesLength = bytesLength;
+	}
+
+	public String getAuthKey() {
+		return authKey;
+	}
+
+	public void setAuthKey(String authKey) {
+		this.authKey = authKey;
 	}
 
 }

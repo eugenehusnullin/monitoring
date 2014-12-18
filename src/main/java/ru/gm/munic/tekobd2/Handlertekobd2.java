@@ -45,12 +45,7 @@ public class Handlertekobd2 implements IoHandler {
 		logger.info("tekobd2. messageReceived");
 
 		Message m = (Message) message;
-
-		if (m.getId() == 0x3000) {
-			// Terminal registration
-			// need response
-			session.write(message);
-		}
+		session.write(m);
 	}
 
 	@Override

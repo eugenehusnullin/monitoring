@@ -21,6 +21,8 @@ public class Decoder extends CumulativeProtocolDecoder {
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
 
+		logger.debug("doDecode called");
+
 		byte[] bytes = new byte[in.remaining()];
 		in.get(bytes);
 

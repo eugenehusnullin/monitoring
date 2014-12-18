@@ -2,6 +2,7 @@ package ru.gm.munic.tekobd2;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
 
 public class Message {
 
@@ -14,6 +15,12 @@ public class Message {
 	private byte encyptWay;
 	private byte subPackage;
 	private byte checkCode;
+	private static final String AUTH_KEY = "SCO";
+	private static byte[] AUTH_KEY_BYTES;
+
+	static {
+		AUTH_KEY_BYTES = AUTH_KEY.getBytes(Charset.forName("GBK"));
+	}
 
 	public short getId() {
 		return id;
@@ -167,62 +174,63 @@ public class Message {
 	}
 
 	private byte[] makeRegistrationResponse() {
-		ByteBuffer bb = ByteBuffer.allocate(13 + 3);
+		int messageBodyLength = 3 + AUTH_KEY_BYTES.length;
+		ByteBuffer bb = ByteBuffer.allocate(13 + messageBodyLength);
 		bb.order(ByteOrder.BIG_ENDIAN);
 		bb.position(0);
 
 		bb.putShort((short) 0xb000);
-		bb.putShort((short) 3);
+		bb.putShort((short) messageBodyLength);
 		bb.put(inBytes, 4, 6);
 		bb.putShort(serialNumber);
 		bb.putShort(serialNumber);
-		bb.put((byte) 1);
+		bb.put((byte) 0);
+		bb.put(AUTH_KEY_BYTES);
 
-		byte[] bytes = new byte[bb.position() - 1];
-		bb.position(1);
-		bb.get(bytes);
-		bb.put(createCheckCode(bytes, 0, bytes.length));
-
-		bytes = new byte[bb.position()];
 		bb.position(0);
-		bb.get(bytes);
+		bb.put(createCheckCode(bb, bb.limit() - 1));
 
-		byte[] outBytes = escape4Out(bytes);
+		bb.position(0);
+		byte[] outBytes = escape4Out(bb);
 		return outBytes;
 	}
 
-	private byte[] escape4Out(byte[] bytes) {
-		int cnt = bytes.length;
-		for (int i = 0; i < bytes.length; i++) {
-			if (bytes[i] == 0x7e || bytes[i] == 0x7d) {
+	private byte[] escape4Out(ByteBuffer bb) {
+		int cnt = bb.remaining();
+		while (bb.hasRemaining()) {
+			byte b = bb.get();
+			if (b == Decoder.MARKER_BYTE || b == Decoder.ESCAPE_BYTE) {
 				cnt++;
 			}
 		}
 
 		byte[] escapedBytes = new byte[cnt];
-		for (int i = 0, j = 0; i < bytes.length; i++, j++) {
-			if (bytes[i] == Decoder.MARKER_BYTE) {
+		bb.position(0);
+		int j = 0;
+		while (bb.hasRemaining()) {
+			byte b = bb.get();
+			if (b == Decoder.MARKER_BYTE) {
 				escapedBytes[j] = Decoder.ESCAPE_BYTE;
 				j++;
 				escapedBytes[j] = 0x02;
-
-			} else if (bytes[i] == Decoder.ESCAPE_BYTE) {
+			} else if (b == Decoder.ESCAPE_BYTE) {
 				escapedBytes[j] = Decoder.ESCAPE_BYTE;
 				j++;
 				escapedBytes[j] = 0x01;
 
 			} else {
-				escapedBytes[j] = bytes[i];
+				escapedBytes[j] = b;
 			}
+			j++;
 		}
 
 		return escapedBytes;
 	}
 
-	public static byte createCheckCode(byte[] bytes, int offset, int length) {
-		byte checkCode = bytes[offset];
-		for (int i = offset + 1; i < offset + length; i++) {
-			checkCode = (byte) (checkCode ^ bytes[i]);
+	public static byte createCheckCode(ByteBuffer bb, int length) {
+		byte checkCode = bb.get();
+		for (int i = 0; i < length - 1; i++) {
+			checkCode = (byte) (checkCode ^ bb.get());
 		}
 		return checkCode;
 	}

@@ -7,113 +7,61 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.gm.munic.tekobd2.messages.Message;
+
 public class Decoder extends CumulativeProtocolDecoder {
 
 	private static final Logger logger = LoggerFactory.getLogger(Decoder.class);
 	private static final int MIN_MESS_SIZE = 15;
 	public static final byte MARKER_BYTE = (byte) 0x7e;
 	public static final byte ESCAPE_BYTE = (byte) 0x7d;
-//	
-//	DEBUG: ru.gm.munic.tekobd2.Decoder - BYTES:: 7E3000001981408735143201F6000000000000000000000000000000000000000000000000008B7E
-//	DEBUG: ru.gm.munic.tekobd2.Decoder - PACKET:: 7E3000001981408735143201F6000000000000000000000000000000000000000000000000008B
-//	WARN : ru.gm.munic.tekobd2.Decoder - WRONG SIZE OF BODY :: 7E3000001981408735143201F6000000000000000000000000000000000000000000000000008B
 
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
-
-		logger.debug("doDecode called");
-
-		byte[] bytes = new byte[in.remaining()];
-		in.get(bytes);
+		
+		Message message = process(in);
+		if (message != null) {
+			out.write(message);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static Message process(IoBuffer in) {
+		int firstPosition = in.position();
 
 		if (logger.isDebugEnabled()) {
-			String str = bytesToHex(bytes);
-			logger.debug("BYTES:: " + str);
+			String allBufferData = ByteUtilities.ioBufferToHex(in);
+			in.position(firstPosition);
+			logger.debug("BYTES :: " + allBufferData);
 		}
 
-		int startIndex = searchByte(bytes, 0, MARKER_BYTE);
+		int startIndex = ByteUtilities.searchInBuffer(in, MARKER_BYTE);
 		if (startIndex != -1) {
-			// если стыковка двух пакетов смещаем startIndex
-			if (bytes.length > startIndex + 1) {
-				if (bytes[startIndex + 1] == MARKER_BYTE) {
-					startIndex++;
-				}
-			}
 
-			int endIndex = searchByte(bytes, startIndex + 1, MARKER_BYTE);
-			if (endIndex != -1) {
-				if (endIndex - startIndex >= MIN_MESS_SIZE) {
-					// покажем пакет в логе
-					if (logger.isDebugEnabled()) {
-						String str = bytesToHex(bytes, startIndex, endIndex - startIndex + 1);
-						logger.debug("PACKET:: " + str);
-					}
+			int endIndex = ByteUtilities.searchInBuffer(in, MARKER_BYTE);
+			if (endIndex == -1) {
+				in.position(startIndex);
 
-					// смещаем сразу за endIndex, там может быть и пустота, но
-					// мы не берем данные
-					in.position(in.position() - (bytes.length - 1 - endIndex));
-
-					try {
-						Message message = Message.parseMessage(bytes, startIndex + 1, endIndex - startIndex - 1);
-						out.write(message);
-					} catch (Exception e) {
-						String str = bytesToHex(bytes, startIndex, endIndex - startIndex);
-						logger.warn("WRONG SIZE OF BODY :: " + str);
-					}
-
-					return true;
+			} else {
+				if (endIndex + 1 - startIndex < MIN_MESS_SIZE) {
+					in.position(endIndex);
 
 				} else {
-					// неправильный пакет
-					String wrongPacket = bytesToHex(bytes, startIndex, endIndex - startIndex);
-					logger.warn("Wrong packet: " + wrongPacket);
-
-					// смещаем так что бы в след. итерации начать с endIndex -
-					// быть может это начало нормального пакета
-					in.position(in.position() - (bytes.length - endIndex));
+					try {
+						in.position(startIndex + 1);
+						Message message = Message.parseMessage(in, endIndex + 1 - startIndex - 2);
+						return message;
+					} catch (Exception e) {
+						in.position(startIndex);
+						String str = ByteUtilities.ioBufferToHex(in, endIndex + 1 - startIndex);
+						logger.warn("parseMessage exception :: " + str);
+					}
 				}
-			} else {
-				in.position(in.position() - (bytes.length - startIndex));
 			}
 		}
 
-		return false;
-	}
-
-	private int searchByte(byte[] bytes, int start, byte key) {
-		for (int i = start; i < bytes.length; i++) {
-			if (bytes[i] == key) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-
-	public static String bytesToHex(byte[] bytes, int offset, int length) {
-
-		char[] hexChars = new char[length * 2];
-
-		for (int j = 0; j < length; j++) {
-			int v = bytes[offset + j] & 0xFF;
-			hexChars[j * 2] = hexArray[v >>> 4];
-			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-		}
-
-		return new String(hexChars);
-	}
-
-	public static String bytesToHex(byte[] bytes) {
-		return bytesToHex(bytes, 0, bytes.length);
-	}
-
-	public static byte[] hexStringToByteArray(String s) {
-		int len = s.length();
-		byte[] data = new byte[len / 2];
-		for (int i = 0; i < len; i += 2) {
-			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
-		}
-		return data;
+		return null;
 	}
 }

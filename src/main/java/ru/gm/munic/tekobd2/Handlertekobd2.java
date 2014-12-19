@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import ru.gm.munic.tekobd2.messages.Message;
+
 @Service
 public class Handlertekobd2 implements IoHandler {
 
@@ -45,17 +47,14 @@ public class Handlertekobd2 implements IoHandler {
 		logger.info("tekobd2. messageReceived");
 
 		Message m = (Message) message;
-		session.write(m);
+		if (m.getMessageId() != 0x3003 && m.getMessageId() != 0x3007) {
+			session.write(m);
+		}
 	}
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
 		logger.info("tekobd2. messageSend");
-
-		Message m = (Message) message;
-		byte[] outBytes = m.makeResponse();
-		String outString = Decoder.bytesToHex(outBytes);
-		logger.info("tekobd2. messageSend :: " + outString);
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
+import ru.gm.munic.tekobd2.messages.Message;
+
 public class Encoder implements ProtocolEncoder {
 
 	@Override

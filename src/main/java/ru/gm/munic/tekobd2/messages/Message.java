@@ -1,36 +1,33 @@
-package ru.gm.munic.tekobd2;
+package ru.gm.munic.tekobd2.messages;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.charset.Charset;
 
-public class Message {
+import org.apache.mina.core.buffer.IoBuffer;
+
+import ru.gm.munic.tekobd2.ByteUtilities;
+import ru.gm.munic.tekobd2.Decoder;
+
+public abstract class Message {
 
 	private byte[] inBytes;
-	private int bytesLength;
-	private short id;
+
+	private short messageId;
 	private long terminalId;
 	private short serialNumber;
 	private short bodyLength;
-	private byte encyptWay;
-	private byte subPackage;
+	private byte encryptWay;
+	private boolean subPackage;
 	private byte checkCode;
-	public static final String AUTH_KEY = "SCO";
-	private static byte[] AUTH_KEY_BYTES;
+
 	private static final int BLUNK_MESSAGE_SIZE = 13;
 
-	private String authKey;
-
-	static {
-		AUTH_KEY_BYTES = AUTH_KEY.getBytes(Charset.forName("GBK"));
+	public short getMessageId() {
+		return messageId;
 	}
 
-	public short getId() {
-		return id;
-	}
-
-	public void setId(short id) {
-		this.id = id;
+	public void setMessageId(short id) {
+		this.messageId = id;
 	}
 
 	public long getTerminalId() {
@@ -57,19 +54,19 @@ public class Message {
 		this.bodyLength = bodyLength;
 	}
 
-	public byte getEncyptWay() {
-		return encyptWay;
+	public byte getEncryptWay() {
+		return encryptWay;
 	}
 
-	public void setEncyptWay(byte encyptWay) {
-		this.encyptWay = encyptWay;
+	public void setEncryptWay(byte encyptWay) {
+		this.encryptWay = encyptWay;
 	}
 
-	public byte getSubPackage() {
+	public boolean getSubPackage() {
 		return subPackage;
 	}
 
-	public void setSubPackage(byte subPackage) {
+	public void setSubPackage(boolean subPackage) {
 		this.subPackage = subPackage;
 	}
 
@@ -81,53 +78,42 @@ public class Message {
 		this.checkCode = checkCode;
 	}
 
-	public static Message parseMessage(byte[] srcBytes, int offset, int length) throws Exception {
+	public byte[] getBytes() {
+		return inBytes;
+	}
+
+	public void setBytes(byte[] bytes) {
+		this.inBytes = bytes;
+	}
+
+	public static Message parseMessage(IoBuffer in, int length) throws Exception {
 		// example how the bytes arrived
 		// 7E 3017 0002 814087547576 000B 0300 3C 7E
 		// 7E 3000 0019 814087547576 000C
 		// 00000000000000000000000000000000000000000000000000 34 7E
-		// 7E 3017 0002 814087547576 000D 0300 3A 7E
-		// 7E 3017 0002 814087547576 000E 0300 39 7E
-		// 7E 3017 0002 814087547576 000F 0300 38 7E
 		// 7E30000019814087547576001000000000000000000000000000000000000000000000000000287E7E3000001981408754757600110000000000000000000000
 		// 0000000000000000000000000000297E
-		// 7E 3017 0002 814087547576 0012 0300 25 7E
-		// 7E 3017 0002 814087547576 0013 0300 24 7E
-		// 7E 3017 0002 814087547576 0014 0300 23 7E
 		// 7E 3000 0019 814087351432 0020
 		// 00000000000000000000000000000000000000000000000000 5C 7E
 		// 7E 3017 0002 814087547576 0015 0300 22 7E
-		// 7E 3017 0002 814087547576 0016 0300 21 7E
 		// 7E 3000 0019 814087547576 0017
 		// 00000000000000000000000000000000000000000000000000 2F 7E
 
-		Message message = new Message();
-		message.setBytes(new byte[length]);
+		byte[] bytes = escapeIn(in, length);
 
-		int i = offset;
-		int j = 0;
-		while (i < (offset + length)) {
-			if (srcBytes[i] == 0x7d && srcBytes[i + 1] == 0x02) {
-				message.getBytes()[j] = 0x7e;
-				i = i + 2;
-			} else if (srcBytes[i] == 0x7d && srcBytes[i + 1] == 0x01) {
-				message.getBytes()[j] = 0x7d;
-				i = i + 2;
-			} else {
-				message.getBytes()[j] = srcBytes[i];
-				i++;
-			}
-			j++;
-		}
-		message.setBytesLength(j);
-
-		ByteBuffer bb = ByteBuffer.allocate(j);
+		ByteBuffer bb = ByteBuffer.wrap(bytes);
 		bb.order(ByteOrder.BIG_ENDIAN);
-		bb.put(message.getBytes(), 0, j);
-		bb.position(0);
 
 		// message Id
-		message.setId(bb.getShort());
+		short messageId = bb.getShort();
+
+		Message message = defineMessage(messageId);
+		if (message == null) {
+			throw new Exception("Coudn't define message type by message id = " + messageId);
+		}
+
+		message.setBytes(bytes);
+		message.setMessageId(messageId);
 
 		// body attribute
 		short bodyAttribute = bb.getShort();
@@ -135,13 +121,13 @@ public class Message {
 		message.setBodyLength((short) (bodyAttribute & 0x3ff));
 
 		byte encrWay = (byte) ((bodyAttribute >> 10) & 0b111);
-		message.setEncyptWay(encrWay);
+		message.setEncryptWay(encrWay);
 
 		byte subPackage = (byte) ((bodyAttribute >> 13) & 0b1);
-		message.setSubPackage(subPackage);
+		message.setSubPackage(subPackage == (byte) 1);
 
 		// terminal Id / 6 bytes
-		String terminalIdString = bcdToString(message.getBytes(), 4, 6);
+		String terminalIdString = ByteUtilities.bcdToString(message.getBytes(), 4, 6);
 		message.setTerminalId(Long.parseLong(terminalIdString));
 		bb.position(bb.position() + 6);
 
@@ -151,7 +137,7 @@ public class Message {
 		if (bb.remaining() != message.getBodyLength() + 1) {
 			throw new Exception("bad packet!");
 		} else {
-			parseMessageBody(bb, message);
+			message.parseMessageBody(bb);
 
 			message.setCheckCode(bb.get());
 
@@ -159,14 +145,13 @@ public class Message {
 		}
 	}
 
-	private static void parseMessageBody(ByteBuffer bb, Message message) {
-		byte[] messageBody = new byte[message.getBodyLength()];
-
-		switch (message.getId()) {
+	private static Message defineMessage(short messageId) {
+		Message message = null;
+		switch (messageId) {
 
 		case 0x3000:
 			// Terminal registration
-			bb.get(messageBody);
+			message = new RegistrationMessage();
 			break;
 
 		case 0x3001:
@@ -174,9 +159,7 @@ public class Message {
 			break;
 
 		case 0x3002:
-			// Terminal login / authentication
-			bb.get(messageBody);
-			message.setAuthKey(new String(messageBody, Charset.forName("GBK")));
+			message = new LoginMessage();
 			break;
 
 		case 0x3003:
@@ -187,42 +170,42 @@ public class Message {
 			// Terminal heartbeat
 			break;
 
+		case 0x3005:
+			// Trip starting and ending report
+
+			break;
+
+		case 0x3006:
+			// Trip data reporting
+
+			break;
+
+		case 0x3007:
+			// Inquiry vehicle information terminal response
+
+			break;
+
 		default:
 			break;
 		}
+
+		return message;
 	}
+
+	public abstract void parseMessageBody(ByteBuffer bb);
 
 	public byte[] makeResponse() {
-		if (getId() == 0x3000) {
-			return make3000Response();
-		} else {
-			return makeGeneralResponse();
-		}
-	}
-
-	private byte[] makeGeneralResponse() {
-		ByteBuffer bb = initHeader(5, (short) 0xb003);
-
-		// message body
-		bb.putShort(serialNumber);
-		bb.putShort(id);
-		bb.put((byte) 0);
-
+		ByteBuffer bb = initHeader(getResponseBodySize(), getResponseMessageId());
+		initResponseBody(bb);
 		byte[] outBytes = initBottom(bb);
 		return outBytes;
 	}
 
-	private byte[] make3000Response() {
-		ByteBuffer bb = initHeader(3 + AUTH_KEY_BYTES.length, (short) 0xb000);
+	protected abstract int getResponseBodySize();
 
-		// message body
-		bb.putShort(serialNumber);
-		bb.put((byte) 0);
-		bb.put(AUTH_KEY_BYTES);
+	protected abstract short getResponseMessageId();
 
-		byte[] outBytes = initBottom(bb);
-		return outBytes;
-	}
+	protected abstract void initResponseBody(ByteBuffer bb);
 
 	private ByteBuffer initHeader(int messageBodyLength, short messageId) {
 		ByteBuffer bb = ByteBuffer.allocate(BLUNK_MESSAGE_SIZE + messageBodyLength);
@@ -245,11 +228,56 @@ public class Message {
 
 		// escape
 		bb.position(0);
-		byte[] outBytes = escape4Out(bb);
+		byte[] outBytes = escapeOut(bb);
 		return outBytes;
 	}
 
-	private byte[] escape4Out(ByteBuffer bb) {
+	public static byte[] escapeIn(IoBuffer in, int length) throws Exception {
+		int startPosition = in.position();
+		int count = ByteUtilities.countInBuffer(in, Decoder.ESCAPE_BYTE, length);
+		in.position(startPosition);
+		byte[] bytes = new byte[length - count];
+
+		int j = 0;
+		int i = 0;
+		while (in.hasRemaining() && i < length) {
+			byte b = in.get();
+			i++;
+
+			if (b == Decoder.MARKER_BYTE) {
+				break;
+			}
+
+			if (b == Decoder.ESCAPE_BYTE) {
+				if (!in.hasRemaining()) {
+					throw new Exception("Escape rules are broken! (not enough bytes)");
+				}
+				b = in.get();
+				i++;
+
+				if (b == 0x02) {
+					bytes[j] = Decoder.MARKER_BYTE;
+
+				} else if (b == 0x01) {
+					bytes[j] = Decoder.ESCAPE_BYTE;
+
+				} else {
+					throw new Exception("Escape rules are broken! (uncorrect byte folowed escape byte)");
+				}
+
+			} else {
+				bytes[j] = b;
+			}
+
+			j++;
+
+		}
+
+		return bytes;
+	}
+
+	public static byte[] escapeOut(ByteBuffer bb) {
+		int startPosition = bb.position();
 		int cnt = bb.remaining();
 		while (bb.hasRemaining()) {
 			byte b = bb.get();
@@ -257,9 +285,9 @@ public class Message {
 				cnt++;
 			}
 		}
+		bb.position(startPosition);
 
-		byte[] escapedBytes = new byte[cnt];
-		bb.position(0);
+		byte[] escapedBytes = new byte[cnt];		
 		int j = 0;
 		while (bb.hasRemaining()) {
 			byte b = bb.get();
@@ -288,46 +316,4 @@ public class Message {
 		}
 		return checkCode;
 	}
-
-	public static String bcdToString(byte[] bcd, int offset, int length) {
-		StringBuffer sb = new StringBuffer();
-
-		for (int i = 0; i < length; i++) {
-			byte high = (byte) (bcd[offset + i] & 0xf0);
-			high = (byte) (high >>> 4);
-			high = (byte) (high & 0x0f);
-
-			byte low = (byte) (bcd[offset + i] & 0x0f);
-
-			sb.append(high);
-			sb.append(low);
-		}
-
-		return sb.toString();
-	}
-
-	public byte[] getBytes() {
-		return inBytes;
-	}
-
-	public void setBytes(byte[] bytes) {
-		this.inBytes = bytes;
-	}
-
-	public int getBytesLength() {
-		return bytesLength;
-	}
-
-	public void setBytesLength(int bytesLength) {
-		this.bytesLength = bytesLength;
-	}
-
-	public String getAuthKey() {
-		return authKey;
-	}
-
-	public void setAuthKey(String authKey) {
-		this.authKey = authKey;
-	}
-
 }

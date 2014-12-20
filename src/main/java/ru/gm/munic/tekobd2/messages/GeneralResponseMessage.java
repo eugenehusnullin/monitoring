@@ -5,17 +5,17 @@ import java.nio.ByteBuffer;
 public abstract class GeneralResponseMessage extends Message {
 
 	@Override
-	protected int getResponseBodySize() {
+	public int getResponseBodySize() {
 		return 5;
 	}
 
 	@Override
-	protected short getResponseMessageId() {
+	public short getResponseMessageId() {
 		return (short) 0xb003;
 	}
 
 	@Override
-	protected void initResponseBody(ByteBuffer bb) {
+	public void initResponseBody(ByteBuffer bb) {
 		// message body
 		bb.putShort(getSerialNumber());
 		bb.putShort(getMessageId());

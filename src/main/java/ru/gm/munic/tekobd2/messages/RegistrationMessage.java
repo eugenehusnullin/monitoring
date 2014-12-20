@@ -21,17 +21,17 @@ public class RegistrationMessage extends Message {
 	}
 
 	@Override
-	protected int getResponseBodySize() {
+	public int getResponseBodySize() {
 		return 3 + AUTH_KEY_BYTES.length;
 	}
 
 	@Override
-	protected short getResponseMessageId() {
+	public short getResponseMessageId() {
 		return (short) 0xb000;
 	}
 
 	@Override
-	protected void initResponseBody(ByteBuffer bb) {
+	public void initResponseBody(ByteBuffer bb) {
 		// message body
 		bb.putShort(getSerialNumber());
 		bb.put((byte) 0);

@@ -8,7 +8,7 @@ import org.apache.mina.core.buffer.IoBuffer;
 import ru.gm.munic.tekobd2.ByteUtilities;
 import ru.gm.munic.tekobd2.Decoder;
 
-public abstract class Message {
+public abstract class Message implements IResponse {
 
 	private byte[] inBytes;
 
@@ -194,18 +194,13 @@ public abstract class Message {
 
 	public abstract void parseMessageBody(ByteBuffer bb);
 
+	@Override
 	public byte[] makeResponse() {
 		ByteBuffer bb = initHeader(getResponseBodySize(), getResponseMessageId());
 		initResponseBody(bb);
 		byte[] outBytes = initBottom(bb);
 		return outBytes;
 	}
-
-	protected abstract int getResponseBodySize();
-
-	protected abstract short getResponseMessageId();
-
-	protected abstract void initResponseBody(ByteBuffer bb);
 
 	private ByteBuffer initHeader(int messageBodyLength, short messageId) {
 		ByteBuffer bb = ByteBuffer.allocate(BLUNK_MESSAGE_SIZE + messageBodyLength);

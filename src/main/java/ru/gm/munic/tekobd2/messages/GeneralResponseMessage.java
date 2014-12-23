@@ -2,7 +2,7 @@ package ru.gm.munic.tekobd2.messages;
 
 import java.nio.ByteBuffer;
 
-public abstract class GeneralResponseMessage extends Message {
+public abstract class GeneralResponseMessage extends ResponseMessage {
 
 	@Override
 	public int getResponseBodySize() {

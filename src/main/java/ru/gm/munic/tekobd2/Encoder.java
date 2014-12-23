@@ -5,14 +5,14 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoder;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
-import ru.gm.munic.tekobd2.messages.Message;
+import ru.gm.munic.tekobd2.messages.IResponse;
 
 public class Encoder implements ProtocolEncoder {
 
 	@Override
 	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
-		Message m = (Message) message;
-		byte[] bytes = m.makeResponse();
+		IResponse response = (IResponse) message;
+		byte[] bytes = response.makeResponse();
 
 		IoBuffer buf = IoBuffer.allocate(bytes.length + 2).setAutoExpand(true);
 		buf.put(Decoder.MARKER_BYTE);

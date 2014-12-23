@@ -87,4 +87,22 @@ public class ByteUtilities {
 
 		return sb.toString();
 	}
+	
+	public static String bcdToString(ByteBuffer bb, int length) {
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < length; i++) {
+			byte b = bb.get();
+			byte high = (byte) (b & 0xf0);
+			high = (byte) (high >>> 4);
+			high = (byte) (high & 0x0f);
+
+			byte low = (byte) (b & 0x0f);
+
+			sb.append(high);
+			sb.append(low);
+		}
+
+		return sb.toString();
+	}
 }

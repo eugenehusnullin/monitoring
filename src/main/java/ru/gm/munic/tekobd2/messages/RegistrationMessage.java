@@ -3,7 +3,7 @@ package ru.gm.munic.tekobd2.messages;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public class RegistrationMessage extends Message {
+public class RegistrationMessage extends ResponseMessage {
 
 	@Override
 	public void parseMessageBody(ByteBuffer bb) {

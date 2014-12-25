@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="monitoring.domain">
+	<class name="MunicDataMdi" table="municdatamdi">
+		<composite-id>
+			<key-many-to-one name="municData" column="municdataid"></key-many-to-one>
+		</composite-id>
+		<property name="mdiExtBattLow"></property>
+		<property name="mdiExtBattVoltage"></property>
+		<property name="mdiAreaList" length="32"></property>
+		<property name="mdiCrashDetected" length="8"></property>
+
+		<property name="mdiDtcMil"></property>
+		<property name="mdiDtcNumber"></property>
+		<property name="mdiDtcList" length="255"></property>
+
+		<property name="mdiRpmMax"></property>
+		<property name="mdiRpmMin"></property>
+		<property name="mdiRpmAverage"></property>
+		<property name="mdiRpmOver"></property>
+
+		<property name="mdiObdSpeed"></property>
+		<property name="mdiObdRpm"></property>
+		<property name="mdiObdFuel"></property>
+		<property name="mdiObdVin" length="64"></property>
+		<property name="mdiObdMileage"></property>
+
+		<property name="mdiJourneyTime"></property>
+		<property name="mdiIdleJourney"></property>
+		<property name="mdiDrivingJorney"></property>
+		<property name="mdiOverSpeedCounter"></property>
+		<property name="mdiTowAway"></property>
+		<property name="mdiOdoJourney"></property>
+		<property name="mdiOverSpeed"></property>
+		<property name="mdiMaxSpeedJourney"></property>
+		<property name="mdiJourneyState"></property>
+
+		<property name="mdiVehicleState" length="3"></property>
+
+		<property name="mdiRecordReason" length="32"></property>
+		<property name="mdiBootReason" length="32"></property>
+		<property name="mdiShutdownReason" length="32"></property>
+
+		<property name="mdiPanicState"></property>
+		<property name="mdiPanicMessage" length="32"></property>
+	</class>
+</hibernate-mapping>

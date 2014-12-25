@@ -34,7 +34,7 @@
 			</props>
 		</property>
 		<property name="dataSource" ref="municDS" />
-		<property name="packagesToScan" value="ru.gm.munic.domain" />
+		<property name="packagesToScan" value="monitoring.domain" />
 	</bean>
 	
 	<bean id="transactionManager"
@@ -45,7 +45,7 @@
 	
 	
 	<context:component-scan base-package="ru.gm.munic.service" />
-	<context:component-scan base-package="ru.gm.munic.cguard" />
-	<context:component-scan base-package="ru.gm.munic.tekobd2" />
+	<context:component-scan base-package="monitoring.cguard" />
+	<context:component-scan base-package="rumonitoring.tekobd2/>
 	<context:annotation-config />
 </beans>

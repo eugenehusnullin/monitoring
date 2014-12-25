@@ -3,14 +3,15 @@ package ru.gm.munic.tekobd2;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import monitoring.tekobd2.ByteUtilities;
+import monitoring.tekobd2.Decoder;
+import monitoring.tekobd2.messages.IHasResponse;
+import monitoring.tekobd2.messages.LoginMessage;
+import monitoring.tekobd2.messages.RegistrationMessage;
+import monitoring.tekobd2.messages.TripDataMessage;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.junit.Test;
-
-import ru.gm.munic.tekobd2.messages.IHasResponse;
-import ru.gm.munic.tekobd2.messages.LoginMessage;
-import ru.gm.munic.tekobd2.messages.RegistrationMessage;
-import ru.gm.munic.tekobd2.messages.TripDataMessage;
 
 public class MessageTest {
 

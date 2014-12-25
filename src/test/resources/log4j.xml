@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="ru.gm.munic">
+	<logger name="monitoring">
 		<level value="info" />
 	</logger>
 	

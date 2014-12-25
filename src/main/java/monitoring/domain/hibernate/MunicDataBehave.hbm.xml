@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="monitoring.domain">
+	<class name="MunicDataBehave" table="municdatabehave">
+		<composite-id>
+			<key-many-to-one name="municData" column="municdataid"></key-many-to-one>
+		</composite-id>
+		<property name="behaveUniqueId"></property>
+		<property name="behaveId"></property>
+		<property name="behaveElapsed"></property>
+		<property name="behaveGpsSpeedBegin"></property>
+		<property name="behaveGpsSpeedPeak"></property>
+		<property name="behaveGpsSpeedEnd"></property>
+		<property name="behaveGpsHeadingBegin"></property>
+		<property name="behaveGpsHeadingPeak"></property>
+		<property name="behaveGpsHeadingEnd"></property>
+		<property name="behaveAccXBegin"></property>
+		<property name="behaveAccXPeak"></property>
+		<property name="behaveAccXEnd"></property>
+		<property name="behaveAccYBegin"></property>
+		<property name="behaveAccYPeak"></property>
+		<property name="behaveAccYEnd"></property>
+		<property name="behaveAccZBegin"></property>
+		<property name="behaveAccZPeak"></property>
+		<property name="behaveAccZEnd"></property>
+		<property name="behaveLong"></property>
+		<property name="behaveLat"></property>
+		<property name="behaveDayOfYear"></property>
+		<property name="behaveTimeOfDay"></property>
+	</class>
+</hibernate-mapping>

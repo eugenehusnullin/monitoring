@@ -5,15 +5,15 @@
 
 <hibernate-configuration>
 	<session-factory>
-		<mapping resource="ru/gm/munic/domain/hibernate/MunicRawData.hbm.xml" />
-		<mapping resource="ru/gm/munic/domain/hibernate/MunicItemRawData.hbm.xml" />
-		<mapping resource="ru/gm/munic/domain/hibernate/MunicData.hbm.xml" />
-		<mapping resource="ru/gm/munic/domain/hibernate/MunicDataBehave.hbm.xml" />
-		<mapping resource="ru/gm/munic/domain/hibernate/MunicDataMdi.hbm.xml" />
-		<mapping resource="ru/gm/munic/domain/hibernate/TopAuto.hbm.xml" />
-		<mapping resource="ru/gm/munic/domain/hibernate/TopMapzone.hbm.xml" />
-		<mapping resource="ru/gm/munic/domain/hibernate/TopMapzonePoint.hbm.xml" />
-		<mapping resource="ru/gm/munic/domain/hibernate/TopBlockAlert.hbm.xml" />
-		<mapping resource="ru/gm/munic/domain/hibernate/Position.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/MunicRawData.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/MunicItemRawData.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/MunicData.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/MunicDataBehave.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/MunicDataMdi.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/TopAuto.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/TopMapzone.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/TopMapzonePoint.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/TopBlockAlert.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/Position.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

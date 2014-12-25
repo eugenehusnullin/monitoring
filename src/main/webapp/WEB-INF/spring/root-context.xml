@@ -44,8 +44,8 @@
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
 	
-	<context:component-scan base-package="ru.gm.munic.service" />
+	<context:component-scan base-package="monitoring.service" />
 	<context:component-scan base-package="monitoring.cguard" />
-	<context:component-scan base-package="rumonitoring.tekobd2/>
+	<context:component-scan base-package="monitoring.tekobd2" />
 	<context:annotation-config />
 </beans>

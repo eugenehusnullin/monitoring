@@ -5,6 +5,7 @@ import java.nio.ByteOrder;
 
 import org.apache.mina.core.buffer.IoBuffer;
 
+import ru.gm.munic.domain.IMessage;
 import ru.gm.munic.tekobd2.ByteUtilities;
 
 public abstract class Message implements IMessage {
@@ -19,69 +20,7 @@ public abstract class Message implements IMessage {
 	private boolean subPackage;
 	private byte checkCode;
 
-	public short getMessageId() {
-		return messageId;
-	}
-
-	public void setMessageId(short id) {
-		this.messageId = id;
-	}
-
-	public long getTerminalId() {
-		return terminalId;
-	}
-
-	public void setTerminalId(long terminalId) {
-		this.terminalId = terminalId;
-	}
-
-	public short getSerialNumber() {
-		return serialNumber;
-	}
-
-	public void setSerialNumber(short serialNumber) {
-		this.serialNumber = serialNumber;
-	}
-
-	public short getBodyLength() {
-		return bodyLength;
-	}
-
-	public void setBodyLength(short bodyLength) {
-		this.bodyLength = bodyLength;
-	}
-
-	public byte getEncryptWay() {
-		return encryptWay;
-	}
-
-	public void setEncryptWay(byte encyptWay) {
-		this.encryptWay = encyptWay;
-	}
-
-	public boolean getSubPackage() {
-		return subPackage;
-	}
-
-	public void setSubPackage(boolean subPackage) {
-		this.subPackage = subPackage;
-	}
-
-	public byte getCheckCode() {
-		return checkCode;
-	}
-
-	public void setCheckCode(byte checkCode) {
-		this.checkCode = checkCode;
-	}
-
-	public byte[] getInBytes() {
-		return inBytes;
-	}
-
-	public void setInBytes(byte[] bytes) {
-		this.inBytes = bytes;
-	}
+	abstract void parseMessageBody(ByteBuffer bb);
 
 	public static Message parseMessage(IoBuffer in, int inLength) throws Exception {
 		// example how the bytes arrived
@@ -190,6 +129,70 @@ public abstract class Message implements IMessage {
 		}
 
 		return message;
+	}
+
+	public short getMessageId() {
+		return messageId;
+	}
+
+	public void setMessageId(short id) {
+		this.messageId = id;
+	}
+
+	public long getTerminalId() {
+		return terminalId;
+	}
+
+	public void setTerminalId(long terminalId) {
+		this.terminalId = terminalId;
+	}
+
+	public short getSerialNumber() {
+		return serialNumber;
+	}
+
+	public void setSerialNumber(short serialNumber) {
+		this.serialNumber = serialNumber;
+	}
+
+	public short getBodyLength() {
+		return bodyLength;
+	}
+
+	public void setBodyLength(short bodyLength) {
+		this.bodyLength = bodyLength;
+	}
+
+	public byte getEncryptWay() {
+		return encryptWay;
+	}
+
+	public void setEncryptWay(byte encyptWay) {
+		this.encryptWay = encyptWay;
+	}
+
+	public boolean getSubPackage() {
+		return subPackage;
+	}
+
+	public void setSubPackage(boolean subPackage) {
+		this.subPackage = subPackage;
+	}
+
+	public byte getCheckCode() {
+		return checkCode;
+	}
+
+	public void setCheckCode(byte checkCode) {
+		this.checkCode = checkCode;
+	}
+
+	public byte[] getInBytes() {
+		return inBytes;
+	}
+
+	public void setInBytes(byte[] bytes) {
+		this.inBytes = bytes;
 	}
 
 }

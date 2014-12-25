@@ -3,7 +3,7 @@ package ru.gm.munic.tekobd2.messages;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public abstract class ResponseMessage extends Message implements IResponse {
+public abstract class ResponseMessage extends Message implements IHasResponse {
 	private static final int BLUNK_MESSAGE_SIZE = 13;
 
 	@Override

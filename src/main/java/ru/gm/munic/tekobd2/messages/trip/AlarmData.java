@@ -1,4 +1,4 @@
-package ru.gm.munic.tekobd2.messages.sub;
+package ru.gm.munic.tekobd2.messages.trip;
 
 import java.nio.ByteBuffer;
 

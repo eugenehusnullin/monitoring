@@ -4,14 +4,16 @@ import java.nio.ByteBuffer;
 import java.util.Calendar;
 import java.util.Date;
 
+import ru.gm.munic.domain.IHasPosition;
+import ru.gm.munic.domain.Position;
 import ru.gm.munic.tekobd2.ByteUtilities;
-import ru.gm.munic.tekobd2.messages.sub.AlarmData;
-import ru.gm.munic.tekobd2.messages.sub.BaseStationPosition;
-import ru.gm.munic.tekobd2.messages.sub.DtcData;
-import ru.gm.munic.tekobd2.messages.sub.ObdData;
-import ru.gm.munic.tekobd2.messages.sub.SatellitePosition;
+import ru.gm.munic.tekobd2.messages.trip.AlarmData;
+import ru.gm.munic.tekobd2.messages.trip.BaseStationPosition;
+import ru.gm.munic.tekobd2.messages.trip.DtcData;
+import ru.gm.munic.tekobd2.messages.trip.ObdData;
+import ru.gm.munic.tekobd2.messages.trip.SatellitePosition;
 
-public class TripDataMessage extends GeneralResponseMessage {
+public class TripDataMessage extends GeneralResponseMessage implements IHasPosition {
 
 	private enum PositioningMode {
 		GPS((byte) 0b000),
@@ -128,6 +130,19 @@ public class TripDataMessage extends GeneralResponseMessage {
 		}
 	}
 	
+	@Override
+	public Position getPosition() {
+		if (satellitePosition != null) {
+			Position position = satellitePosition.getPosition();
+			position.setDate(uploadingTime);
+			position.setTerminalId(getTerminalId());
+			position.setSatellites((int) satelites);
+			return position;
+		} else {
+			return null;
+		}
+	}
+	
 	public Date getUploadingTime() {
 		return uploadingTime;
 	}
@@ -183,4 +198,6 @@ public class TripDataMessage extends GeneralResponseMessage {
 	public AlarmData getAlarmData() {
 		return alarmData;
 	}
+
+
 }

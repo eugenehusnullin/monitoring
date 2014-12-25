@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ru.gm.munic.tekobd2.messages.IResponse;
+import ru.gm.munic.tekobd2.messages.IHasResponse;
 import ru.gm.munic.tekobd2.messages.Message;
 
 @Service
@@ -48,7 +48,7 @@ public class Handlertekobd2 implements IoHandler {
 		logger.info("tekobd2. messageReceived");
 
 		Message m = (Message) message;
-		if (m instanceof IResponse) {
+		if (m instanceof IHasResponse) {
 			session.write(m);
 		}
 	}

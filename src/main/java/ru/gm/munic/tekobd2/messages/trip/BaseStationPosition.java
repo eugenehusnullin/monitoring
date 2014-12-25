@@ -1,10 +1,17 @@
-package ru.gm.munic.tekobd2.messages.sub;
+package ru.gm.munic.tekobd2.messages.trip;
 
 import java.nio.ByteBuffer;
 
 import ru.gm.munic.tekobd2.ByteUtilities;
 
 public class BaseStationPosition implements ISubMessage {
+	/*
+	 * For example: China MCC: 460, MNC of China Mobile GSM: 02, corresponding
+	 * hexadecimal byte (bytes0~byte 3) indicating: 00 04 60 02; BYTE4~
+	 * BYTE5-LAC (upper byte is in the front): BYTE6~ BYTE7-CELLID (upper byte
+	 * is in the front): (Will consider adding to three groups base station area
+	 * code afterwards.)
+	 */
 	// fields for tripDataMessageId == 0xA2
 	private int mcc;
 	private byte mnc;

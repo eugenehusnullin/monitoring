@@ -47,10 +47,18 @@ public class Position {
 		this.lon = lon;
 	}
 
+	/**
+	 * km/h (kilometer per hour)
+	 * @return
+	 */
 	public Double getSpeed() {
 		return speed;
 	}
 
+	/**
+	 * km/h (kilometer per hour)
+	 * @param speed
+	 */
 	public void setSpeed(Double speed) {
 		this.speed = speed;
 	}

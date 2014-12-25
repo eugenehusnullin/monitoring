@@ -90,12 +90,12 @@ public class Handler implements IoHandler {
 			if ( Pattern.matches(firstElement, "\\d{6}\\s\\d{6}") ) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.set(
-						Integer.parseInt(firstElement.substring(0, 1)),
-						Integer.parseInt(firstElement.substring(2, 3)),
-						Integer.parseInt(firstElement.substring(4, 5)),
-						Integer.parseInt(firstElement.substring(7, 8)),
-						Integer.parseInt(firstElement.substring(9, 10)),
-						Integer.parseInt(firstElement.substring(11, 12))
+						Integer.parseInt(firstElement.substring(0, 2)),
+						Integer.parseInt(firstElement.substring(2, 4)),
+						Integer.parseInt(firstElement.substring(4, 6)),
+						Integer.parseInt(firstElement.substring(6, 8)),
+						Integer.parseInt(firstElement.substring(8, 10)),
+						Integer.parseInt(firstElement.substring(10))
 					);
 			} else if (firstElement.equals("U") && (commandType.equals("BC") || commandType.equals("EV"))) {
 				messageDate = new Date();
@@ -117,7 +117,7 @@ public class Handler implements IoHandler {
 			}
 			
 			Position position = new Position();
-			position.setImei(imei);
+			position.setTerminalId(imei);
 			position.setDate(messageDate);
 			position.setLat(Double.parseDouble(messArr[1].trim()));
 			position.setLon(Double.parseDouble(messArr[2].trim()));

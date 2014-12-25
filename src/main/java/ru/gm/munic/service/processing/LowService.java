@@ -38,7 +38,7 @@ public class LowService {
 	public void catchPosition(Position position) {
 		Session session = sessionFactory.getCurrentSession();
 		TopAuto topAuto = (TopAuto) session.createCriteria(TopAuto.class)
-				.add(Restrictions.eq("asset", position.getImei()))
+				.add(Restrictions.eq("asset", position.getTerminalId()))
 				.uniqueResult();
 		
 		if (topAuto != null) {

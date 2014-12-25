@@ -45,9 +45,11 @@ public class OlapService {
 		sqlQuery.executeUpdate();
 	}
 	
+	@SuppressWarnings("unused")
 	private void calcDicstance() {
 		Session session = sessionFactory.getCurrentSession();
 		
+		@SuppressWarnings("unchecked")
 		List<TopAuto> blocks = session.createCriteria(TopAuto.class).list();
 		
 		for (TopAuto block : blocks) {

@@ -53,7 +53,7 @@ public class TripDataMessage extends GeneralResponseMessage {
 	private byte gsmSignalValue;
 	private boolean obdEnabled;
 
-	private ObdData obdDataSubmessage;
+	private ObdData obdData;
 	private SatellitePosition satellitePosition;
 	private BaseStationPosition baseStationPosition;
 	private DtcData dtcData;
@@ -66,12 +66,12 @@ public class TripDataMessage extends GeneralResponseMessage {
 		String timeString = ByteUtilities.bcdToString(bb, 6);
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(
-				Integer.parseInt(timeString.substring(0, 1)),
-				Integer.parseInt(timeString.substring(2, 3)),
-				Integer.parseInt(timeString.substring(4, 5)),
-				Integer.parseInt(timeString.substring(7, 8)),
-				Integer.parseInt(timeString.substring(9, 10)),
-				Integer.parseInt(timeString.substring(11, 12))
+				Integer.parseInt(timeString.substring(0, 2)),
+				Integer.parseInt(timeString.substring(2, 4)),
+				Integer.parseInt(timeString.substring(4, 6)),
+				Integer.parseInt(timeString.substring(6, 8)),
+				Integer.parseInt(timeString.substring(8, 10)),
+				Integer.parseInt(timeString.substring(10))
 			);
 		calendar.add(Calendar.HOUR_OF_DAY, -8);
 		uploadingTime = calendar.getTime();
@@ -93,31 +93,31 @@ public class TripDataMessage extends GeneralResponseMessage {
 		obdEnabled = (dword[2] & 0b1) == 1;
 
 		while (bb.remaining() > 1) {
-			short tripDataMessageId = bb.getShort();
+			byte tripDataMessageId = bb.get();
 			short length = bb.getShort();
 			
 			switch (tripDataMessageId) {
-			case 0xA0:
-				obdDataSubmessage = new ObdData();
-				obdDataSubmessage.parse(bb, length);
+			case (byte) 0xA0:
+				obdData = new ObdData();
+				obdData.parse(bb, length);
 				break;
 
-			case 0xA1:
+			case (byte) 0xA1:
 				satellitePosition = new SatellitePosition();
 				satellitePosition.parse(bb, length);
 				break;
 
-			case 0xA2:
+			case (byte) 0xA2:
 				baseStationPosition = new BaseStationPosition();
 				baseStationPosition.parse(bb, length);
 				break;
 
-			case 0xA3:
+			case (byte) 0xA3:
 				dtcData = new DtcData();
 				dtcData.parse(bb, length);
 				break;
 
-			case 0xA4:
+			case (byte) 0xA4:
 				alarmData = new AlarmData();
 				alarmData.parse(bb, length);
 				break;
@@ -164,8 +164,8 @@ public class TripDataMessage extends GeneralResponseMessage {
 		return obdEnabled;
 	}
 
-	public ObdData getObdDataSubmessage() {
-		return obdDataSubmessage;
+	public ObdData getObdData() {
+		return obdData;
 	}
 
 	public SatellitePosition getSatellitePosition() {

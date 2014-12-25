@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Position {
 	private Long id;
-	private Long imei;
+	private Long terminalId;
 	private TopAuto topAuto;
 	private Date date;
 	private Double lat;
@@ -87,19 +87,19 @@ public class Position {
 		this.altitude = altitude;
 	}
 
-	public Long getImei() {
-		return imei;
-	}
-
-	public void setImei(Long imei) {
-		this.imei = imei;
-	}
-
 	public TopAuto getTopAuto() {
 		return topAuto;
 	}
 
 	public void setTopAuto(TopAuto topAuto) {
 		this.topAuto = topAuto;
+	}
+
+	public Long getTerminalId() {
+		return terminalId;
+	}
+
+	public void setTerminalId(Long terminalId) {
+		this.terminalId = terminalId;
 	}
 }

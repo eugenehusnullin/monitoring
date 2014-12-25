@@ -20,6 +20,7 @@ public class ObdData implements ISubMessage {
 
 			int spRetrived = 0;
 			while (spLength > spRetrived) {
+				@SuppressWarnings("unused")
 				byte pid = bb.get();
 				byte[] content = new byte[bb.get()];
 				bb.get(content);

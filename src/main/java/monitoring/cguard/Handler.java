@@ -141,7 +141,7 @@ public class Handler implements IoHandler {
 			}
 			
 			if (position.getLat() != 0 && position.getLon() != 0) {
-				lowService.catchPosition(position);
+				// TODO: persist position to db
 			}
 		}
 		

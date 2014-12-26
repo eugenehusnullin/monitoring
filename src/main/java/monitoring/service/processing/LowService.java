@@ -7,7 +7,6 @@ import java.util.List;
 import monitoring.domain.MunicData;
 import monitoring.domain.MunicItemRawData;
 import monitoring.domain.MunicRawData;
-import monitoring.domain.Position;
 import monitoring.domain.TopAuto;
 import monitoring.domain.TopBlockAlert;
 
@@ -33,20 +32,6 @@ public class LowService {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
-	@Transactional
-	public void catchPosition(Position position) {
-		Session session = sessionFactory.getCurrentSession();
-		TopAuto topAuto = (TopAuto) session.createCriteria(TopAuto.class)
-				.add(Restrictions.eq("asset", position.getTerminalId()))
-				.uniqueResult();
-		
-		if (topAuto != null) {
-			position.setTopAuto(topAuto);
-		}
-		
-		session.save(position);
-	}
 
 	@Transactional
 	public List<MunicItemRawData> processMunicRawData(MunicRawData municRawData) {

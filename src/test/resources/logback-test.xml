@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://logback.temp/logback.xsd">
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Application Loggers -->
+	<logger name="monitoring" level="DEBUG">
+	</logger>
+
+	<logger name="Stream" level="DEBUG">
+	</logger>
+
+	<!-- 3rdparty Loggers -->
+	<logger name="org.springframework.core" level="INFO">
+	</logger>
+
+	<logger name="org.springframework.beans" level="INFO">
+	</logger>
+
+	<logger name="org.springframework.context" level="INFO">
+	</logger>
+
+	<logger name="org.springframework.web" level="INFO">
+	</logger>
+
+
+	<root level="WARN">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

@@ -8,3 +8,4 @@ jdbc.settings
 log4j.properties
 main.settings
 .springBeans
+src/main/resources/logback.xml

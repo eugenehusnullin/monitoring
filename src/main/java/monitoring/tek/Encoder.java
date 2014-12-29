@@ -1,6 +1,7 @@
-package monitoring.tekobd2;
+package monitoring.tek;
 
-import monitoring.tekobd2.messages.IHasResponse;
+import monitoring.tek.messages.MessageUtilities;
+import monitoring.tek.messages.domain.HasResponse;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -15,7 +16,7 @@ public class Encoder implements ProtocolEncoder {
 
 	@Override
 	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
-		IHasResponse response = (IHasResponse) message;
+		HasResponse response = (HasResponse) message;
 		byte[] bytes = response.makeResponse();
 		
 		if (streamLogger.isDebugEnabled()) {
@@ -26,9 +27,9 @@ public class Encoder implements ProtocolEncoder {
 		}
 
 		IoBuffer buf = IoBuffer.allocate(bytes.length + 2).setAutoExpand(true);
-		buf.put(Decoder.MARKER_BYTE);
+		buf.put(MessageUtilities.MARKER_BYTE);
 		buf.put(bytes);
-		buf.put(Decoder.MARKER_BYTE);
+		buf.put(MessageUtilities.MARKER_BYTE);
 		
 		buf.flip();
 		out.write(buf);

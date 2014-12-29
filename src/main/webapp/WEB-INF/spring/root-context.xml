@@ -46,6 +46,6 @@
 	
 	<context:component-scan base-package="monitoring.service" />
 	<context:component-scan base-package="monitoring.cguard" />
-	<context:component-scan base-package="monitoring.tekobd2" />
+	<context:component-scan base-package="monitoring.tek" />
 	<context:annotation-config />
 </beans>

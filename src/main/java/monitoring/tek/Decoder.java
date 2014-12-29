@@ -1,6 +1,8 @@
-package monitoring.tekobd2;
+package monitoring.tek;
 
-import monitoring.tekobd2.messages.Message;
+import monitoring.tek.messages.MessageParser;
+import monitoring.tek.messages.MessageUtilities;
+import monitoring.tek.messages.domain.TekMessageImpl;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -15,16 +17,16 @@ public class Decoder extends CumulativeProtocolDecoder {
 	private static final Logger logger = LoggerFactory.getLogger(Decoder.class);
 	private static final Logger streamLogger = LoggerFactory.getLogger("Stream");
 	private static final int MIN_MESS_SIZE = 15;
-	public static final byte MARKER_BYTE = (byte) 0x7e;
-	public static final byte ESCAPE_BYTE = (byte) 0x7d;
 	public static final String KEY_TERMINAL_ID = "TERMINAL_ID";
+	
+	private MessageParser messageParser;
 
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
 
 		int startPosition = in.position();
 
-		Message message = process(in);
+		TekMessageImpl message = process(in);
 		if (message != null) {
 
 			session.setAttribute(KEY_TERMINAL_ID, message.getTerminalId());
@@ -45,8 +47,8 @@ public class Decoder extends CumulativeProtocolDecoder {
 		}
 	}
 
-	public static Message process(IoBuffer in) {
-		Message message = null;
+	public TekMessageImpl process(IoBuffer in) {
+		TekMessageImpl message = null;
 
 		int firstPosition = in.position();
 
@@ -56,10 +58,10 @@ public class Decoder extends CumulativeProtocolDecoder {
 			logger.debug("BYTES :: " + allBufferData);
 		}
 
-		int startIndex = ByteUtilities.searchInBuffer(in, MARKER_BYTE);
+		int startIndex = ByteUtilities.searchInBuffer(in, MessageUtilities.MARKER_BYTE);
 		if (startIndex != -1) {
 
-			int endIndex = ByteUtilities.searchInBuffer(in, MARKER_BYTE);
+			int endIndex = ByteUtilities.searchInBuffer(in, MessageUtilities.MARKER_BYTE);
 			if (endIndex == -1) {
 				in.position(startIndex);
 
@@ -67,7 +69,7 @@ public class Decoder extends CumulativeProtocolDecoder {
 				if (endIndex + 1 - startIndex >= MIN_MESS_SIZE) {
 					try {
 						in.position(startIndex + 1);
-						message = Message.parseMessage(in, endIndex + 1 - startIndex - 2);
+						message = messageParser.parse(in, endIndex + 1 - startIndex - 2);
 
 					} catch (Exception e) {
 						in.position(startIndex);

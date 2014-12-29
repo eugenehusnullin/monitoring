@@ -1,4 +1,4 @@
-package monitoring.tekobd2;
+package monitoring.tek;
 
 import java.nio.ByteBuffer;
 
@@ -22,19 +22,19 @@ public class ByteUtilities {
 	public static String bytesToHex(byte[] bytes) {
 		return bytesToHex(bytes, 0, bytes.length);
 	}
-	
+
 	public static String ioBufferToHex(IoBuffer in) {
 		return byteBufferToHex(in.buf());
 	}
-	
+
 	public static String ioBufferToHex(IoBuffer in, int length) {
 		return byteBufferToHex(in.buf(), length);
 	}
-	
+
 	public static String byteBufferToHex(ByteBuffer bb) {
 		return byteBufferToHex(bb, bb.remaining());
 	}
-	
+
 	public static String byteBufferToHex(ByteBuffer bb, int length) {
 		byte[] bytes = new byte[length];
 		bb.get(bytes);
@@ -49,7 +49,7 @@ public class ByteUtilities {
 		}
 		return data;
 	}
-	
+
 	public static int searchInBuffer(IoBuffer in, byte key) {
 		while (in.hasRemaining()) {
 			if (in.get() == key) {
@@ -58,7 +58,7 @@ public class ByteUtilities {
 		}
 		return -1;
 	}
-	
+
 	public static int countInBuffer(IoBuffer in, byte key, int length) {
 		int result = 0;
 		int i = 0;
@@ -70,7 +70,7 @@ public class ByteUtilities {
 		}
 		return result;
 	}
-	
+
 	public static String bcdToString(byte[] bcd, int offset, int length) {
 		StringBuffer sb = new StringBuffer();
 
@@ -87,7 +87,7 @@ public class ByteUtilities {
 
 		return sb.toString();
 	}
-	
+
 	public static String bcdToString(ByteBuffer bb, int length) {
 		StringBuffer sb = new StringBuffer();
 
@@ -104,5 +104,43 @@ public class ByteUtilities {
 		}
 
 		return sb.toString();
+	}
+
+	public static byte[] decimalToBcd(long num) {
+		int digits = 0;
+
+		long temp = num;
+		while (temp != 0) {
+			digits++;
+			temp /= 10;
+		}
+
+		int byteLen = digits % 2 == 0 ? digits / 2 : (digits + 1) / 2;
+		boolean isOdd = digits % 2 != 0;
+
+		byte bcd[] = new byte[byteLen];
+
+		for (int i = 0; i < digits; i++) {
+			byte tmp = (byte) (num % 10);
+
+			if (i == digits - 1 && isOdd)
+				bcd[i / 2] = tmp;
+			else if (i % 2 == 0)
+				bcd[i / 2] = tmp;
+			else {
+				byte foo = (byte) (tmp << 4);
+				bcd[i / 2] |= foo;
+			}
+
+			num /= 10;
+		}
+
+		for (int i = 0; i < byteLen / 2; i++) {
+			byte tmp = bcd[i];
+			bcd[i] = bcd[byteLen - i - 1];
+			bcd[byteLen - i - 1] = tmp;
+		}
+
+		return bcd;
 	}
 }

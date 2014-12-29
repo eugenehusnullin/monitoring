@@ -1,4 +1,4 @@
-package monitoring.tekobd2;
+package monitoring.tek;
 
 import java.net.InetSocketAddress;
 

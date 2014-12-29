@@ -1,9 +1,12 @@
-package monitoring.tekobd2.messages;
+package monitoring.tek.messages.domain;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public abstract class ResponseMessage extends Message implements IHasResponse {
+import monitoring.tek.ByteUtilities;
+import monitoring.tek.messages.MessageUtilities;
+
+public abstract class ResponseMessage extends TekMessageImpl implements HasResponse {
 	private static final int BLUNK_MESSAGE_SIZE = 13;
 
 	@Override
@@ -22,7 +25,7 @@ public abstract class ResponseMessage extends Message implements IHasResponse {
 		// message header
 		bb.putShort(messageId);
 		bb.putShort((short) messageBodyLength);
-		bb.put(getInBytes(), 4, 6);
+		bb.put(ByteUtilities.decimalToBcd(getTerminalId()));
 		bb.putShort(getSerialNumber());
 
 		return bb;

@@ -1,14 +1,14 @@
-package ru.gm.munic.tekobd2;
+package ru.gm.munic.tek;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import monitoring.tekobd2.ByteUtilities;
-import monitoring.tekobd2.Decoder;
-import monitoring.tekobd2.messages.IHasResponse;
-import monitoring.tekobd2.messages.LoginMessage;
-import monitoring.tekobd2.messages.RegistrationMessage;
-import monitoring.tekobd2.messages.TripDataMessage;
+import monitoring.tek.ByteUtilities;
+import monitoring.tek.Decoder;
+import monitoring.tek.messages.domain.HasResponse;
+import monitoring.tek.messages.domain.LoginMessage;
+import monitoring.tek.messages.domain.RegistrationMessage;
+import monitoring.tek.messages.domain.TripDataMessage;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.junit.Test;
@@ -21,14 +21,15 @@ public class MessageTest {
 		byte[] inBytes = ByteUtilities.hexToBytes(s);
 		IoBuffer in = IoBuffer.wrap(inBytes);
 		try {
-			// Message message = Message.parseMessage(in, inBytes.length);
-			RegistrationMessage message = (RegistrationMessage) Decoder.process(in);
+			// TekMessageImpl message = TekMessageImpl.parseMessage(in, inBytes.length);
+			Decoder decoder = new Decoder();
+			RegistrationMessage message = (RegistrationMessage) decoder.process(in);
 			assertEquals(message.getMessageId(), 0x3000);
 			assertEquals(message.getBodyLength(), 0x19);
 			assertEquals(message.getTerminalId(), 814087547576L);
 
-			if (message instanceof IHasResponse) {
-				byte[] outBytes = ((IHasResponse) message).makeResponse();
+			if (message instanceof HasResponse) {
+				byte[] outBytes = ((HasResponse) message).makeResponse();
 				String outString = ByteUtilities.bytesToHex(outBytes);
 				assertEquals("B0000006814087547576001000100053434FF8", outString);
 				// System.out.println(outString);
@@ -45,14 +46,15 @@ public class MessageTest {
 		byte[] inBytes = ByteUtilities.hexToBytes(s);
 		IoBuffer in = IoBuffer.wrap(inBytes);
 		try {
-			// Message message = Message.parseMessage(in, inBytes.length);
-			RegistrationMessage message = (RegistrationMessage) Decoder.process(in);
+			// TekMessageImpl message = TekMessageImpl.parseMessage(in, inBytes.length);
+			Decoder decoder = new Decoder();
+			RegistrationMessage message = (RegistrationMessage) decoder.process(in);
 			assertEquals(message.getMessageId(), 0x3000);
 			assertEquals(message.getBodyLength(), 0x0);
 			assertEquals(message.getTerminalId(), 814087547576L);
 
-			if (message instanceof IHasResponse) {
-				byte[] outBytes = ((IHasResponse) message).makeResponse();
+			if (message instanceof HasResponse) {
+				byte[] outBytes = ((HasResponse) message).makeResponse();
 				String outString = ByteUtilities.bytesToHex(outBytes);
 				assertEquals("B0000006814087547576001000100053434FF8", outString);
 				// System.out.println(outString);
@@ -69,14 +71,15 @@ public class MessageTest {
 		byte[] inBytes = ByteUtilities.hexToBytes(s);
 		IoBuffer in = IoBuffer.wrap(inBytes);
 		try {
-			// Message message = Message.parseMessage(in, inBytes.length);
-			LoginMessage message = (LoginMessage) Decoder.process(in);
+			// TekMessageImpl message = TekMessageImpl.parseMessage(in, inBytes.length);
+			Decoder decoder = new Decoder();
+			LoginMessage message = (LoginMessage) decoder.process(in);
 			assertEquals(message.getMessageId(), 0x3002);
 			assertEquals(message.getBodyLength(), 0x3);
 			assertEquals(message.getTerminalId(), 814087351432L);
 
-			if (message instanceof IHasResponse) {
-				byte[] outBytes = ((IHasResponse) message).makeResponse();
+			if (message instanceof HasResponse) {
+				byte[] outBytes = ((HasResponse) message).makeResponse();
 				String outString = ByteUtilities.bytesToHex(outBytes);
 				// System.out.println(outString);
 				assertEquals("B0030005814087351432000E000E300200D1", outString);
@@ -93,8 +96,9 @@ public class MessageTest {
 		byte[] inBytes = ByteUtilities.hexToBytes(s);
 		IoBuffer in = IoBuffer.wrap(inBytes);
 		try {
-			// Message message = Message.parseMessage(in, inBytes.length);
-			TripDataMessage message = (TripDataMessage) Decoder.process(in);
+			// TekMessageImpl message = TekMessageImpl.parseMessage(in, inBytes.length);
+			Decoder decoder = new Decoder();
+			TripDataMessage message = (TripDataMessage) decoder.process(in);
 			assertEquals(message.getMessageId(), 0x3006);
 			assertEquals(message.getBodyLength(), 0x107);
 			assertEquals(message.getTerminalId(), 814087547576L);
@@ -105,8 +109,8 @@ public class MessageTest {
 			assertNull(message.getAlarmData());
 			assertNull(message.getDtcData());
 
-			if (message instanceof IHasResponse) {
-				byte[] outBytes = ((IHasResponse) message).makeResponse();
+			if (message instanceof HasResponse) {
+				byte[] outBytes = ((HasResponse) message).makeResponse();
 				String outString = ByteUtilities.bytesToHex(outBytes);
 				//System.out.println(outString);
 				assertEquals("B0030005814087547576043B043B30060091", outString);

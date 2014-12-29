@@ -1,10 +1,6 @@
-package monitoring.tekobd2.messages.trip;
+package monitoring.tek.messages.domain.trip;
 
-import java.nio.ByteBuffer;
-
-import monitoring.tekobd2.ByteUtilities;
-
-public class BaseStationPosition implements ISubMessage {
+public class BaseStationPosition {
 	/*
 	 * For example: China MCC: 460, MNC of China Mobile GSM: 02, corresponding
 	 * hexadecimal byte (bytes0~byte 3) indicating: 00 04 60 02; BYTE4~
@@ -17,14 +13,6 @@ public class BaseStationPosition implements ISubMessage {
 	private byte mnc;
 	private short lac;
 	private short cellid;
-
-	@Override
-	public void parse(ByteBuffer bb, short length) {
-		mcc = Integer.parseInt(ByteUtilities.bcdToString(bb, 3));
-		mnc = Byte.parseByte(ByteUtilities.bcdToString(bb, 1));
-		lac = bb.getShort();
-		cellid = bb.getShort();
-	}
 
 	public int getMcc() {
 		return mcc;
@@ -40,6 +28,22 @@ public class BaseStationPosition implements ISubMessage {
 
 	public short getCellid() {
 		return cellid;
+	}
+
+	public void setMcc(int mcc) {
+		this.mcc = mcc;
+	}
+
+	public void setMnc(byte mnc) {
+		this.mnc = mnc;
+	}
+
+	public void setLac(short lac) {
+		this.lac = lac;
+	}
+
+	public void setCellid(short cellid) {
+		this.cellid = cellid;
 	}
 
 }

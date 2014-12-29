@@ -1,5 +1,5 @@
 package monitoring.domain;
 
-public interface IHasPosition {
+public interface HasPosition {
 	Position getPosition();
 }

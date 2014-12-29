@@ -1,17 +1,18 @@
-package monitoring.tekobd2.messages;
+package monitoring.tek.messages;
 
 import java.nio.ByteBuffer;
 
-import monitoring.tekobd2.ByteUtilities;
-import monitoring.tekobd2.Decoder;
+import monitoring.tek.ByteUtilities;
 
 import org.apache.mina.core.buffer.IoBuffer;
 
 public class MessageUtilities {
+	public static final byte ESCAPE_BYTE = (byte) 0x7d;
+	public static final byte MARKER_BYTE = (byte) 0x7e;
 
 	public static byte[] escapeIn(IoBuffer in, int length) throws Exception {
 		int startPosition = in.position();
-		int count = ByteUtilities.countInBuffer(in, Decoder.ESCAPE_BYTE, length);
+		int count = ByteUtilities.countInBuffer(in, ESCAPE_BYTE, length);
 		in.position(startPosition);
 		byte[] bytes = new byte[length - count];
 
@@ -21,11 +22,11 @@ public class MessageUtilities {
 			byte b = in.get();
 			i++;
 
-			if (b == Decoder.MARKER_BYTE) {
+			if (b == MARKER_BYTE) {
 				break;
 			}
 
-			if (b == Decoder.ESCAPE_BYTE) {
+			if (b == ESCAPE_BYTE) {
 				if (!in.hasRemaining()) {
 					throw new Exception("Escape rules are broken! (not enough bytes)");
 				}
@@ -33,10 +34,10 @@ public class MessageUtilities {
 				i++;
 
 				if (b == 0x02) {
-					bytes[j] = Decoder.MARKER_BYTE;
+					bytes[j] = MARKER_BYTE;
 
 				} else if (b == 0x01) {
-					bytes[j] = Decoder.ESCAPE_BYTE;
+					bytes[j] = ESCAPE_BYTE;
 
 				} else {
 					throw new Exception("Escape rules are broken! (uncorrect byte folowed escape byte)");
@@ -58,7 +59,7 @@ public class MessageUtilities {
 		int cnt = bb.remaining();
 		while (bb.hasRemaining()) {
 			byte b = bb.get();
-			if (b == Decoder.MARKER_BYTE || b == Decoder.ESCAPE_BYTE) {
+			if (b == MARKER_BYTE || b == ESCAPE_BYTE) {
 				cnt++;
 			}
 		}
@@ -68,12 +69,12 @@ public class MessageUtilities {
 		int j = 0;
 		while (bb.hasRemaining()) {
 			byte b = bb.get();
-			if (b == Decoder.MARKER_BYTE) {
-				escapedBytes[j] = Decoder.ESCAPE_BYTE;
+			if (b == MARKER_BYTE) {
+				escapedBytes[j] = ESCAPE_BYTE;
 				j++;
 				escapedBytes[j] = 0x02;
-			} else if (b == Decoder.ESCAPE_BYTE) {
-				escapedBytes[j] = Decoder.ESCAPE_BYTE;
+			} else if (b == ESCAPE_BYTE) {
+				escapedBytes[j] = ESCAPE_BYTE;
 				j++;
 				escapedBytes[j] = 0x01;
 

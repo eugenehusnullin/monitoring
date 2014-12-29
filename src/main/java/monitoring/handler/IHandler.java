@@ -1,7 +1,7 @@
 package monitoring.handler;
 
-import monitoring.domain.IMessage;
+import monitoring.domain.Message;
 
 public interface IHandler {
-	void handle(IMessage message);
+	void handle(Message message);
 }

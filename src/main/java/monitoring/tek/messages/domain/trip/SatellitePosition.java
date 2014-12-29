@@ -1,11 +1,9 @@
-package monitoring.tekobd2.messages.trip;
+package monitoring.tek.messages.domain.trip;
 
-import java.nio.ByteBuffer;
-
-import monitoring.domain.IHasPosition;
+import monitoring.domain.HasPosition;
 import monitoring.domain.Position;
 
-public class SatellitePosition implements ISubMessage, IHasPosition {
+public class SatellitePosition implements HasPosition {
 
 	// fields for tripDataMessageId == 0xA1
 	private int latitude; // The latitude value in the unit of degree shall be
@@ -17,15 +15,6 @@ public class SatellitePosition implements ISubMessage, IHasPosition {
 	private short elevation; // Altitude, unit: m
 	private short speed; // 1/10km/h
 	private short direction; // 0-359, the true north is 0, clockwise
-
-	@Override
-	public void parse(ByteBuffer bb, short length) {
-		latitude = bb.getInt();
-		longitude = bb.getInt();
-		elevation = bb.getShort();
-		speed = bb.getShort();
-		direction = bb.getShort();
-	}
 
 	@Override
 	public Position getPosition() {
@@ -58,5 +47,25 @@ public class SatellitePosition implements ISubMessage, IHasPosition {
 
 	public short getDirection() {
 		return direction;
+	}
+
+	public void setLatitude(int latitude) {
+		this.latitude = latitude;
+	}
+
+	public void setLongitude(int longitude) {
+		this.longitude = longitude;
+	}
+
+	public void setElevation(short elevation) {
+		this.elevation = elevation;
+	}
+
+	public void setSpeed(short speed) {
+		this.speed = speed;
+	}
+
+	public void setDirection(short direction) {
+		this.direction = direction;
 	}
 }

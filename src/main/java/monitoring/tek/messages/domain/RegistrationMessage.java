@@ -1,18 +1,9 @@
-package monitoring.tekobd2.messages;
+package monitoring.tek.messages.domain;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 public class RegistrationMessage extends ResponseMessage {
-
-	@Override
-	public void parseMessageBody(ByteBuffer bb) {
-		// just move position
-		// value in registration body don't need
-		byte[] messageBody = new byte[getBodyLength()];
-		bb.get(messageBody);
-	}
-
 	public static final String AUTH_KEY = "SCO";
 	private static byte[] AUTH_KEY_BYTES;
 

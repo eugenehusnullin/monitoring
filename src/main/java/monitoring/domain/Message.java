@@ -1,5 +1,5 @@
 package monitoring.domain;
 
 
-public interface IMessage {
+public interface Message {
 }

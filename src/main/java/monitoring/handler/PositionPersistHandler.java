@@ -5,8 +5,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Transactional;
 
-import monitoring.domain.IHasPosition;
-import monitoring.domain.IMessage;
+import monitoring.domain.HasPosition;
+import monitoring.domain.Message;
 import monitoring.domain.Position;
 import monitoring.domain.TopAuto;
 
@@ -16,9 +16,9 @@ public class PositionPersistHandler implements IPositionHandler {
 
 	@Transactional
 	@Override
-	public void handle(IMessage message) {
-		if (message instanceof IHasPosition) {
-			IHasPosition hasPosition = (IHasPosition) message;
+	public void handle(Message message) {
+		if (message instanceof HasPosition) {
+			HasPosition hasPosition = (HasPosition) message;
 			Position position = hasPosition.getPosition();
 
 			if (position != null) {

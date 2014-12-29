@@ -1,4 +1,4 @@
-package monitoring.tekobd2.messages;
+package monitoring.tek.messages.domain;
 
 import java.nio.ByteBuffer;
 

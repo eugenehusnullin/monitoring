@@ -2,7 +2,7 @@ package monitoring.tek;
 
 import monitoring.tek.messages.MessageParser;
 import monitoring.tek.messages.MessageUtilities;
-import monitoring.tek.messages.domain.TekMessageImpl;
+import monitoring.tek.messages.domain.MessageImpl;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -26,7 +26,7 @@ public class Decoder extends CumulativeProtocolDecoder {
 
 		int startPosition = in.position();
 
-		TekMessageImpl message = process(in);
+		MessageImpl message = process(in);
 		if (message != null) {
 
 			session.setAttribute(KEY_TERMINAL_ID, message.getTerminalId());
@@ -47,8 +47,8 @@ public class Decoder extends CumulativeProtocolDecoder {
 		}
 	}
 
-	public TekMessageImpl process(IoBuffer in) {
-		TekMessageImpl message = null;
+	public MessageImpl process(IoBuffer in) {
+		MessageImpl message = null;
 
 		int firstPosition = in.position();
 

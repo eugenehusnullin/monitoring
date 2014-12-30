@@ -4,17 +4,17 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 import monitoring.tek.messages.domain.LoginMessage;
-import monitoring.tek.messages.domain.TekMessageImpl;
+import monitoring.tek.messages.domain.MessageImpl;
 
 public class LoginMessageFactory extends MessageFactory {
 
 	@Override
-	TekMessageImpl getNewTekMessage() {
+	public MessageImpl createTekMessage() {
 		return new LoginMessage();
 	}
 
 	@Override
-	void initializeMessageBody(TekMessageImpl message, ByteBuffer buffer) {
+	public void initializeMessageBody(MessageImpl message, ByteBuffer buffer) {
 		LoginMessage loginMessage = (LoginMessage) message;
 
 		byte[] messageBody = new byte[loginMessage.getBodyLength()];

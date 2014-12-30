@@ -1,7 +1,7 @@
 package monitoring.tek.messages.domain;
 
 
-public abstract class TekMessageImpl implements TekMessage {
+public abstract class MessageImpl implements TekMessage {
 
 	private short messageId;
 	private long terminalId;

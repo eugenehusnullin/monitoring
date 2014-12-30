@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 import monitoring.tek.ByteUtilities;
 import monitoring.tek.messages.MessageUtilities;
 
-public abstract class ResponseMessage extends TekMessageImpl implements HasResponse {
+public abstract class ResponseMessage extends MessageImpl implements HasResponse {
 	private static final int BLUNK_MESSAGE_SIZE = 13;
 
 	@Override

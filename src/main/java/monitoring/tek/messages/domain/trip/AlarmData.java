@@ -1,6 +1,5 @@
 package monitoring.tek.messages.domain.trip;
 
-
 public class AlarmData {
 	public static class Alarm {
 		public byte type;
@@ -27,5 +26,5 @@ public class AlarmData {
 	public void setAlarmArray(Alarm[] alarmArray) {
 		this.alarmArray = alarmArray;
 	}
-	
+
 }

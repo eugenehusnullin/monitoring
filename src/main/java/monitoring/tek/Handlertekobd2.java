@@ -1,7 +1,7 @@
 package monitoring.tek;
 
 import monitoring.tek.messages.domain.HasResponse;
-import monitoring.tek.messages.domain.TekMessageImpl;
+import monitoring.tek.messages.domain.MessageImpl;
 
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
@@ -47,7 +47,7 @@ public class Handlertekobd2 implements IoHandler {
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		logger.info("tekobd2. messageReceived");
 
-		TekMessageImpl m = (TekMessageImpl) message;
+		MessageImpl m = (MessageImpl) message;
 		if (m instanceof HasResponse) {
 			session.write(m);
 		}

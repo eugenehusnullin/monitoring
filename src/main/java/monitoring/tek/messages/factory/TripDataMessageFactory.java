@@ -17,7 +17,7 @@ import monitoring.tek.messages.domain.trip.SatellitePosition;
 public class TripDataMessageFactory extends MessageFactory {
 
 	@Override
-	public MessageImpl createTekMessage() {
+	public MessageImpl createMessage() {
 		return new TripDataMessage();
 	}
 

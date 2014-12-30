@@ -97,7 +97,7 @@ public class MessageUtilities {
 		return checkCode;
 	}
 	
-	public static ByteBuffer preprocess(IoBuffer in, int length) throws Exception {
+	public static ByteBuffer preprocessIncoming(IoBuffer in, int length) throws Exception {
 		byte[] bytes = MessageUtilities.escapeIn(in, length);
 
 		ByteBuffer buffer = ByteBuffer.wrap(bytes);

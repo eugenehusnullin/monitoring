@@ -6,7 +6,7 @@ import monitoring.tek.messages.domain.MessageImpl;
 
 public abstract class MessageFactory {
 
-	abstract public MessageImpl createTekMessage();
+	abstract public MessageImpl createMessage();
 
 	abstract public void initializeMessageBody(MessageImpl message, ByteBuffer buffer);
 }

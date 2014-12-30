@@ -14,12 +14,12 @@ public class MessageParser {
 
 	public MessageImpl parse(IoBuffer in, int length) throws Exception {
 
-		ByteBuffer buffer = MessageUtilities.preprocess(in, length);
+		ByteBuffer buffer = MessageUtilities.preprocessIncoming(in, length);
 		short messageId = MessageUtilities.detectMessageId(buffer);
 
 		MessageFactory messageFactory = messageFactoryDetector.getMessageFactory(messageId);
 
-		MessageImpl message = messageFactory.createTekMessage();
+		MessageImpl message = messageFactory.createMessage();
 
 		MessageUtilities.initializeHeader(message, buffer);
 

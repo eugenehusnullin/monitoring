@@ -8,7 +8,7 @@ import monitoring.tek.messages.domain.RegistrationMessage;
 public class RegistrationMessageFactory extends MessageFactory {
 
 	@Override
-	public MessageImpl createTekMessage() {
+	public MessageImpl createMessage() {
 		return new RegistrationMessage();
 	}
 

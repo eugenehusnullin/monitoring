@@ -9,7 +9,7 @@ import monitoring.tek.messages.domain.MessageImpl;
 public class LoginMessageFactory extends MessageFactory {
 
 	@Override
-	public MessageImpl createTekMessage() {
+	public MessageImpl createMessage() {
 		return new LoginMessage();
 	}
 

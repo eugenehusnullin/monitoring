@@ -10,7 +10,7 @@ import monitoring.tek.messages.domain.trip.DtcData;
 import monitoring.tek.messages.domain.trip.ObdData;
 import monitoring.tek.messages.domain.trip.SatellitePosition;
 
-public class TripDataMessage extends GeneralResponseMessage implements HasPosition {
+public class TripDataMessage extends MessageImpl implements HasPosition {
 
 	public enum PositioningMode {
 		GPS((byte) 0b000), BeidouSatelite((byte) 0b001), GPSBeidou((byte) 0b010), Glonass((byte) 0b011), BaseStation(

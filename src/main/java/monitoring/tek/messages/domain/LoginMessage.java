@@ -1,7 +1,7 @@
 package monitoring.tek.messages.domain;
 
 
-public class LoginMessage extends GeneralResponseMessage {
+public class LoginMessage extends MessageImpl {
 	private String authKey;
 
 	public String getAuthKey() {

@@ -9,12 +9,12 @@ import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import monitoring.domain.MunicData;
-import monitoring.domain.MunicItemRawData;
 import monitoring.domain.TopMapzone;
 import monitoring.service.processing.utils.ItemRawDataJson;
 import monitoring.service.processing.utils.ThreadFactorySecuenceNaming;
 import monitoring.service.sender.SendDispatcher;
+import monitoring.terminal.munic.controller.domain.MunicData;
+import monitoring.terminal.munic.controller.domain.MunicItemRawData;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

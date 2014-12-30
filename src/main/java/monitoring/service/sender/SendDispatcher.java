@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import monitoring.domain.MunicItemRawData;
 import monitoring.service.processing.LowService;
 import monitoring.service.processing.utils.ItemRawDataJson;
+import monitoring.terminal.munic.controller.domain.MunicItemRawData;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

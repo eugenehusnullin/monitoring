@@ -3,8 +3,8 @@ package monitoring.service.processing;
 import java.util.Date;
 import java.util.List;
 
-import monitoring.domain.MunicItemRawData;
-import monitoring.domain.MunicRawData;
+import monitoring.terminal.munic.controller.domain.MunicItemRawData;
+import monitoring.terminal.munic.controller.domain.MunicRawData;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;

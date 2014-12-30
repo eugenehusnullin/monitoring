@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import monitoring.domain.MunicData;
-import monitoring.domain.MunicItemRawData;
-import monitoring.domain.MunicRawData;
 import monitoring.domain.TopAuto;
 import monitoring.domain.TopBlockAlert;
+import monitoring.terminal.munic.controller.domain.MunicData;
+import monitoring.terminal.munic.controller.domain.MunicItemRawData;
+import monitoring.terminal.munic.controller.domain.MunicRawData;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

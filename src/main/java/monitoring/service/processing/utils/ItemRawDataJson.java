@@ -5,9 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import monitoring.domain.MunicData;
-import monitoring.domain.MunicDataBehave;
-import monitoring.domain.MunicDataMdi;
+import monitoring.terminal.munic.controller.domain.MunicData;
+import monitoring.terminal.munic.controller.domain.MunicDataBehave;
+import monitoring.terminal.munic.controller.domain.MunicDataMdi;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

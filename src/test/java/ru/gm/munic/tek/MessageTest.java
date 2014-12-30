@@ -3,11 +3,11 @@ package ru.gm.munic.tek;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import monitoring.tek.ByteUtilities;
-import monitoring.tek.Decoder;
-import monitoring.tek.messages.domain.LoginMessage;
-import monitoring.tek.messages.domain.RegistrationMessage;
-import monitoring.tek.messages.domain.TripDataMessage;
+import monitoring.terminal.tek.ByteUtilities;
+import monitoring.terminal.tek.Decoder;
+import monitoring.terminal.tek.messages.domain.LoginMessage;
+import monitoring.terminal.tek.messages.domain.RegistrationMessage;
+import monitoring.terminal.tek.messages.domain.TripDataMessage;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.junit.Test;

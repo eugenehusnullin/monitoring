@@ -3,7 +3,7 @@ package monitoring.service.processing;
 import java.util.Calendar;
 import java.util.Date;
 
-import monitoring.domain.MunicRawData;
+import monitoring.terminal.munic.controller.domain.MunicRawData;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

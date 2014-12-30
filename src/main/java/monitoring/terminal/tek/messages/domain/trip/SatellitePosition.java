@@ -1,9 +1,6 @@
 package monitoring.terminal.tek.messages.domain.trip;
 
-import monitoring.handler.position.domain.HasPosition;
-import monitoring.handler.position.domain.Position;
-
-public class SatellitePosition implements HasPosition {
+public class SatellitePosition {
 
 	// fields for tripDataMessageId == 0xA1
 	private int latitude; // The latitude value in the unit of degree shall be
@@ -15,19 +12,6 @@ public class SatellitePosition implements HasPosition {
 	private short elevation; // Altitude, unit: m
 	private short speed; // 1/10km/h
 	private short direction; // 0-359, the true north is 0, clockwise
-
-	@Override
-	public Position getPosition() {
-		Position position = new Position();
-
-		position.setSpeed((double) (speed / 10));
-		position.setCourse((double) direction);
-		position.setAltitude((double) elevation);
-		position.setLat((double) (latitude / 1000000));
-		position.setLon((double) (longitude / 1000000));
-
-		return null;
-	}
 
 	public int getLatitude() {
 		return latitude;

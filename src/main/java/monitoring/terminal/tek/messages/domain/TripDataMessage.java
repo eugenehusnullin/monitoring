@@ -2,15 +2,13 @@ package monitoring.terminal.tek.messages.domain;
 
 import java.util.Date;
 
-import monitoring.handler.position.domain.HasPosition;
-import monitoring.handler.position.domain.Position;
 import monitoring.terminal.tek.messages.domain.trip.AlarmData;
 import monitoring.terminal.tek.messages.domain.trip.BaseStationPosition;
 import monitoring.terminal.tek.messages.domain.trip.DtcData;
 import monitoring.terminal.tek.messages.domain.trip.ObdData;
 import monitoring.terminal.tek.messages.domain.trip.SatellitePosition;
 
-public class TripDataMessage extends MessageImpl implements HasPosition {
+public class TripDataMessage extends MessageImpl {
 
 	public enum PositioningMode {
 		GPS((byte) 0b000), BeidouSatelite((byte) 0b001), GPSBeidou((byte) 0b010), Glonass((byte) 0b011), BaseStation(
@@ -52,19 +50,6 @@ public class TripDataMessage extends MessageImpl implements HasPosition {
 	private BaseStationPosition baseStationPosition;
 	private DtcData dtcData;
 	private AlarmData alarmData;
-
-	@Override
-	public Position getPosition() {
-		if (satellitePosition != null) {
-			Position position = satellitePosition.getPosition();
-			position.setDate(uploadingTime);
-			position.setTerminalId(getTerminalId());
-			position.setSatellites((int) satelites);
-			return position;
-		} else {
-			return null;
-		}
-	}
 
 	public Date getUploadingTime() {
 		return uploadingTime;

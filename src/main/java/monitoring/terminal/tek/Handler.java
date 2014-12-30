@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Handlertekobd2 implements IoHandler {
+public class Handler implements IoHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(Handlertekobd2.class);
+	private static final Logger logger = LoggerFactory.getLogger(Handler.class);
 
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {

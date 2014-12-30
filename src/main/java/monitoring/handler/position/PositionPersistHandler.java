@@ -1,38 +1,28 @@
 package monitoring.handler.position;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.transaction.annotation.Transactional;
-
 import monitoring.domain.Message;
-import monitoring.domain.TopAuto;
-import monitoring.handler.position.domain.HasPosition;
+import monitoring.handler.Handler;
+import monitoring.handler.HandlerStrategy;
 import monitoring.handler.position.domain.Position;
 
-public class PositionPersistHandler implements IPositionHandler {
-	
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.transaction.annotation.Transactional;
+
+public class PositionPersistHandler implements Handler {
+
 	private SessionFactory sessionFactory;
 
 	@Transactional
 	@Override
-	public void handle(Message message) {
-		if (message instanceof HasPosition) {
-			HasPosition hasPosition = (HasPosition) message;
-			Position position = hasPosition.getPosition();
+	public void handle(Message message, HandlerStrategy strategy) {
 
-			if (position != null) {
-				Session session = sessionFactory.getCurrentSession();
-				TopAuto topAuto = (TopAuto) session.createCriteria(TopAuto.class)
-						.add(Restrictions.eq("asset", position.getTerminalId()))
-						.uniqueResult();
-				
-				if (topAuto != null) {
-					position.setTopAuto(topAuto);
-				}
-				
-				session.save(position);
-			}
+		PositionConverter positionConverter = strategy.getPositionConverter();
+		Position position = positionConverter.convert(message);
+
+		if (position != null) {
+			Session session = sessionFactory.getCurrentSession();
+			session.save(position);
 		}
 	}
 }

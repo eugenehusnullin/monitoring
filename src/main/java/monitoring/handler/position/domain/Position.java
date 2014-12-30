@@ -2,12 +2,9 @@ package monitoring.handler.position.domain;
 
 import java.util.Date;
 
-import monitoring.domain.TopAuto;
-
 public class Position {
 	private Long id;
 	private Long terminalId;
-	private TopAuto topAuto;
 	private Date date;
 	private Double lat;
 	private Double lon;
@@ -51,6 +48,7 @@ public class Position {
 
 	/**
 	 * km/h (kilometer per hour)
+	 * 
 	 * @return
 	 */
 	public Double getSpeed() {
@@ -59,6 +57,7 @@ public class Position {
 
 	/**
 	 * km/h (kilometer per hour)
+	 * 
 	 * @param speed
 	 */
 	public void setSpeed(Double speed) {
@@ -95,14 +94,6 @@ public class Position {
 
 	public void setAltitude(Double altitude) {
 		this.altitude = altitude;
-	}
-
-	public TopAuto getTopAuto() {
-		return topAuto;
-	}
-
-	public void setTopAuto(TopAuto topAuto) {
-		this.topAuto = topAuto;
 	}
 
 	public Long getTerminalId() {

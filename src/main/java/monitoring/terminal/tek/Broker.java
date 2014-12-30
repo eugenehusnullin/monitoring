@@ -8,14 +8,14 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Brokertekobd2 {
+public class Broker {
 
-	private static final Logger logger = LoggerFactory.getLogger(Brokertekobd2.class);
+	private static final Logger logger = LoggerFactory.getLogger(Broker.class);
 	private IoAcceptor acceptor;
 	private String host;
 	private Integer port;
 
-	private Handlertekobd2 handler;
+	private Handler handler;
 
 	public void start() {
 		try {

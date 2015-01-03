@@ -20,7 +20,7 @@ public class MessageTest {
 		byte[] inBytes = ByteUtilities.hexToBytes(s);
 		IoBuffer in = IoBuffer.wrap(inBytes);
 		try {
-			// MessageImpl message = MessageImpl.parseMessage(in, inBytes.length);
+			// TekMessage message = TekMessage.parseMessage(in, inBytes.length);
 			Decoder decoder = new Decoder();
 			RegistrationMessage message = (RegistrationMessage) decoder.process(in);
 			assertEquals(message.getMessageId(), 0x3000);
@@ -45,7 +45,7 @@ public class MessageTest {
 		byte[] inBytes = ByteUtilities.hexToBytes(s);
 		IoBuffer in = IoBuffer.wrap(inBytes);
 		try {
-			// MessageImpl message = MessageImpl.parseMessage(in, inBytes.length);
+			// TekMessage message = TekMessage.parseMessage(in, inBytes.length);
 			Decoder decoder = new Decoder();
 			RegistrationMessage message = (RegistrationMessage) decoder.process(in);
 			assertEquals(message.getMessageId(), 0x3000);
@@ -70,7 +70,7 @@ public class MessageTest {
 		byte[] inBytes = ByteUtilities.hexToBytes(s);
 		IoBuffer in = IoBuffer.wrap(inBytes);
 		try {
-			// MessageImpl message = MessageImpl.parseMessage(in, inBytes.length);
+			// TekMessage message = TekMessage.parseMessage(in, inBytes.length);
 			Decoder decoder = new Decoder();
 			LoginMessage message = (LoginMessage) decoder.process(in);
 			assertEquals(message.getMessageId(), 0x3002);
@@ -95,7 +95,7 @@ public class MessageTest {
 		byte[] inBytes = ByteUtilities.hexToBytes(s);
 		IoBuffer in = IoBuffer.wrap(inBytes);
 		try {
-			// MessageImpl message = MessageImpl.parseMessage(in, inBytes.length);
+			// TekMessage message = TekMessage.parseMessage(in, inBytes.length);
 			Decoder decoder = new Decoder();
 			TripDataMessage message = (TripDataMessage) decoder.process(in);
 			assertEquals(message.getMessageId(), 0x3006);

@@ -1,20 +1,18 @@
-package monitoring.service.sender;
+package monitoring.terminal.munic.sender;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import monitoring.service.processing.LowService;
-import monitoring.service.processing.utils.ItemRawDataJson;
 import monitoring.terminal.munic.controller.domain.MunicItemRawData;
+import monitoring.terminal.munic.processing.LowService;
+import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.future.IoFutureListener;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
 
@@ -53,8 +51,7 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 
 		connector = new NioSocketConnector();
 		connector.setConnectTimeoutMillis(10000);
-		connector.getFilterChain().addLast("codec",
-				new ProtocolCodecFilter(new PrefixedStringCodecFactory(Charset.forName("ASCII"), 2)));
+		
 		connector.setHandler(this);
 	}
 

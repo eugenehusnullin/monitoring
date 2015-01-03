@@ -5,12 +5,12 @@ import java.nio.ByteOrder;
 
 import monitoring.terminal.tek.ByteUtilities;
 import monitoring.terminal.tek.messages.MessageUtilities;
-import monitoring.terminal.tek.messages.domain.MessageImpl;
+import monitoring.terminal.tek.messages.domain.TekMessage;
 
 public abstract class ResponseCreator {
 	private static final int BLUNK_MESSAGE_SIZE = 13;
 
-	public byte[] create(MessageImpl message) {
+	public byte[] create(TekMessage message) {
 		ByteBuffer buffer = initHeader(message);
 		initResponseBody(message, buffer);
 		initBottom(buffer);
@@ -22,9 +22,9 @@ public abstract class ResponseCreator {
 
 	abstract short getResponseMessageId();
 	
-	abstract void initResponseBody(MessageImpl message, ByteBuffer buffer);
+	abstract void initResponseBody(TekMessage message, ByteBuffer buffer);
 
-	private ByteBuffer initHeader(MessageImpl message) {
+	private ByteBuffer initHeader(TekMessage message) {
 		ByteBuffer buffer = ByteBuffer.allocate(BLUNK_MESSAGE_SIZE + getResponseBodySize());
 		buffer.order(ByteOrder.BIG_ENDIAN);
 		buffer.position(0);

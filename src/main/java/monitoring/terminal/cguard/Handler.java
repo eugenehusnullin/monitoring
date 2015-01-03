@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 import monitoring.handler.position.domain.Position;
-import monitoring.service.processing.LowService;
 import monitoring.terminal.cguard.wialon.Dispatcher;
+import monitoring.terminal.munic.processing.LowService;
 
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;

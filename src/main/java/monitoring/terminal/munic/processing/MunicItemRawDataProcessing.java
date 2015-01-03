@@ -1,4 +1,4 @@
-package monitoring.service.processing;
+package monitoring.terminal.munic.processing;
 
 import java.util.ArrayDeque;
 import java.util.List;
@@ -10,11 +10,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import monitoring.domain.TopMapzone;
-import monitoring.service.processing.utils.ItemRawDataJson;
-import monitoring.service.processing.utils.ThreadFactorySecuenceNaming;
-import monitoring.service.sender.SendDispatcher;
 import monitoring.terminal.munic.controller.domain.MunicData;
 import monitoring.terminal.munic.controller.domain.MunicItemRawData;
+import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
+import monitoring.terminal.munic.processing.utils.ThreadFactorySecuenceNaming;
+import monitoring.terminal.munic.sender.SendDispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

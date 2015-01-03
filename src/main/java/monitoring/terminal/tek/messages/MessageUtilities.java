@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import monitoring.terminal.tek.ByteUtilities;
-import monitoring.terminal.tek.messages.domain.MessageImpl;
+import monitoring.terminal.tek.messages.domain.TekMessage;
 
 import org.apache.mina.core.buffer.IoBuffer;
 
@@ -114,7 +114,7 @@ public class MessageUtilities {
 		return messageId;
 	}
 
-	public static void initializeHeader(MessageImpl message, ByteBuffer buffer) throws Exception {
+	public static void initializeHeader(TekMessage message, ByteBuffer buffer) throws Exception {
 		message.setMessageId(buffer.getShort());
 
 		// body attribute
@@ -140,7 +140,7 @@ public class MessageUtilities {
 		}
 	}
 	
-	public static void initializeFooter(MessageImpl message, ByteBuffer buffer) {
+	public static void initializeFooter(TekMessage message, ByteBuffer buffer) {
 		buffer.position(buffer.limit() - 1);
 		message.setCheckCode(buffer.get());
 	}

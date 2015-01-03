@@ -3,7 +3,7 @@ package monitoring.terminal.tek.messages.domain;
 import monitoring.domain.Message;
 
 
-public abstract class MessageImpl implements Message {
+public abstract class TekMessage implements Message {
 
 	private short messageId;
 	private long terminalId;
@@ -21,6 +21,7 @@ public abstract class MessageImpl implements Message {
 		this.messageId = id;
 	}
 
+	@Override
 	public long getTerminalId() {
 		return terminalId;
 	}

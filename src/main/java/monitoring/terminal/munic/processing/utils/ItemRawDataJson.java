@@ -1,4 +1,4 @@
-package monitoring.service.processing.utils;
+package monitoring.terminal.munic.processing.utils;
 
 import java.nio.charset.Charset;
 import java.text.ParseException;
@@ -62,6 +62,7 @@ public class ItemRawDataJson {
 		return asset;
 	}
 
+	@SuppressWarnings("unused")
 	private String getGPRMC() {
 		// $GPRMC,180933.000,A,5544.0903,N,3736.7949,E,25.00,194.00,160414,0,N,A*15
 		Date recordedAt = getRecordedAt();
@@ -258,14 +259,8 @@ public class ItemRawDataJson {
 				insertPair("lon", String.valueOf(lon), sb);
 			}
 
-			String gprmc = getGPRMC();
-			if (gprmc != null) {
-				insertPair("gprmc", gprmc, sb);
-			}
-
 			insertIntegerFieldIfExists("GPS_DIR", sb);
 			insertIntegerFieldIfExists("GPS_SPEED", sb);
-			//insertBooleanFieldIfExists("DIO_IGNITION", sb);
 			insertBooleanPair("DIO_IGNITION", dioIgnition, sb);
 			insertIntegerFieldIfExists("ODO_FULL", sb);
 			insertIntegerFieldIfExists("BEHAVE_ID", sb);

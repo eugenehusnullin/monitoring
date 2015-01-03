@@ -1,7 +1,7 @@
 package monitoring.terminal.tek;
 
 import monitoring.terminal.tek.messages.MessageUtilities;
-import monitoring.terminal.tek.messages.domain.MessageImpl;
+import monitoring.terminal.tek.messages.domain.TekMessage;
 import monitoring.terminal.tek.responses.ResponseCreator;
 import monitoring.terminal.tek.responses.ResponseCreatorDetector;
 
@@ -20,7 +20,7 @@ public class Encoder implements ProtocolEncoder {
 
 	@Override
 	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
-		MessageImpl messageImpl = (MessageImpl) message;
+		TekMessage messageImpl = (TekMessage) message;
 
 		ResponseCreator responseCreator = responseCreatorDetector.getResponseCreator(messageImpl.getMessageId());
 		if (responseCreator != null) {

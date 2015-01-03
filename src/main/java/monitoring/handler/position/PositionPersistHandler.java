@@ -18,11 +18,13 @@ public class PositionPersistHandler implements Handler {
 	public void handle(Message message, HandlerStrategy strategy) {
 
 		PositionConverter positionConverter = strategy.getPositionConverter();
-		Position position = positionConverter.convert(message);
+		if (positionConverter != null) {
+			Position position = positionConverter.convert(message);
 
-		if (position != null) {
-			Session session = sessionFactory.getCurrentSession();
-			session.save(position);
+			if (position != null) {
+				Session session = sessionFactory.getCurrentSession();
+				session.save(position);
+			}
 		}
 	}
 }

@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Calendar;
 
 import monitoring.terminal.tek.ByteUtilities;
-import monitoring.terminal.tek.messages.domain.MessageImpl;
+import monitoring.terminal.tek.messages.domain.TekMessage;
 import monitoring.terminal.tek.messages.domain.TripDataMessage;
 import monitoring.terminal.tek.messages.domain.TripDataMessage.PositioningMode;
 import monitoring.terminal.tek.messages.domain.trip.AlarmData;
@@ -17,12 +17,12 @@ import monitoring.terminal.tek.messages.domain.trip.AlarmData.Alarm;
 public class TripDataMessageFactory extends MessageFactory {
 
 	@Override
-	public MessageImpl createMessage() {
+	public TekMessage createMessage() {
 		return new TripDataMessage();
 	}
 
 	@Override
-	public void initializeMessageBody(MessageImpl message, ByteBuffer buffer) {
+	public void initializeMessageBody(TekMessage message, ByteBuffer buffer) {
 		TripDataMessage tripDataMessage = (TripDataMessage) message;
 		
 		

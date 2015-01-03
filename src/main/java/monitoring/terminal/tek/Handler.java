@@ -1,61 +1,41 @@
 package monitoring.terminal.tek;
 
-import org.apache.mina.core.service.IoHandler;
-import org.apache.mina.core.session.IdleStatus;
+import java.util.HashMap;
+import java.util.Map;
+
+import monitoring.domain.Message;
+
+import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Handler implements IoHandler {
+public class Handler extends IoHandlerAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(Handler.class);
-
-	@Override
-	public void sessionCreated(IoSession session) throws Exception {
-		logger.info("tekobd2. sessionCreated");
-	}
-
-	@Override
-	public void sessionOpened(IoSession session) throws Exception {
-		logger.info("tekobd2. sessionOpened");
-
-	}
-
-	@Override
-	public void sessionClosed(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-		logger.error(cause.toString());
-	}
+	
+	private Map<Long, IoSession> sessionMap = new HashMap<Long, IoSession>();
 
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		logger.info("tekobd2. messageReceived");
+		
+		Message m = (Message) message;
+		synchronized (sessionMap) {
+			sessionMap.put(m.getTerminalId(), session);
+			sessionMap.notifyAll();
+		}
 
 		session.write(message);
 	}
-
-	@Override
-	public void messageSent(IoSession session, Object message) throws Exception {
-		logger.info("tekobd2. messageSend");
+	
+	public IoSession getSession(long terminalId) {
+		synchronized (sessionMap) {
+			IoSession session = sessionMap.get(terminalId);
+			sessionMap.notifyAll();
+			return session;
+		}
 	}
-
-	@Override
-	public void inputClosed(IoSession arg0) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
 }

@@ -1,6 +1,6 @@
 package monitoring.terminal.munic.controller.domain;
 
-import monitoring.service.processing.utils.ItemRawDataJson;
+import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
 
 public class MunicItemRawData {
 	private Long id;

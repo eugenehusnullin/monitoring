@@ -1,4 +1,4 @@
-package monitoring.service.processing;
+package monitoring.terminal.munic.processing;
 
 import java.util.ArrayList;
 import java.util.Date;

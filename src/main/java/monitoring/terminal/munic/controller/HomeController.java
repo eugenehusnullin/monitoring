@@ -14,8 +14,8 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import monitoring.service.processing.MessageService;
-import monitoring.service.processing.ProcessFailedItems;
+import monitoring.terminal.munic.processing.MessageService;
+import monitoring.terminal.munic.processing.ProcessFailedItems;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;

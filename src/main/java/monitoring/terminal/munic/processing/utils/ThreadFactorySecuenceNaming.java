@@ -1,4 +1,4 @@
-package monitoring.service.processing.utils;
+package monitoring.terminal.munic.processing.utils;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

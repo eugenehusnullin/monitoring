@@ -8,7 +8,7 @@ import monitoring.terminal.tek.messages.domain.trip.DtcData;
 import monitoring.terminal.tek.messages.domain.trip.ObdData;
 import monitoring.terminal.tek.messages.domain.trip.SatellitePosition;
 
-public class TripDataMessage extends MessageImpl {
+public class TripDataMessage extends TekMessage {
 
 	public enum PositioningMode {
 		GPS((byte) 0b000), BeidouSatelite((byte) 0b001), GPSBeidou((byte) 0b010), Glonass((byte) 0b011), BaseStation(

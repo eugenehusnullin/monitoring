@@ -2,7 +2,7 @@ package monitoring.terminal.tek.responses;
 
 import java.nio.ByteBuffer;
 
-import monitoring.terminal.tek.messages.domain.MessageImpl;
+import monitoring.terminal.tek.messages.domain.TekMessage;
 
 public class GeneralResponseCreator extends ResponseCreator {
 
@@ -17,7 +17,7 @@ public class GeneralResponseCreator extends ResponseCreator {
 	}
 
 	@Override
-	void initResponseBody(MessageImpl message, ByteBuffer buffer) {
+	void initResponseBody(TekMessage message, ByteBuffer buffer) {
 		// message body
 		buffer.putShort(message.getSerialNumber());
 		buffer.putShort(message.getMessageId());

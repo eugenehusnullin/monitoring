@@ -1,4 +1,4 @@
-package monitoring.service.processing;
+package monitoring.terminal.munic.processing;
 
 import java.util.ArrayDeque;
 import java.util.List;
@@ -9,9 +9,9 @@ import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import monitoring.service.processing.utils.ThreadFactorySecuenceNaming;
 import monitoring.terminal.munic.controller.domain.MunicItemRawData;
 import monitoring.terminal.munic.controller.domain.MunicRawData;
+import monitoring.terminal.munic.processing.utils.ThreadFactorySecuenceNaming;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

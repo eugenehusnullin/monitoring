@@ -1,32 +1,23 @@
-package monitoring.service.sender;
+package monitoring.terminal.munic.sender;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import monitoring.service.processing.LowService;
-import monitoring.service.processing.utils.ItemRawDataJson;
 import monitoring.terminal.munic.controller.domain.MunicItemRawData;
+import monitoring.terminal.munic.processing.LowService;
+import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-@Service
 public class SendDispatcher {
 	private static final Logger logger = LoggerFactory.getLogger(SendDispatcher.class);
 
 	private Map<Long, Sender> connectionsMap = new HashMap<Long, Sender>();
 
-	@Value("#{mainSettings['wialonb3.host']}")
 	private String wialonb3Host;
-	@Value("#{mainSettings['wialonb3.port']}")
 	private Integer wialonb3Port;
-	@Value("#{mainSettings['wialonb3.enabled']}")
-	private Integer wialonb3Enabled = 1;
-	@Autowired
 	private LowService lowService;
 
 	private Sender createSender() {

@@ -1,4 +1,4 @@
-package monitoring.terminal.tek;
+package monitoring.utils;
 
 import java.nio.ByteBuffer;
 

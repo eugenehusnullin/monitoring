@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import monitoring.terminal.munic.controller.domain.MunicItemRawData;
+import monitoring.terminal.munic.domain.MunicItemRawData;
 import monitoring.terminal.munic.processing.LowService;
 import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
 

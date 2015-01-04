@@ -3,7 +3,7 @@ package monitoring.handler.position;
 import monitoring.domain.Message;
 import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
-import monitoring.handler.position.domain.Position;
+import monitoring.handler.PositionConverter;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

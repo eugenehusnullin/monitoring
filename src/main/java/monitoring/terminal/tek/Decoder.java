@@ -3,6 +3,7 @@ package monitoring.terminal.tek;
 import monitoring.terminal.tek.messages.MessageParser;
 import monitoring.terminal.tek.messages.MessageUtilities;
 import monitoring.terminal.tek.messages.domain.TekMessage;
+import monitoring.utils.ByteUtilities;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -12,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-public class Decoder extends CumulativeProtocolDecoder {
+class Decoder extends CumulativeProtocolDecoder {
 
 	private static final Logger logger = LoggerFactory.getLogger(Decoder.class);
 	private static final Logger streamLogger = LoggerFactory.getLogger("Stream");

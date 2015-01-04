@@ -1,17 +1,16 @@
 package monitoring.terminal.tek.handler;
 
-import org.apache.mina.core.session.IoSession;
-
 import monitoring.handler.HandlerStrategyAdapter;
-import monitoring.handler.position.PositionConverter;
-import monitoring.handler.wialon.MessageFormatter;
-import monitoring.terminal.tek.Handler;
+import monitoring.handler.MessageFormatter;
+import monitoring.handler.PositionConverter;
+import monitoring.handler.TerminalSession;
+import monitoring.terminal.tek.TekIoHandler;
 
 public class TekHandlerStrategy extends HandlerStrategyAdapter {
 
 	private TekPositionConverter tekPositionConverter;
-	private Handler handler;
-	
+	private TekIoHandler handler;
+
 	@Override
 	public PositionConverter getPositionConverter() {
 		return tekPositionConverter;
@@ -21,10 +20,10 @@ public class TekHandlerStrategy extends HandlerStrategyAdapter {
 	public MessageFormatter getWialonMessageFormatter() {
 		return null;
 	}
-	
+
 	@Override
-	public IoSession getTerminalIoSession(long terminalId) {
-		return handler.getSession(terminalId);
+	public TerminalSession getTerminalSession(long terminalId) {
+		return handler.getTerminalSession(terminalId);
 	}
 
 }

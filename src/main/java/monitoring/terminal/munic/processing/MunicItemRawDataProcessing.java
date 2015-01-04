@@ -10,8 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import monitoring.domain.TopMapzone;
-import monitoring.terminal.munic.controller.domain.MunicData;
-import monitoring.terminal.munic.controller.domain.MunicItemRawData;
+import monitoring.terminal.munic.domain.MunicData;
+import monitoring.terminal.munic.domain.MunicItemRawData;
 import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
 import monitoring.terminal.munic.processing.utils.ThreadFactorySecuenceNaming;
 import monitoring.terminal.munic.sender.SendDispatcher;

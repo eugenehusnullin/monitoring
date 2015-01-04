@@ -1,8 +1,8 @@
 package monitoring.terminal.tek.handler;
 
 import monitoring.domain.Message;
-import monitoring.handler.position.PositionConverter;
-import monitoring.handler.position.domain.Position;
+import monitoring.handler.PositionConverter;
+import monitoring.handler.position.Position;
 import monitoring.terminal.tek.messages.domain.TripDataMessage;
 import monitoring.terminal.tek.messages.domain.trip.SatellitePosition;
 
@@ -17,11 +17,11 @@ public class TekPositionConverter implements PositionConverter {
 				SatellitePosition satellitePosition = tripDataMessage.getSatellitePosition();
 
 				Position position = new Position();
-				position.setSpeed((double) (satellitePosition.getSpeed() / 10));
+				position.setSpeed(satellitePosition.getSpeed());
 				position.setCourse((double) satellitePosition.getDirection());
 				position.setAltitude((double) satellitePosition.getElevation());
-				position.setLat((double) (satellitePosition.getLatitude() / 1000000));
-				position.setLon((double) (satellitePosition.getLongitude() / 1000000));
+				position.setLat(satellitePosition.getLatitude());
+				position.setLon(satellitePosition.getLongitude());
 				position.setDate(tripDataMessage.getUploadingTime());
 				position.setTerminalId(tripDataMessage.getTerminalId());
 				position.setSatellites((int) tripDataMessage.getSatelites());

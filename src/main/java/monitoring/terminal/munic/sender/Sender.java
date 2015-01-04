@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import monitoring.terminal.munic.controller.domain.MunicItemRawData;
+import monitoring.terminal.munic.domain.MunicItemRawData;
 import monitoring.terminal.munic.processing.LowService;
 import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
 

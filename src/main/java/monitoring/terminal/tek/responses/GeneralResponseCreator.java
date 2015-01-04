@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import monitoring.terminal.tek.messages.domain.TekMessage;
 
-public class GeneralResponseCreator extends ResponseCreator {
+class GeneralResponseCreator extends ResponseCreator {
 
 	@Override
 	int getResponseBodySize() {

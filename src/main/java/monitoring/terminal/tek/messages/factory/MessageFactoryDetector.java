@@ -1,6 +1,5 @@
 package monitoring.terminal.tek.messages.factory;
 
-
 public class MessageFactoryDetector {
 
 	public MessageFactory getMessageFactory(short messageId) {

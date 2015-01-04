@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 
-import monitoring.handler.position.domain.Position;
+import monitoring.handler.position.Position;
 import monitoring.terminal.cguard.wialon.Dispatcher;
 import monitoring.terminal.munic.processing.LowService;
 

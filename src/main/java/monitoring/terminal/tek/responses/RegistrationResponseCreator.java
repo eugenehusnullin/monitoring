@@ -5,7 +5,7 @@ import java.nio.charset.Charset;
 
 import monitoring.terminal.tek.messages.domain.TekMessage;
 
-public class RegistrationResponseCreator extends ResponseCreator {
+class RegistrationResponseCreator extends ResponseCreator {
 
 	public static final String AUTH_KEY = "SCO";
 	private static byte[] AUTH_KEY_BYTES;

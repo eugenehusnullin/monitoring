@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Handler extends IoHandlerAdapter {
+public class TekIoHandler extends IoHandlerAdapter {
 
-	private static final Logger logger = LoggerFactory.getLogger(Handler.class);
+	private static final Logger logger = LoggerFactory.getLogger(TekIoHandler.class);
 	
-	private Map<Long, IoSession> sessionMap = new HashMap<Long, IoSession>();
+	private Map<Long, TekTerminalSession> sessionMap = new HashMap<Long, TekTerminalSession>();
 
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
@@ -24,16 +24,22 @@ public class Handler extends IoHandlerAdapter {
 		
 		Message m = (Message) message;
 		synchronized (sessionMap) {
-			sessionMap.put(m.getTerminalId(), session);
+			long terminalId = m.getTerminalId();
+			TekTerminalSession terminalSession = sessionMap.get(terminalId);
+			if (terminalSession == null) {
+				terminalSession = new TekTerminalSession();
+				sessionMap.put(terminalId, terminalSession);
+			}
+			terminalSession.setSession(session);
 			sessionMap.notifyAll();
 		}
 
 		session.write(message);
 	}
 	
-	public IoSession getSession(long terminalId) {
+	public TekTerminalSession getTerminalSession(long terminalId) {
 		synchronized (sessionMap) {
-			IoSession session = sessionMap.get(terminalId);
+			TekTerminalSession session = sessionMap.get(terminalId);
 			sessionMap.notifyAll();
 			return session;
 		}

@@ -1,4 +1,4 @@
-package monitoring.terminal.munic.controller.domain;
+package monitoring.terminal.munic.domain;
 
 import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
 

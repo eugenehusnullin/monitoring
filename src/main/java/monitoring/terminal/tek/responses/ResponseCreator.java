@@ -3,9 +3,9 @@ package monitoring.terminal.tek.responses;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import monitoring.terminal.tek.ByteUtilities;
 import monitoring.terminal.tek.messages.MessageUtilities;
 import monitoring.terminal.tek.messages.domain.TekMessage;
+import monitoring.utils.ByteUtilities;
 
 public abstract class ResponseCreator {
 	private static final int BLUNK_MESSAGE_SIZE = 13;
@@ -41,8 +41,8 @@ public abstract class ResponseCreator {
 	private void initBottom(ByteBuffer buffer) {
 		// check code
 		buffer.position(0);
-		buffer.put(MessageUtilities.createCheckCode(buffer, buffer.limit() - 1));
-
+		byte checkCode = MessageUtilities.createCheckCode(buffer, buffer.limit() - 1);
+		buffer.put(checkCode);
 	}
 
 	private byte[] postProcess(ByteBuffer buffer) {

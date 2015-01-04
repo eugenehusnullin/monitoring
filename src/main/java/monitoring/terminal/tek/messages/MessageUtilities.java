@@ -3,8 +3,8 @@ package monitoring.terminal.tek.messages;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import monitoring.terminal.tek.ByteUtilities;
 import monitoring.terminal.tek.messages.domain.TekMessage;
+import monitoring.utils.ByteUtilities;
 
 import org.apache.mina.core.buffer.IoBuffer;
 

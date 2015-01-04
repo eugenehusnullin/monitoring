@@ -1,4 +1,4 @@
-package monitoring.handler.position.domain;
+package monitoring.handler.position;
 
 import java.util.Date;
 

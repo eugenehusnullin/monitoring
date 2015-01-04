@@ -15,14 +15,14 @@ public class EnterPoint {
 	private String host;
 	private Integer port;
 
-	private Handler handler;
+	private TekIoHandler handler;
 
 	public void start() {
 		try {
 			logger.info("Starting tekobd2 acceptor.");
 
 			acceptor = new NioSocketAcceptor();
-			acceptor.getFilterChain().addLast("tekobd2", new ProtocolCodecFilter(new CodecFactory()));
+			acceptor.getFilterChain().addLast("tekobd2", new ProtocolCodecFilter(new Encoder(), new Decoder()));
 			acceptor.setDefaultLocalAddress(new InetSocketAddress(host, port));
 			acceptor.setHandler(handler);
 			acceptor.bind();

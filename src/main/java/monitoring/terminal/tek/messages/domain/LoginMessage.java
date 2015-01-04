@@ -1,6 +1,5 @@
 package monitoring.terminal.tek.messages.domain;
 
-
 public class LoginMessage extends TekMessage {
 	private String authKey;
 

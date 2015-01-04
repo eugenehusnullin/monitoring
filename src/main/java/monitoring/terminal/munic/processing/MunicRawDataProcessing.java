@@ -9,8 +9,8 @@ import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import monitoring.terminal.munic.controller.domain.MunicItemRawData;
-import monitoring.terminal.munic.controller.domain.MunicRawData;
+import monitoring.terminal.munic.domain.MunicItemRawData;
+import monitoring.terminal.munic.domain.MunicRawData;
 import monitoring.terminal.munic.processing.utils.ThreadFactorySecuenceNaming;
 
 import org.slf4j.Logger;

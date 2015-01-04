@@ -6,9 +6,9 @@ import java.util.List;
 
 import monitoring.domain.TopAuto;
 import monitoring.domain.TopBlockAlert;
-import monitoring.terminal.munic.controller.domain.MunicData;
-import monitoring.terminal.munic.controller.domain.MunicItemRawData;
-import monitoring.terminal.munic.controller.domain.MunicRawData;
+import monitoring.terminal.munic.domain.MunicData;
+import monitoring.terminal.munic.domain.MunicItemRawData;
+import monitoring.terminal.munic.domain.MunicRawData;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

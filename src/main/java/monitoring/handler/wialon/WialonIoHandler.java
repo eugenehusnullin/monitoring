@@ -5,6 +5,11 @@ import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import monitoring.domain.Message;
+import monitoring.handler.HandlerStrategy;
+import monitoring.handler.MessageFormatter;
+import monitoring.handler.TerminalSession;
+
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.future.IoFutureListener;
 import org.apache.mina.core.service.IoHandlerAdapter;
@@ -16,11 +21,11 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Sender extends IoHandlerAdapter implements IoFutureListener<ConnectFuture> {
-	private static final Logger logger = LoggerFactory.getLogger(Sender.class);
+class WialonIoHandler extends IoHandlerAdapter implements IoFutureListener<ConnectFuture> {
+	private static final Logger logger = LoggerFactory.getLogger(WialonIoHandler.class);
 
-	@SuppressWarnings("unused")
 	private long terminalId;
+	private HandlerStrategy strategy;
 	private String wialonb3Host;
 	private Integer wialonb3Port;
 
@@ -32,8 +37,9 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 	private NioSocketConnector connector;
 	private int errorsCount;
 
-	public Sender(long terminalId, String wialonb3Host, Integer wialonb3Port) {
+	public WialonIoHandler(long terminalId, HandlerStrategy strategy, String wialonb3Host, Integer wialonb3Port) {
 		this.terminalId = terminalId;
+		this.strategy = strategy;
 		this.wialonb3Host = wialonb3Host;
 		this.wialonb3Port = wialonb3Port;
 
@@ -135,6 +141,24 @@ public class Sender extends IoHandlerAdapter implements IoFutureListener<Connect
 		errorsCount++;
 		Thread.sleep(Math.min(errorsCount * 1000, 60000));
 		sendCurrentItem();
+	}
+
+	@Override
+	public void messageReceived(IoSession session, Object message) throws Exception {
+		TerminalSession terminalSession = strategy.getTerminalSession(terminalId);
+		if (terminalSession != null) {
+			MessageFormatter messageFormatter = strategy.getWialonMessageFormatter();
+			if (messageFormatter != null) {
+				WialonMessage wialonMessage = new WialonMessage();
+				wialonMessage.setStrMessage((String) message);
+				wialonMessage.setTerminalId(terminalId);
+
+				Message m = messageFormatter.toTerminalFormatt(wialonMessage);
+				if (m != null) {
+					terminalSession.write(m);
+				}
+			}
+		}
 	}
 
 }

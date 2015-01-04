@@ -13,11 +13,19 @@ public class SatellitePosition {
 	private short speed; // 1/10km/h
 	private short direction; // 0-359, the true north is 0, clockwise
 
-	public int getLatitude() {
+	public int getRawLatitude() {
 		return latitude;
 	}
 
-	public int getLongitude() {
+	public int getRawLongitude() {
+		return longitude;
+	}
+	
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
 		return longitude;
 	}
 
@@ -25,8 +33,12 @@ public class SatellitePosition {
 		return elevation;
 	}
 
-	public short getSpeed() {
+	public short getRawSpeed() {
 		return speed;
+	}
+	
+	public double getSpeed() {
+		return (double) (speed / 10);
 	}
 
 	public short getDirection() {

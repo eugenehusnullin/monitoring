@@ -1,9 +1,5 @@
 package monitoring.handler;
 
-import org.apache.mina.core.session.IoSession;
-
-import monitoring.handler.position.PositionConverter;
-import monitoring.handler.wialon.MessageFormatter;
 
 public interface HandlerStrategy {
 
@@ -11,5 +7,5 @@ public interface HandlerStrategy {
 
 	MessageFormatter getWialonMessageFormatter();
 	
-	IoSession getTerminalIoSession(long terminalId);
+	TerminalSession getTerminalSession(long terminalId);
 }

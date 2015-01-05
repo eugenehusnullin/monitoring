@@ -8,16 +8,16 @@
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   <servlet>
-    <servlet-name>appServlet</servlet-name>
+    <servlet-name>munic</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+      <param-value>/WEB-INF/spring/servletMunic.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>appServlet</servlet-name>
-    <url-pattern>/</url-pattern>
+    <servlet-name>munic</servlet-name>
+    <url-pattern>/munic/*</url-pattern>
   </servlet-mapping>
 </web-app>

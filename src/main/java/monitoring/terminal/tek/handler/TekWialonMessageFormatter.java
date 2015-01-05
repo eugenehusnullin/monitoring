@@ -18,13 +18,13 @@ public class TekWialonMessageFormatter implements MessageFormatter {
 			if (tripDataMessage.getSatellitePosition() != null) {
 				SatellitePosition satellitePosition = tripDataMessage.getSatellitePosition();
 				DataPacket dataPacket = new DataPacket();
+				dataPacket.setTerminalId(tripDataMessage.getTerminalId());
+				dataPacket.setDate(tripDataMessage.getUploadingTime());
 				dataPacket.setSpeed(satellitePosition.getSpeed());
 				dataPacket.setCourse((double) satellitePosition.getDirection());
 				dataPacket.setAltitude((double) satellitePosition.getElevation());
 				dataPacket.setLat(satellitePosition.getLatitude());
 				dataPacket.setLon(satellitePosition.getLongitude());
-				dataPacket.setDate(tripDataMessage.getUploadingTime());
-				dataPacket.setTerminalId(tripDataMessage.getTerminalId());
 				dataPacket.setSatellites((int) tripDataMessage.getSatelites());
 				return dataPacket;
 			}
@@ -33,7 +33,8 @@ public class TekWialonMessageFormatter implements MessageFormatter {
 	}
 
 	/**
-	 * Incoming message is {@link WialonMessage}, output must be derived from {@link TekMessage}
+	 * Incoming message is {@link WialonMessage}, output must be derived from
+	 * {@link TekMessage}
 	 */
 	@Override
 	public Message toTerminalFormatt(Message message) {

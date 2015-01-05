@@ -1,4 +1,4 @@
-package monitoring.terminal.munic.processing.utils;
+package monitoring.utils;
 
 import org.postgresql.util.Base64;
 

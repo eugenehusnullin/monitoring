@@ -13,17 +13,12 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-@Service
 public class Broker {
 
 	private static final Logger logger = LoggerFactory.getLogger(Broker.class);
 	private IoAcceptor acceptor;
-	@Value("#{mainSettings['cguard.host']}")
 	private String host;
-	@Value("#{mainSettings['cguard.port']}")
 	private Integer port;
 	
 	@Autowired

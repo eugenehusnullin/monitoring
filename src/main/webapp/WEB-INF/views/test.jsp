@@ -10,6 +10,7 @@
 		<br>${result}
 	</c:if>
 	<h1>Post correct json-message</h1>
+	<h1>${inject}</h1>
 
 	<form method="POST">
 		<!-- 		<input type="text" name="value" /> -->

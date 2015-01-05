@@ -8,6 +8,7 @@ import java.util.Date;
 import monitoring.terminal.munic.domain.MunicData;
 import monitoring.terminal.munic.domain.MunicDataBehave;
 import monitoring.terminal.munic.domain.MunicDataMdi;
+import monitoring.utils.Base64Utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package monitoring.terminal.tek.handler;
+package monitoring.terminal.tek;
 
 import monitoring.domain.Message;
 import monitoring.handler.MessageFormatter;

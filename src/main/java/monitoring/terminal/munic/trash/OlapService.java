@@ -1,4 +1,4 @@
-package monitoring.terminal.munic.processing;
+package monitoring.terminal.munic.trash;
 
 import java.util.List;
 

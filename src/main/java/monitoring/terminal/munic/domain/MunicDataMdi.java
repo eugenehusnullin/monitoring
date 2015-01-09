@@ -2,6 +2,7 @@ package monitoring.terminal.munic.domain;
 
 import java.io.Serializable;
 
+@Deprecated
 public class MunicDataMdi implements Serializable {
 	private static final long serialVersionUID = -7504880117857146427L;
 	private MunicData municData;

@@ -1,12 +1,10 @@
-package monitoring.terminal.munic.sender;
+package monitoring.terminal.munic.trash;
 
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import monitoring.terminal.munic.domain.MunicItemRawData;
-import monitoring.terminal.munic.processing.LowService;
-import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.future.IoFutureListener;
@@ -16,6 +14,7 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
 
+@Deprecated
 public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 	private Logger logger;
 
@@ -51,7 +50,7 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 
 		connector = new NioSocketConnector();
 		connector.setConnectTimeoutMillis(10000);
-		
+
 		connector.setHandler(this);
 	}
 
@@ -77,11 +76,7 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 				}
 				ioSession.write(itemRawDataJson.getString4Wialon());
 			} else {
-				try {
-					lowService.setWialonSended(currentItem);
-				} finally {
-					sendNextItem();
-				}
+				sendNextItem();
 			}
 		}
 	}
@@ -138,12 +133,8 @@ public class Sender implements IoFutureListener<ConnectFuture>, IoHandler {
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		try {
-			lowService.setWialonSended(currentItem);
-		} finally {
-			errorsCount = 0;
-			sendNextItem();
-		}
+		errorsCount = 0;
+		sendNextItem();
 	}
 
 	@Override

@@ -3,9 +3,9 @@ package monitoring.terminal.munic.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+@Deprecated
 public class MunicData implements Serializable {
 	private static final long serialVersionUID = -5210229116835535429L;
-	private MunicItemRawData municItemRawData;
 	private String event;
 	private Long asset;
 	private Date recordedAt;
@@ -50,14 +50,6 @@ public class MunicData implements Serializable {
 			return municDataMdi.getMdiObdMileage() != null;
 		}
 		return false;
-	}
-
-	public MunicItemRawData getMunicItemRawData() {
-		return municItemRawData;
-	}
-
-	public void setMunicItemRawData(MunicItemRawData municItemRawData) {
-		this.municItemRawData = municItemRawData;
 	}
 
 	public String getEvent() {

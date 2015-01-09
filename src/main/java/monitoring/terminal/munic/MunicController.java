@@ -1,35 +1,43 @@
-package monitoring.terminal.munic.controller;
+package monitoring.terminal.munic;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import monitoring.terminal.munic.processing.MessageService;
-
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 public class MunicController extends MultiActionController {
+	private static final Logger logger = LoggerFactory.getLogger(MunicController.class);
 
-	private MessageService messageService;
+	private List<RawHandler> handlers;
+
+	private void processRawHandlers(StringWriter writer) {
+		for (RawHandler handler : handlers) {
+			handler.procces(writer);
+		}
+	}
 
 	public void rawdata(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			StringWriter writer = new StringWriter();
 			IOUtils.copy(request.getInputStream(), writer);
-			messageService.processRawData(writer.toString());
-
+			processRawHandlers(writer);
 			response.setStatus(200);
+
 		} catch (IOException e) {
 			response.setStatus(500);
+			logger.error(e.toString());
+			e.printStackTrace();
 		}
 	}
 
@@ -45,7 +53,7 @@ public class MunicController extends MultiActionController {
 			int index = url.lastIndexOf('/');
 			url = url.substring(0, index);
 			url = url.concat("/rawdata");
-			
+
 			URL obj;
 			try {
 				obj = new URL(url);
@@ -66,16 +74,12 @@ public class MunicController extends MultiActionController {
 				int responceCode = connection.getResponseCode();
 
 				model.addObject("json", value);
-				if (responceCode != 200) {
-					model.addObject("result", "Error");
-				} else {
+				if (responceCode == 200) {
 					model.addObject("result", "Succes");
+				} else {
+					model.addObject("result", connection.getResponseMessage());
 				}
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (ProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

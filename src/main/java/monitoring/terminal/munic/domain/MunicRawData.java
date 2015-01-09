@@ -5,12 +5,7 @@ import java.util.Date;
 public class MunicRawData {
 	private Long id;
 	private String rawData;
-	private Boolean processed;
 	private Date arrived;
-
-	public MunicRawData() {
-		processed = false;
-	}
 
 	public Long getId() {
 		return id;
@@ -18,14 +13,6 @@ public class MunicRawData {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Boolean getProcessed() {
-		return processed;
-	}
-
-	public void setProcessed(Boolean processed) {
-		this.processed = processed;
 	}
 
 	public String getRawData() {

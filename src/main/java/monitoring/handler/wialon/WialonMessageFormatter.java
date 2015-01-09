@@ -2,7 +2,7 @@ package monitoring.handler.wialon;
 
 import java.text.SimpleDateFormat;
 
-public class WialonMessageFormatter {
+class WialonMessageFormatter {
 
 	WialonMessage formatt(DataPacket dataPacket) {
 

@@ -7,7 +7,7 @@ import monitoring.terminal.tek.messages.domain.TekMessage;
 
 class RegistrationResponseCreator extends ResponseCreator {
 
-	public static final String AUTH_KEY = "SCO";
+	public static final String AUTH_KEY = "SCORING";
 	private static byte[] AUTH_KEY_BYTES;
 
 	static {

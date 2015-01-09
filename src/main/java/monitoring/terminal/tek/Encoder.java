@@ -23,7 +23,7 @@ class Encoder implements ProtocolEncoder {
 	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
 		TekMessage messageImpl = (TekMessage) message;
 
-		ResponseCreator responseCreator = responseCreatorDetector.getResponseCreator(messageImpl.getMessageId());
+		ResponseCreator responseCreator = responseCreatorDetector.getResponseCreator(messageImpl.getMessageType());
 		if (responseCreator != null) {
 			byte[] bytes = responseCreator.create(messageImpl);
 
@@ -46,7 +46,6 @@ class Encoder implements ProtocolEncoder {
 
 	@Override
 	public void dispose(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 

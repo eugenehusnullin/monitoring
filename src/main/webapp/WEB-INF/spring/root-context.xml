@@ -43,9 +43,6 @@
 	</bean>
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
-	
-	<context:component-scan base-package="monitoring.service" />
-	<context:component-scan base-package="monitoring.terminal.cguard" />
-	<context:component-scan base-package="monitoring.terminal.tek" />
+	<context:component-scan base-package="monitoring" />
 	<context:annotation-config />
 </beans>

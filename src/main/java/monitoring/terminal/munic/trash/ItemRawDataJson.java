@@ -1,4 +1,4 @@
-package monitoring.terminal.munic.processing.utils;
+package monitoring.terminal.munic.trash;
 
 import java.nio.charset.Charset;
 import java.text.ParseException;

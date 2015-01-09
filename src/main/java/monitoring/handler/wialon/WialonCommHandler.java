@@ -8,8 +8,11 @@ import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
 import monitoring.handler.MessageFormatter;
 
-public class WialonCommHandler implements Handler {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class WialonCommHandler implements Handler {
+	private static final Logger logger = LoggerFactory.getLogger(WialonCommHandler.class);
 	private Map<Long, WialonIoHandler> connectionsMap = new HashMap<Long, WialonIoHandler>();
 	private String wialonb3Host;
 	private Integer wialonb3Port;
@@ -17,17 +20,22 @@ public class WialonCommHandler implements Handler {
 
 	@Override
 	public void handle(Message message, HandlerStrategy strategy) {
+		try {
 
-		MessageFormatter messageFormatter = strategy.getWialonMessageFormatter();
-		if (messageFormatter != null) {
-			DataPacket dataPacket = messageFormatter.fromTerminalFormatt(message);
+			MessageFormatter messageFormatter = strategy.getWialonMessageFormatter();
+			if (messageFormatter != null) {
+				DataPacket dataPacket = messageFormatter.fromTerminalFormatt(message);
 
-			if (dataPacket != null) {
-				WialonMessage wialonMessage = wialonMessageFormatter.formatt(dataPacket);
-				if (wialonMessage != null) {
-					send(wialonMessage, strategy);
+				if (dataPacket != null) {
+					WialonMessage wialonMessage = wialonMessageFormatter.formatt(dataPacket);
+					if (wialonMessage != null) {
+						send(wialonMessage, strategy);
+					}
 				}
 			}
+
+		} catch (Exception e) {
+			logger.error("WialonCommHandler exception: ", e);
 		}
 	}
 

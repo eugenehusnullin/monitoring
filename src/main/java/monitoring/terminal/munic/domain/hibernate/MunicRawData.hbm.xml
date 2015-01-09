@@ -9,7 +9,6 @@
 			<generator class="identity" />
 		</id>
 		<property name="arrived" not-null="true"></property>
-		<property name="processed" not-null="true"></property>
 		<property name="rawData" length="20000" not-null="true"></property>
 	</class>
 </hibernate-mapping>

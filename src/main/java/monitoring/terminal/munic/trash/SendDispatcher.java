@@ -1,16 +1,15 @@
-package monitoring.terminal.munic.sender;
+package monitoring.terminal.munic.trash;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import monitoring.terminal.munic.domain.MunicItemRawData;
-import monitoring.terminal.munic.processing.LowService;
-import monitoring.terminal.munic.processing.utils.ItemRawDataJson;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Deprecated
 public class SendDispatcher {
 	private static final Logger logger = LoggerFactory.getLogger(SendDispatcher.class);
 

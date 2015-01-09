@@ -115,7 +115,7 @@ public class MessageUtilities {
 	}
 
 	public static void initializeHeader(TekMessage message, ByteBuffer buffer) throws Exception {
-		message.setMessageId(buffer.getShort());
+		message.setMessageType(buffer.getShort());
 
 		// body attribute
 		short bodyAttribute = buffer.getShort();

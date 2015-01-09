@@ -20,7 +20,7 @@ class GeneralResponseCreator extends ResponseCreator {
 	void initResponseBody(TekMessage message, ByteBuffer buffer) {
 		// message body
 		buffer.putShort(message.getSerialNumber());
-		buffer.putShort(message.getMessageId());
+		buffer.putShort(message.getMessageType());
 		buffer.put((byte) 0);
 	}
 

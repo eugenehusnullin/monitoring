@@ -1,4 +1,4 @@
-package monitoring.terminal.tek.handler;
+package monitoring.terminal.tek;
 
 import monitoring.domain.Message;
 import monitoring.handler.PositionConverter;
@@ -6,7 +6,7 @@ import monitoring.handler.position.Position;
 import monitoring.terminal.tek.messages.domain.TripDataMessage;
 import monitoring.terminal.tek.messages.domain.trip.SatellitePosition;
 
-public class TekPositionConverter implements PositionConverter {
+class TekPositionConverter implements PositionConverter {
 
 	@Override
 	public Position convert(Message message) {

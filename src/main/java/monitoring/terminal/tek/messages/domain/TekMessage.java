@@ -5,7 +5,7 @@ import monitoring.domain.Message;
 
 public abstract class TekMessage implements Message {
 
-	private short messageId;
+	private short messageType;
 	private long terminalId;
 	private short serialNumber;
 	private short bodyLength;
@@ -13,12 +13,12 @@ public abstract class TekMessage implements Message {
 	private boolean subPackage;
 	private byte checkCode;
 
-	public short getMessageId() {
-		return messageId;
+	public short getMessageType() {
+		return messageType;
 	}
 
-	public void setMessageId(short id) {
-		this.messageId = id;
+	public void setMessageType(short messageType) {
+		this.messageType = messageType;
 	}
 
 	@Override

@@ -1,29 +1,29 @@
-package monitoring.terminal.tek.handler;
+package monitoring.terminal.tek;
 
 import monitoring.handler.HandlerStrategyAdapter;
 import monitoring.handler.MessageFormatter;
 import monitoring.handler.PositionConverter;
 import monitoring.handler.TerminalSession;
-import monitoring.terminal.tek.TekIoHandler;
 
 public class TekHandlerStrategy extends HandlerStrategyAdapter {
 
-	private TekPositionConverter tekPositionConverter;
-	private TekIoHandler handler;
+	private PositionConverter positionConverter;
+	private MessageFormatter messageFormatter;
+	private TekTerminalSessionKeeper terminalSessionKeeper;
 
 	@Override
 	public PositionConverter getPositionConverter() {
-		return tekPositionConverter;
+		return positionConverter;
 	}
 
 	@Override
 	public MessageFormatter getWialonMessageFormatter() {
-		return null;
+		return messageFormatter;
 	}
 
 	@Override
 	public TerminalSession getTerminalSession(long terminalId) {
-		return handler.getTerminalSession(terminalId);
+		return terminalSessionKeeper.getTerminalSession(terminalId);
 	}
 
 }

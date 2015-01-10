@@ -12,56 +12,16 @@ import monitoring.utils.Base64Utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 public class ItemRawDataJson {
 	private String event;
 	private String asset;
 	private String recorded_at;
-	private JSONObject payload;
 	private JSONArray loc;
 	private JSONObject fields;
 	private double lat;
 	private double lon;
 	private Boolean dioIgnition = null;
-
-	public ItemRawDataJson(String itemRawData) {
-		JSONTokener tokener = new JSONTokener(itemRawData);
-		JSONObject jsonObject = (JSONObject) tokener.nextValue();
-		setMessageJsonObject(jsonObject);
-	}
-
-	public ItemRawDataJson(JSONObject messsageJsonValue) {
-		setMessageJsonObject(messsageJsonValue);
-	}
-
-	private void setMessageJsonObject(JSONObject messsageJsonValue) {
-		JSONObject meta = messsageJsonValue.getJSONObject("meta");
-		event = meta.getString("event");
-		payload = messsageJsonValue.getJSONObject("payload");
-		asset = payload.getString("asset");
-		fields = payload.optJSONObject("fields");
-
-		if (isTrack()) {
-			recorded_at = payload.getString("recorded_at"); // 2014-03-26T11:42:01Z
-			loc = payload.optJSONArray("loc");
-			if (loc != null) {
-				lon = loc.getDouble(0);
-				lat = loc.getDouble(1);
-			}
-			if (fields != null) {
-				dioIgnition = getBooleanField("DIO_IGNITION");
-			}
-		}
-	}
-
-	public boolean isTrack() {
-		return event.equals("track");
-	}
-
-	public String getAsset() {
-		return asset;
-	}
 
 	@SuppressWarnings("unused")
 	private String getGPRMC() {
@@ -142,6 +102,10 @@ public class ItemRawDataJson {
 		} catch (ParseException e) {
 		}
 		return null;
+	}
+
+	private boolean isTrack() {
+		return event.equals("track");
 	}
 
 	public MunicData getMunicData() {
@@ -327,7 +291,7 @@ public class ItemRawDataJson {
 		sb.append("=");
 		sb.append(value);
 	}
-	
+
 	private void insertBooleanPair(String key, Boolean value, StringBuilder sb) {
 		if (value != null) {
 			insertPair(key, value ? "1" : "0", sb);
@@ -359,14 +323,6 @@ public class ItemRawDataJson {
 		} else {
 			return null;
 		}
-	}
-
-	public Boolean getDioIgnition() {
-		return dioIgnition;
-	}
-
-	public void setDioIgnition(Boolean previousDioIgnition) {
-		dioIgnition = previousDioIgnition;
 	}
 
 }

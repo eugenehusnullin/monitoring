@@ -48,6 +48,7 @@ class ExtractMessagesRawData implements RawHandler {
 							}
 						}
 						writer = queue.poll();
+						queue.notifyAll();
 					}
 
 					if (writer != null) {

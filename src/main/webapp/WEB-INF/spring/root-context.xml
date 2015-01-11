@@ -34,7 +34,7 @@
 			</props>
 		</property>
 		<property name="dataSource" ref="municDS" />
-		<property name="packagesToScan" value="monitoring.domain" />
+		<property name="packagesToScan" value="monitoring" />
 	</bean>
 	
 	<bean id="transactionManager"

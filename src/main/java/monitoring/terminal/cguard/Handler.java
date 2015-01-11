@@ -48,6 +48,7 @@ public class Handler extends IoHandlerAdapter {
 
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
+		try {
 		if (message == null) {
 			return;
 		}
@@ -75,15 +76,16 @@ public class Handler extends IoHandlerAdapter {
 						.equals("EV"))) {
 
 			String firstElement = messArr[1].trim();
-			if (Pattern.matches(firstElement, "\\d{6}\\s\\d{6}")) {
+			if (Pattern.matches("\\d{6}\\s\\d{6}", firstElement)) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.set(
 						Integer.parseInt(firstElement.substring(0, 2)),
 						Integer.parseInt(firstElement.substring(2, 4)),
 						Integer.parseInt(firstElement.substring(4, 6)),
-						Integer.parseInt(firstElement.substring(6, 8)),
-						Integer.parseInt(firstElement.substring(8, 10)),
-						Integer.parseInt(firstElement.substring(10)));
+						Integer.parseInt(firstElement.substring(7, 9)),
+						Integer.parseInt(firstElement.substring(9, 11)),
+						Integer.parseInt(firstElement.substring(11)));
+				messageDate = calendar.getTime();
 			} else if (firstElement.equals("U") && (commandType.equals("BC") || commandType.equals("EV"))) {
 				messageDate = new Date();
 			} else {
@@ -115,6 +117,7 @@ public class Handler extends IoHandlerAdapter {
 		logger.info("imei = " + imei);
 		// Основная навигационная информация.
 		if (commandType.equals("NAV") || commandType.equals("NV")) {
+			// NV:150111 150445:55.750710:37.583568:5.26:NAN:32.14
 			Position position = new Position();
 			position.setTerminalId(imei);
 			position.setDate(messageDate);
@@ -123,20 +126,24 @@ public class Handler extends IoHandlerAdapter {
 			position.setSpeed(Double.parseDouble(messArr[4].trim()));
 
 			int shift = 0;
-			if (commandType.equals("NV")) {
+			if (commandType.equals("NV") && messArr.length > 5) {
 				shift = 1;
 				if (!messArr[5].trim().equals(NAN)) {
 					position.setAccuracy(Double.parseDouble(messArr[5].trim()));
 				}
 			}
-			if (!messArr[shift + 5].trim().equals(NAN)) {
-				position.setCourse(Double.parseDouble(messArr[shift + 5].trim()));
-				if (position.getCourse() > 359 || position.getCourse() < 0) {
-					position.setCourse(0D);
+			if (commandType.equals("NV") && messArr.length > 6 || commandType.equals("NAV")) {
+				if (!messArr[shift + 5].trim().equals(NAN)) {
+					position.setCourse(Double.parseDouble(messArr[shift + 5].trim()));
+					if (position.getCourse() > 359 || position.getCourse() < 0) {
+						position.setCourse(0D);
+					}
 				}
 			}
-			if (!messArr[shift + 6].trim().equals(NAN)) {
-				position.setAltitude(Double.parseDouble(messArr[shift + 6].trim()));
+			if (commandType.equals("NV") && messArr.length > 7 || commandType.equals("NAV")) {
+				if (!messArr[shift + 6].trim().equals(NAN)) {
+					position.setAltitude(Double.parseDouble(messArr[shift + 6].trim()));
+				}
 			}
 
 			if (position.getLat() != 0 && position.getLon() != 0) {
@@ -176,10 +183,15 @@ public class Handler extends IoHandlerAdapter {
 						logger.info("AIN1 bigger than 8.0d");
 						synchronized (terminalDetachMap) {
 							terminalDetachMap.remove(imei);
+							terminalDetachMap.notifyAll();
 						}
 					}
 				}
 			}
+		}
+		}catch(Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 

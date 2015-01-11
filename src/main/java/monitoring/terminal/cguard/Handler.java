@@ -94,19 +94,24 @@ public class Handler extends IoHandlerAdapter {
 		// "только чтение"
 		Long imei;
 		if (commandType.equals("ID") || commandType.equals("IDRO")) {
+			logger.info("set ID");
 			imei = Long.parseLong(messArr[1].trim());
 			session.setAttribute(ID, imei);
 			
 		} else {
+			logger.info("get ID");
 			imei = (Long) session.getAttribute(ID);
 		}
 		
+
 		if (imei == null || messageDate == null ) {
+			logger.info("imei is null");
 			return;
 		}
 			
+		logger.info("imei = " + imei);
 		// Основная навигационная информация.
-		if (commandType.equals("NAV") || commandType.equals("NV") || messArr.length < 5) {
+		if (commandType.equals("NAV") || commandType.equals("NV")) {
 			Position position = new Position();
 			position.setTerminalId(imei);
 			position.setDate(messageDate);
@@ -136,26 +141,26 @@ public class Handler extends IoHandlerAdapter {
 			}
 
 		} else if (commandType.equals("BC")) { // Бортовой контроль и телеметрия
-			logger.debug("BC entered");
+			logger.info("BC entered");
 			for (int i = 2; i+1 < messArr.length; i += 2) {
-				logger.debug("BC for i=" + i);
+				logger.info("BC for i=" + i);
 
 				if (messArr[i].equals("AIN1")) {
-					logger.debug("AIN1 found");
+					logger.info("AIN1 found");
 					
 					Double ain1 = Double.parseDouble(messArr[i+1]);
-					logger.debug("AIN1 = " + ain1);
+					logger.info("AIN1 = " + ain1);
 					if (ain1.compareTo(8.0d) < 0) {
 						
-						logger.debug("AIN1 less than 8.0d");
+						logger.info("AIN1 less than 8.0d");
 						
 						synchronized (terminalDetachMap) {
 							Boolean stateBoolean = terminalDetachMap.get(imei);
 							if (stateBoolean == null) {
-								logger.debug("put to map");
+								logger.info("put to map");
 								terminalDetachMap.put(imei, true);
 								
-								logger.debug("save to table");
+								logger.info("save to table");
 								TerminalDetach terminalDetach = new TerminalDetach();
 								terminalDetach.setEventDate(messageDate);
 								terminalDetach.setTerminalId(imei);
@@ -165,7 +170,7 @@ public class Handler extends IoHandlerAdapter {
 							terminalDetachMap.notifyAll();
 						}
 					} else {
-						logger.debug("AIN1 bigger than 8.0d");
+						logger.info("AIN1 bigger than 8.0d");
 						synchronized (terminalDetachMap) {
 							terminalDetachMap.remove(imei);
 						}

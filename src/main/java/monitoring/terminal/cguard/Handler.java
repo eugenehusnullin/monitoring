@@ -2,6 +2,8 @@ package monitoring.terminal.cguard;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import monitoring.domain.TerminalDetach;
@@ -24,6 +26,8 @@ public class Handler extends IoHandlerAdapter {
 
 	private final String NAN = "NAN";
 	private final String ID = "ID";
+	
+	private Map<Long, Boolean> terminalDetachMap = new HashMap<Long, Boolean>();
 
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
@@ -97,12 +101,12 @@ public class Handler extends IoHandlerAdapter {
 			imei = (Long) session.getAttribute(ID);
 		}
 		
-		if (imei == null || messageDate == null || messArr.length < 5) {
+		if (imei == null || messageDate == null ) {
 			return;
 		}
 			
 		// Основная навигационная информация.
-		if (commandType.equals("NAV") || commandType.equals("NV")) {
+		if (commandType.equals("NAV") || commandType.equals("NV") || messArr.length < 5) {
 			Position position = new Position();
 			position.setTerminalId(imei);
 			position.setDate(messageDate);
@@ -132,16 +136,39 @@ public class Handler extends IoHandlerAdapter {
 			}
 
 		} else if (commandType.equals("BC")) { // Бортовой контроль и телеметрия
-
+			logger.debug("BC entered");
 			for (int i = 2; i+1 < messArr.length; i += 2) {
+				logger.debug("BC for i=" + i);
+
 				if (messArr[i].equals("AIN1")) {
+					logger.debug("AIN1 found");
+					
 					Double ain1 = Double.parseDouble(messArr[i+1]);
+					logger.debug("AIN1 = " + ain1);
 					if (ain1.compareTo(8.0d) < 0) {
-						TerminalDetach terminalDetach = new TerminalDetach();
-						terminalDetach.setEventDate(messageDate);
-						terminalDetach.setTerminalId(imei);
 						
-						lowService.saveTerminalDetach(terminalDetach);
+						logger.debug("AIN1 less than 8.0d");
+						
+						synchronized (terminalDetachMap) {
+							Boolean stateBoolean = terminalDetachMap.get(imei);
+							if (stateBoolean == null) {
+								logger.debug("put to map");
+								terminalDetachMap.put(imei, true);
+								
+								logger.debug("save to table");
+								TerminalDetach terminalDetach = new TerminalDetach();
+								terminalDetach.setEventDate(messageDate);
+								terminalDetach.setTerminalId(imei);
+								
+								lowService.saveTerminalDetach(terminalDetach);
+							}
+							terminalDetachMap.notifyAll();
+						}
+					} else {
+						logger.debug("AIN1 bigger than 8.0d");
+						synchronized (terminalDetachMap) {
+							terminalDetachMap.remove(imei);
+						}
 					}
 				}
 			}

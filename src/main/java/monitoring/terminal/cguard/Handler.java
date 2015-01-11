@@ -6,13 +6,14 @@ import java.util.regex.Pattern;
 
 import monitoring.handler.position.Position;
 
-import org.apache.mina.core.service.IoHandler;
-import org.apache.mina.core.session.IdleStatus;
+import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-public class Handler implements IoHandler {
+@Service
+public class Handler extends IoHandlerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(Handler.class);
 
 	private final String NAN = "NAN";
@@ -27,18 +28,6 @@ public class Handler implements IoHandler {
 	@Override
 	public void sessionOpened(IoSession session) throws Exception {
 		logger.info("cguard. sessionOpened");
-
-	}
-
-	@Override
-	public void sessionClosed(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -65,16 +54,15 @@ public class Handler implements IoHandler {
 			return;
 		}
 
-		String commandType = strMessage.substring(0, i - 1);
-		String commanData = strMessage.substring(i + 1, strMessage.length() - 1);
-		String[] messArr = commanData.split(":");
+		String[] messArr = strMessage.split(":");
+		String commandType = messArr[0];
 
 		Date messageDate = null;
-		if (messArr.length > 0
+		if (messArr.length > 1
 				&& (commandType.equals("NAV") || commandType.equals("NV") || commandType.equals("BC") || commandType
 						.equals("EV"))) {
 
-			String firstElement = messArr[0].trim();
+			String firstElement = messArr[1].trim();
 			if (Pattern.matches(firstElement, "\\d{6}\\s\\d{6}")) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.set(Integer.parseInt(firstElement.substring(0, 2)),
@@ -88,58 +76,52 @@ public class Handler implements IoHandler {
 			}
 		}
 
+		// Запрос авторизации устройства с идентификатором
+		// Запрос авторизации устройства с идентификатором в режиме
+		// "только чтение"
 		Long imei;
 		if (commandType.equals("ID") || commandType.equals("IDRO")) {
-			imei = Long.parseLong(messArr[0].trim());
+			imei = Long.parseLong(messArr[1].trim());
 			session.setAttribute(ID, imei);
 
-		} else // if (commandType.equals("NAV") || commandType.equals("NV"))
-		{
+			// Основная навигационная информация.
+		} else if (commandType.equals("NAV") || commandType.equals("NV")) {
 			imei = (Long) session.getAttribute(ID);
-			if (imei == null || messageDate == null || messArr.length < 4) {
+			if (imei == null || messageDate == null || messArr.length < 5) {
 				return;
 			}
 
 			Position position = new Position();
 			position.setTerminalId(imei);
 			position.setDate(messageDate);
-			position.setLat(Double.parseDouble(messArr[1].trim()));
-			position.setLon(Double.parseDouble(messArr[2].trim()));
-			position.setSpeed(Double.parseDouble(messArr[3].trim()));
+			position.setLat(Double.parseDouble(messArr[2].trim()));
+			position.setLon(Double.parseDouble(messArr[3].trim()));
+			position.setSpeed(Double.parseDouble(messArr[4].trim()));
 
 			int shift = 0;
 			if (commandType.equals("NV")) {
 				shift = 1;
-				if (!messArr[4].trim().equals(NAN)) {
-					position.setAccuracy(Double.parseDouble(messArr[4].trim()));
+				if (!messArr[5].trim().equals(NAN)) {
+					position.setAccuracy(Double.parseDouble(messArr[5].trim()));
 				}
 			}
-			if (!messArr[shift + 4].trim().equals(NAN)) {
-				position.setCourse(Double.parseDouble(messArr[shift + 4].trim()));
+			if (!messArr[shift + 5].trim().equals(NAN)) {
+				position.setCourse(Double.parseDouble(messArr[shift + 5].trim()));
 				if (position.getCourse() > 359 || position.getCourse() < 0) {
 					position.setCourse(0D);
 				}
 			}
-			if (!messArr[shift + 5].trim().equals(NAN)) {
-				position.setAltitude(Double.parseDouble(messArr[shift + 5].trim()));
+			if (!messArr[shift + 6].trim().equals(NAN)) {
+				position.setAltitude(Double.parseDouble(messArr[shift + 6].trim()));
 			}
 
 			if (position.getLat() != 0 && position.getLon() != 0) {
 				// TODO: persist position to db
 			}
+
+		} else if (commandType.equals("BC")) { // Бортовой контроль и телеметрия
+
 		}
-	}
-
-	@Override
-	public void messageSent(IoSession session, Object message) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void inputClosed(IoSession arg0) throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 }

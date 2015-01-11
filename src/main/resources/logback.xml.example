@@ -8,25 +8,49 @@
 		</layout>
 	</appender>
 
+	<appender name="SiftStream" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<key>TERMINAL_ID</key>
+			<defaultValue>unknown</defaultValue>
+		</discriminator>
+		<sift>
+			<appender name="FILE-${TERMINAL_ID}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<!-- daily rollover -->
+					<fileNamePattern>%d{yyyy-MM-dd}_${TERMINAL_ID}.log</fileNamePattern>
+
+					<!-- keep 30 days' worth of history -->
+					<maxHistory>30</maxHistory>
+				</rollingPolicy>
+				<encoder>
+					<pattern>%d{HH:mm:ss.SSS} %mdc %logger{36} - %msg%n</pattern>
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
+
+	<logger name="Stream" level="DEBUG">
+		<appender-ref ref="SiftStream" />
+	</logger>
+
 	<!-- Application Loggers -->
 	<logger name="monitoring" level="DEBUG">
 	</logger>
-	
+
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core" level="INFO">
-	</logger>	
-	
+	</logger>
+
 	<logger name="org.springframework.beans" level="INFO">
 	</logger>
-	
+
 	<logger name="org.springframework.context" level="INFO">
 	</logger>
 
 	<logger name="org.springframework.web" level="INFO">
 	</logger>
 
-
-	<root level="WARN">
+	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>

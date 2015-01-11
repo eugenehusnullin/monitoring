@@ -55,12 +55,14 @@ public class Handler extends IoHandlerAdapter {
 		String strMessage = (String) message;
 		logger.info("cguard. messageReceived. " + strMessage);
 
-		if (strMessage == "") {
+		if (strMessage.equals("")) {
+			logger.info("message empty");
 			return;
 		}
 
 		int index = strMessage.indexOf(":", 0);
 		if (index <= 0) {
+			logger.info("index of : is 0");
 			return;
 		}
 
@@ -85,6 +87,7 @@ public class Handler extends IoHandlerAdapter {
 			} else if (firstElement.equals("U") && (commandType.equals("BC") || commandType.equals("EV"))) {
 				messageDate = new Date();
 			} else {
+				logger.info("date is bad");
 				return;
 			}
 		}

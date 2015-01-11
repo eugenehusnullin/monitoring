@@ -11,6 +11,8 @@
 <!-- 		<mapping resource="monitoring/domain/hibernate/MunicDataBehave.hbm.xml" /> -->
 <!-- 		<mapping resource="monitoring/domain/hibernate/MunicDataMdi.hbm.xml" /> -->
 		<mapping resource="monitoring/domain/hibernate/TopAuto.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/TerminalDetach.hbm.xml" />
+		
 <!-- 		<mapping resource="monitoring/domain/hibernate/TopMapzone.hbm.xml" /> -->
 <!-- 		<mapping resource="monitoring/domain/hibernate/TopMapzonePoint.hbm.xml" /> -->
 <!-- 		<mapping resource="monitoring/domain/hibernate/TopBlockAlert.hbm.xml" /> -->

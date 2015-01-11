@@ -2,6 +2,7 @@ package monitoring.terminal.munic.trash;
 
 import java.util.Date;
 
+import monitoring.domain.TerminalDetach;
 import monitoring.domain.TopAuto;
 import monitoring.domain.TopBlockAlert;
 import monitoring.terminal.munic.domain.MunicData;
@@ -10,11 +11,20 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class LowService {
 
 	private SessionFactory sessionFactory;
+	
+	@Transactional
+	public void saveTerminalDetach(TerminalDetach terminalDetach) {
+		Session session = sessionFactory.getCurrentSession();
+		session.save(terminalDetach);
+	}
 
 	@Transactional
 	public void saveMunicData(MunicData municData) {

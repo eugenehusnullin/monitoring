@@ -47,6 +47,15 @@ public class Handler extends IoHandlerAdapter {
 		logger.info("cguard. sessionOpened");
 
 	}
+	
+	@Override
+	public void sessionClosed(IoSession session) throws Exception {
+		RetranslateSender retranslateSender = (RetranslateSender) session.getAttribute(atrRetr);
+		if (retranslateSender != null) {
+			session.removeAttribute(atrRetr);
+			retranslateSender.closeConnection();
+		}
+	}
 
 	@Override
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {

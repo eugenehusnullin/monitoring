@@ -89,6 +89,12 @@ public class RetranslateSender extends IoHandlerAdapter implements IoFutureListe
 			queue.notify();
 		}
 	}
+	
+	public void closeConnection() {
+		if (ioSession != null && ioSession.isConnected()) {
+			ioSession.close(true);
+		}
+	}
 
 	@Override
 	public void operationComplete(ConnectFuture future) {

@@ -1,6 +1,5 @@
 package monitoring.terminal.munic;
 
-import java.io.StringWriter;
 import java.util.Date;
 
 import monitoring.terminal.munic.domain.MunicRawData;
@@ -15,9 +14,9 @@ class PersistRawData implements RawHandler {
 
 	@Transactional
 	@Override
-	public void procces(StringWriter writer) {
+	public void procces(String message) {
 		MunicRawData municRawData = new MunicRawData();
-		municRawData.setRawData(writer.toString());
+		municRawData.setRawData(message);
 		municRawData.setArrived(DateUtils.getUTC(new Date()));
 
 		Session session = sessionFactory.getCurrentSession();

@@ -1,4 +1,4 @@
-package monitoring.terminal.cguard.wialon;
+package monitoring.terminal.cguardbad.wialon;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;

@@ -1,4 +1,4 @@
-package monitoring.terminal.cguard;
+package monitoring.terminal.cguardbad;
 
 import monitoring.domain.Message;
 

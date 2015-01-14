@@ -21,9 +21,9 @@ public class MunicController extends MultiActionController {
 
 	private List<RawHandler> handlers;
 
-	private void processRawHandlers(StringWriter writer) {
+	private void processRawHandlers(String message) {
 		for (RawHandler handler : handlers) {
-			handler.procces(writer);
+			handler.procces(message);
 		}
 	}
 
@@ -31,7 +31,7 @@ public class MunicController extends MultiActionController {
 		try {
 			StringWriter writer = new StringWriter();
 			IOUtils.copy(request.getInputStream(), writer);
-			processRawHandlers(writer);
+			processRawHandlers(writer.toString());
 			response.setStatus(200);
 
 		} catch (IOException e) {

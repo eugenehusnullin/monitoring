@@ -1,6 +1,5 @@
 package monitoring.terminal.munic;
 
-import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
@@ -22,8 +21,16 @@ class ExtractMessagesRawData implements RawHandler {
 		this.handlers = handlers;
 	}
 	
-	private void proccesWriter(StringWriter writer) {
-		JSONTokener jsonTokener = new JSONTokener(writer.toString());
+	@Override
+	public void procces(String message) {
+		synchronized (queue) {
+			queue.add(message);
+			queue.notifyAll();
+		}
+	}
+	
+	private void proccesWriter(String message) {
+		JSONTokener jsonTokener = new JSONTokener(message);
 		JSONArray jsonArray = (JSONArray) jsonTokener.nextValue();
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -38,7 +45,7 @@ class ExtractMessagesRawData implements RawHandler {
 		public void run() {
 			while (processing) {
 				try {
-					StringWriter writer = null;
+					String message = null;
 					synchronized (queue) {
 						if (queue.isEmpty()) {
 							try {
@@ -47,12 +54,12 @@ class ExtractMessagesRawData implements RawHandler {
 								break;
 							}
 						}
-						writer = queue.poll();
+						message = queue.poll();
 						queue.notifyAll();
 					}
 
-					if (writer != null) {
-						proccesWriter(writer);
+					if (message != null) {
+						proccesWriter(message);
 					}
 				} catch (Exception e) {
 					logger.error("ExtractMessagesRawData exception in RecieverMunicRawDataRunnable.", e);
@@ -61,7 +68,7 @@ class ExtractMessagesRawData implements RawHandler {
 		}
 	}
 
-	private Queue<StringWriter> queue = new ArrayDeque<StringWriter>();
+	private Queue<String> queue = new ArrayDeque<String>();
 	private Thread mainThread;
 	private volatile boolean processing = true;
 
@@ -81,12 +88,6 @@ class ExtractMessagesRawData implements RawHandler {
 		}
 	}
 
-	@Override
-	public void procces(StringWriter writer) {
-		synchronized (queue) {
-			queue.add(writer);
-			queue.notifyAll();
-		}
-	}
+
 
 }

@@ -60,4 +60,12 @@ public class Gprmc {
 		}
 		return crc;
 	}
+	
+	@SuppressWarnings("unused")
+	private double convertDecDegToDecMin(double number) {
+		int decimal = (int) number;
+		double fractional = number - decimal;
+		double result = (decimal * 100) + (fractional * 60);
+		return result;
+	}
 }

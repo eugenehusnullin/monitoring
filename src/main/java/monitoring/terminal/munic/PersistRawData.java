@@ -9,7 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-class PersistRawData implements RawHandler {
+public class PersistRawData implements RawHandler {
 	private SessionFactory sessionFactory;
 
 	@Transactional
@@ -22,6 +22,10 @@ class PersistRawData implements RawHandler {
 		Session session = sessionFactory.getCurrentSession();
 		session.save(municRawData);
 
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
 }

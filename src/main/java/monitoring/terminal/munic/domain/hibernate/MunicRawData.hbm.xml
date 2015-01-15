@@ -3,7 +3,7 @@
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="monitoring.domain">
+<hibernate-mapping package="monitoring.terminal.munic.domain">
 	<class name="MunicRawData" table="municrawdata">
 		<id name="id">
 			<generator class="identity" />

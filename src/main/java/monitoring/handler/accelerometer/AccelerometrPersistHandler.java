@@ -1,9 +1,9 @@
-package monitoring.handler.position;
+package monitoring.handler.accelerometer;
 
 import monitoring.domain.Message;
+import monitoring.handler.AccelerometrConverter;
 import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
-import monitoring.handler.PositionConverter;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,10 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-public class PositionPersistHandler implements Handler {
-	private static final Logger logger = LoggerFactory.getLogger(PositionPersistHandler.class);
+public class AccelerometrPersistHandler implements Handler {
+
+	private static final Logger logger = LoggerFactory.getLogger(AccelerometrPersistHandler.class);
 	private SessionFactory sessionFactory;
-	
+
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
@@ -24,18 +25,19 @@ public class PositionPersistHandler implements Handler {
 	public void handle(Message message, HandlerStrategy strategy) {
 		try {
 
-			PositionConverter positionConverter = strategy.getPositionConverter();
-			if (positionConverter != null) {
-				Position position = positionConverter.convert(message);
+			AccelerometrConverter converter = strategy.getAccelerometrConverter();
+			if (converter != null) {
+				Accelerometr accelerometr = converter.convert(message);
 
-				if (position != null) {
+				if (accelerometr != null) {
 					Session session = sessionFactory.getCurrentSession();
-					session.save(position);
+					session.save(accelerometr);
 				}
 			}
 
 		} catch (Exception e) {
-			logger.error("PositionPersistHandler exception: ", e);
+			logger.error("AccelerometrPersistHandler exception: ", e);
 		}
 	}
+
 }

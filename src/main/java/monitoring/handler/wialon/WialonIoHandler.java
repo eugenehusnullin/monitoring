@@ -26,8 +26,8 @@ class WialonIoHandler extends IoHandlerAdapter implements IoFutureListener<Conne
 
 	private long terminalId;
 	private HandlerStrategy strategy;
-	private String wialonb3Host;
-	private Integer wialonb3Port;
+	private String host;
+	private Integer port;
 
 	private Queue<WialonMessage> queue;
 	private volatile boolean processed;
@@ -40,8 +40,8 @@ class WialonIoHandler extends IoHandlerAdapter implements IoFutureListener<Conne
 	public WialonIoHandler(long terminalId, HandlerStrategy strategy, String wialonb3Host, Integer wialonb3Port) {
 		this.terminalId = terminalId;
 		this.strategy = strategy;
-		this.wialonb3Host = wialonb3Host;
-		this.wialonb3Port = wialonb3Port;
+		this.host = wialonb3Host;
+		this.port = wialonb3Port;
 
 		queue = new LinkedList<WialonMessage>();
 		processed = false;
@@ -62,7 +62,7 @@ class WialonIoHandler extends IoHandlerAdapter implements IoFutureListener<Conne
 
 	private boolean connect() {
 		if (ioSession == null || !ioSession.isConnected()) {
-			ConnectFuture future = connector.connect(new InetSocketAddress(wialonb3Host, wialonb3Port));
+			ConnectFuture future = connector.connect(new InetSocketAddress(host, port));
 			future.addListener(this);
 
 			return false;

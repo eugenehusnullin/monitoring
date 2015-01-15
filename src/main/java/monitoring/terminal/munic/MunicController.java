@@ -21,6 +21,10 @@ public class MunicController extends MultiActionController {
 
 	private List<RawHandler> handlers;
 
+	public void setHandlers(List<RawHandler> handlers) {
+		this.handlers = handlers;
+	}
+
 	private void processRawHandlers(String message) {
 		for (RawHandler handler : handlers) {
 			handler.procces(message);

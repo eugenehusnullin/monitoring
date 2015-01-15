@@ -6,7 +6,7 @@ import monitoring.handler.wialon.DataPacket;
 import monitoring.handler.wialon.WialonMessage;
 import monitoring.terminal.tek.messages.domain.TekMessage;
 import monitoring.terminal.tek.messages.domain.TripDataMessage;
-import monitoring.terminal.tek.messages.domain.trip.SatellitePosition;
+import monitoring.terminal.tek.utils.PositionHelper;
 
 public class TekWialonMessageFormatter implements MessageFormatter {
 
@@ -16,16 +16,8 @@ public class TekWialonMessageFormatter implements MessageFormatter {
 			TripDataMessage tripDataMessage = (TripDataMessage) message;
 
 			if (tripDataMessage.getSatellitePosition() != null) {
-				SatellitePosition satellitePosition = tripDataMessage.getSatellitePosition();
 				DataPacket dataPacket = new DataPacket();
-				dataPacket.setTerminalId(tripDataMessage.getTerminalId());
-				dataPacket.setDate(tripDataMessage.getUploadingTime());
-				dataPacket.setSpeed(satellitePosition.getSpeed());
-				dataPacket.setCourse((double) satellitePosition.getDirection());
-				dataPacket.setAltitude((double) satellitePosition.getElevation());
-				dataPacket.setLat(satellitePosition.getLatitude());
-				dataPacket.setLon(satellitePosition.getLongitude());
-				dataPacket.setSatellites((int) tripDataMessage.getSatelites());
+				PositionHelper.initPosition(dataPacket, tripDataMessage);
 				return dataPacket;
 			}
 		}

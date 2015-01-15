@@ -5,17 +5,11 @@
 
 <hibernate-configuration>
 	<session-factory>
-<!-- 		<mapping resource="monitoring/domain/hibernate/MunicRawData.hbm.xml" /> -->
-<!-- 		<mapping resource="monitoring/domain/hibernate/MunicItemRawData.hbm.xml" /> -->
-<!-- 		<mapping resource="monitoring/domain/hibernate/MunicData.hbm.xml" /> -->
-<!-- 		<mapping resource="monitoring/domain/hibernate/MunicDataBehave.hbm.xml" /> -->
-<!-- 		<mapping resource="monitoring/domain/hibernate/MunicDataMdi.hbm.xml" /> -->
-		<mapping resource="monitoring/domain/hibernate/TopAuto.hbm.xml" />
-		<mapping resource="monitoring/domain/hibernate/TerminalDetach.hbm.xml" />
-		
+		<mapping resource="monitoring/terminal/munic/domain/hibernate/MunicRawData.hbm.xml" />
+		<mapping resource="monitoring/handler/position/hibernate/Position.hbm.xml" />
+		<mapping resource="monitoring/handler/accelerometer/hibernate/Accelerometr.hbm.xml" />
+<!-- 		<mapping resource="monitoring/domain/hibernate/TerminalDetach.hbm.xml" /> -->		
 <!-- 		<mapping resource="monitoring/domain/hibernate/TopMapzone.hbm.xml" /> -->
 <!-- 		<mapping resource="monitoring/domain/hibernate/TopMapzonePoint.hbm.xml" /> -->
-<!-- 		<mapping resource="monitoring/domain/hibernate/TopBlockAlert.hbm.xml" /> -->
-<!-- 		<mapping resource="monitoring/domain/hibernate/Position.hbm.xml" /> -->
 	</session-factory>
 </hibernate-configuration>

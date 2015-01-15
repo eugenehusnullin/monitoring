@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 public class WialonCommHandler implements Handler {
 	private static final Logger logger = LoggerFactory.getLogger(WialonCommHandler.class);
 	private Map<Long, WialonIoHandler> connectionsMap = new HashMap<Long, WialonIoHandler>();
-	private String wialonb3Host;
-	private Integer wialonb3Port;
-	private WialonMessageFormatter wialonMessageFormatter;
+	private String host;
+	private Integer port;
+	private WialonMessageFormatter wialonMessageFormatter = new WialonMessageFormatter();
 
 	@Override
 	public void handle(Message message, HandlerStrategy strategy) {
@@ -54,7 +54,15 @@ public class WialonCommHandler implements Handler {
 	}
 
 	private WialonIoHandler createSender(long terminalId, HandlerStrategy strategy) {
-		return new WialonIoHandler(terminalId, strategy, wialonb3Host, wialonb3Port);
+		return new WialonIoHandler(terminalId, strategy, host, port);
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
 	}
 
 }

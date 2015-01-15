@@ -8,31 +8,17 @@ import java.util.regex.Pattern;
 
 import monitoring.domain.TerminalDetach;
 import monitoring.handler.position.Position;
-import monitoring.terminal.cguard.wialon.RetranslateSender;
-import monitoring.terminal.munic.trash.LowService;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-@Service
 public class Handler extends IoHandlerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(Handler.class);
 
-	@Autowired
-	private LowService lowService;
-	@Value("#{mainSettings['wialonb3.cguard.host']}")
-	private String host;
-	@Value("#{mainSettings['wialonb3.cguard.port']}")
-	private Integer port;
-
 	private final String NAN = "NAN";
 	private final String ID = "ID";
-	private static final String atrRetr = "RETRANSLATOR";
 
 	private Map<Long, Boolean> terminalDetachMap = new HashMap<Long, Boolean>();
 
@@ -47,14 +33,10 @@ public class Handler extends IoHandlerAdapter {
 		logger.info("cguard. sessionOpened");
 
 	}
-	
+
 	@Override
 	public void sessionClosed(IoSession session) throws Exception {
-		RetranslateSender retranslateSender = (RetranslateSender) session.getAttribute(atrRetr);
-		if (retranslateSender != null) {
-			session.removeAttribute(atrRetr);
-			retranslateSender.closeConnection();
-		}
+
 	}
 
 	@Override
@@ -72,14 +54,6 @@ public class Handler extends IoHandlerAdapter {
 			String strMessage = (String) message;
 			logger.info("cguard. messageReceived. " + strMessage);
 
-			
-			RetranslateSender retranslateSender = (RetranslateSender) session.getAttribute(atrRetr);
-			if (retranslateSender == null) {
-				retranslateSender = new RetranslateSender(host, port);
-				session.setAttribute(atrRetr, retranslateSender);
-			}
-			retranslateSender.send(strMessage);
-			
 			if (strMessage.equals("")) {
 				logger.info("message empty");
 				return;
@@ -198,7 +172,7 @@ public class Handler extends IoHandlerAdapter {
 									terminalDetach.setEventDate(messageDate);
 									terminalDetach.setTerminalId(imei);
 
-									lowService.saveTerminalDetach(terminalDetach);
+									//lowService.saveTerminalDetach(terminalDetach);
 								}
 								terminalDetachMap.notifyAll();
 							}

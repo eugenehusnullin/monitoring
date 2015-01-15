@@ -8,4 +8,6 @@ public interface HandlerStrategy {
 	MessageFormatter getWialonMessageFormatter();
 	
 	TerminalSession getTerminalSession(long terminalId);
+	
+	AccelerometrConverter getAccelerometrConverter();
 }

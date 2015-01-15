@@ -3,7 +3,7 @@
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="monitoring.domain">
+<hibernate-mapping package="monitoring.handler.position">
 	<class name="Position" table="position">
 		<id name="id">
 			<generator class="identity" />

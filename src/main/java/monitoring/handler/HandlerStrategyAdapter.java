@@ -24,4 +24,9 @@ public class HandlerStrategyAdapter implements HandlerStrategy {
 		return null;
 	}
 
+	@Override
+	public AccelerometrConverter getAccelerometrConverter() {
+		return null;
+	}
+
 }

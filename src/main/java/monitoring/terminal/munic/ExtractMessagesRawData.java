@@ -1,12 +1,15 @@
 package monitoring.terminal.munic;
 
+import java.text.ParseException;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 
 import monitoring.handler.Handler;
+import monitoring.handler.HandlerStrategy;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
@@ -16,11 +19,16 @@ class ExtractMessagesRawData implements RawHandler {
 	private static final Logger logger = LoggerFactory.getLogger(ExtractMessagesRawData.class);
 
 	private List<Handler> handlers;
+	private HandlerStrategy strategy;
 
 	public void setHandlers(List<Handler> handlers) {
 		this.handlers = handlers;
 	}
 	
+	public void setStrategy(HandlerStrategy strategy) {
+		this.strategy = strategy;
+	}
+
 	@Override
 	public void procces(String message) {
 		synchronized (queue) {
@@ -34,9 +42,15 @@ class ExtractMessagesRawData implements RawHandler {
 		JSONArray jsonArray = (JSONArray) jsonTokener.nextValue();
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			// TODO: generate Messages here
-			//
-			//
+			MunicMessage municMessage = new MunicMessage();
+			try {
+				municMessage.setJsonMessage(jsonObject);
+				for (Handler handler : handlers) {
+					handler.handle(municMessage, strategy);
+				}
+			} catch (JSONException | ParseException e) {
+				logger.error(e.toString());
+			}
 		}
 	}
 

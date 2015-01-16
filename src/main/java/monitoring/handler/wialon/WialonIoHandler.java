@@ -37,11 +37,11 @@ class WialonIoHandler extends IoHandlerAdapter implements IoFutureListener<Conne
 	private NioSocketConnector connector;
 	private int errorsCount;
 
-	public WialonIoHandler(long terminalId, HandlerStrategy strategy, String wialonb3Host, Integer wialonb3Port) {
+	public WialonIoHandler(long terminalId, HandlerStrategy strategy, String host, Integer port) {
 		this.terminalId = terminalId;
 		this.strategy = strategy;
-		this.host = wialonb3Host;
-		this.port = wialonb3Port;
+		this.host = host;
+		this.port = port;
 
 		queue = new LinkedList<WialonMessage>();
 		processed = false;

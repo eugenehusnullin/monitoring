@@ -102,12 +102,22 @@ public class MunicMessage implements Message {
 		return getBooleanField("DIO_IGNITION");
 	}
 
-	public Integer getDirection() {
-		return getIntegerField("GPS_DIR");
+	public Double getDirection() {
+		Integer dirInteger = getIntegerField("GPS_DIR");
+		if (dirInteger != null) {
+			return dirInteger.doubleValue() / 100;
+		} else {
+			return null;
+		}
 	}
 
-	public Integer getSpeed() {
-		return getIntegerField("GPS_SPEED");
+	public Double getSpeed() {
+		Integer speedInteger = getIntegerField("GPS_SPEED");
+		if (speedInteger != null) {
+			return speedInteger.doubleValue() / 1000 * 1.852;
+		} else {
+			return null;
+		}
 	}
 
 	/*

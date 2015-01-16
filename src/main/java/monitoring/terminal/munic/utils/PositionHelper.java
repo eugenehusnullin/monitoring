@@ -13,7 +13,7 @@ public class PositionHelper {
 		position.setLat(municMessage.getLatitude());
 		position.setLon(municMessage.getLongitude());
 		if (municMessage.getSpeed() != null) {
-			position.setSpeed(municMessage.getSpeed().doubleValue());
+			position.setSpeed(municMessage.getSpeed());
 		}
 	}
 }

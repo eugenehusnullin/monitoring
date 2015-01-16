@@ -10,7 +10,7 @@ public class MunicHandlerStrategy extends HandlerStrategyAdapter {
 
 	private PositionConverter positionConverter;
 	private MessageFormatter messageFormatter;
-	private MunicAccelerometrConverter accelerometrConverter;
+	private AccelerometrConverter accelerometrConverter;
 
 	@Override
 	public PositionConverter getPositionConverter() {
@@ -40,7 +40,7 @@ public class MunicHandlerStrategy extends HandlerStrategyAdapter {
 		this.messageFormatter = messageFormatter;
 	}
 
-	public void setAccelerometrConverter(MunicAccelerometrConverter accelerometrConverter) {
+	public void setAccelerometrConverter(AccelerometrConverter accelerometrConverter) {
 		this.accelerometrConverter = accelerometrConverter;
 	}
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+	<bean name="tekTerminals" class="monitoring.terminal.tek.EnterPoint"
+		init-method="start" destroy-method="stop">
+		<property name="host" value="${main.terminal.tek.host}"></property>
+		<property name="port" value="${main.terminal.tek.port}"></property>
+		<property name="handler">
+			<ref bean="tekIoHandler" />
+		</property>
+	</bean>
+
+	<bean name="tekIoHandler" class="monitoring.terminal.tek.TekIoHandler">
+		<property name="terminalSessionKeeper">
+			<ref bean="terminalSessionKeeper" />
+		</property>
+		<property name="strategy">
+			<ref bean="tekHandlerStrategy" />
+		</property>
+		<property name="handlers">
+			<list>
+				<ref bean="tekPositionPersist" />
+				<ref bean="tekWialonScoring" />
+			</list>
+		</property>
+	</bean>
+
+	<bean name="terminalSessionKeeper" class="monitoring.terminal.tek.TekTerminalSessionKeeper"
+		scope="singleton"></bean>
+
+	<bean name="tekHandlerStrategy" class="monitoring.terminal.tek.TekHandlerStrategy">
+		<property name="terminalSessionKeeper">
+			<ref bean="terminalSessionKeeper" />
+		</property>
+		<property name="messageFormatter">
+			<bean class="monitoring.terminal.tek.TekWialonMessageFormatter"></bean>
+		</property>
+		<property name="positionConverter">
+			<bean class="monitoring.terminal.tek.TekPositionConverter"></bean>
+		</property>
+	</bean>
+
+	<bean name="tekPositionPersist" class="monitoring.handler.position.PositionPersistHandler">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean name="tekWialonScoring" class="monitoring.handler.wialon.WialonCommHandler">
+		<property name="host" value="${main.wialonb3.scoring.host}"></property>
+		<property name="port" value="${main.wialonb3.scoring.port}"></property>
+	</bean>
+</beans>

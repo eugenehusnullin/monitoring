@@ -19,14 +19,14 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 public class MunicController extends MultiActionController {
 	private static final Logger logger = LoggerFactory.getLogger(MunicController.class);
 
-	private List<RawHandler> handlers;
+	private List<RawHandler> rawHandlers;
 
-	public void setHandlers(List<RawHandler> handlers) {
-		this.handlers = handlers;
+	public void setRawHandlers(List<RawHandler> handlers) {
+		this.rawHandlers = handlers;
 	}
 
 	private void processRawHandlers(String message) {
-		for (RawHandler handler : handlers) {
+		for (RawHandler handler : rawHandlers) {
 			handler.procces(message);
 		}
 	}

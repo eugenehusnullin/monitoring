@@ -11,9 +11,8 @@
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 
-	<context:property-placeholder location="WEB-INF\settings\jdbc.settings" />
 	<context:property-placeholder location="WEB-INF\settings\main.settings" />
-	<util:properties id="mainSettings" location="WEB-INF\settings\main.settings"></util:properties>
+<!-- 	<util:properties id="mainSettings" location="WEB-INF\settings\main.settings"></util:properties> -->
 
 	<bean id="municDS"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -37,6 +36,8 @@
 		<property name="dataSource" ref="municDS" />
 		<property name="packagesToScan" value="monitoring" />
 	</bean>
+	
+	<import resource="tek-context.xml"/>
 	
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">

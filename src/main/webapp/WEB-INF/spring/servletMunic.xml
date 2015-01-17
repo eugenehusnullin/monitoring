@@ -11,7 +11,6 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
-	<alias name="sessionFactory" alias="sessionFactory" />
 	<context:property-placeholder location="WEB-INF\settings\main.settings" />
 
 	<!-- IMPORTANT 1) available handler mappers - ControllerBeanNameHandlerMapping, 
@@ -26,7 +25,7 @@
 	</bean>
 
 	<bean name="scoring" class="monitoring.terminal.munic.MunicController">
-		<property name="handlers">
+		<property name="rawHandlers">
 			<list>
 				<ref bean="persistRawData" />
 				<ref bean="extractMessages" />

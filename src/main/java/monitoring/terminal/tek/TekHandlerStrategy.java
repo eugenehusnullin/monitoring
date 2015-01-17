@@ -26,4 +26,16 @@ public class TekHandlerStrategy extends HandlerStrategyAdapter {
 		return terminalSessionKeeper.getTerminalSession(terminalId);
 	}
 
+	public void setPositionConverter(PositionConverter positionConverter) {
+		this.positionConverter = positionConverter;
+	}
+
+	public void setMessageFormatter(MessageFormatter messageFormatter) {
+		this.messageFormatter = messageFormatter;
+	}
+
+	public void setTerminalSessionKeeper(TekTerminalSessionKeeper terminalSessionKeeper) {
+		this.terminalSessionKeeper = terminalSessionKeeper;
+	}
+
 }

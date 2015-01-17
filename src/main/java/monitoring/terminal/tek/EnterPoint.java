@@ -12,9 +12,9 @@ public class EnterPoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(EnterPoint.class);
 	private IoAcceptor acceptor;
+
 	private String host;
 	private Integer port;
-
 	private TekIoHandler handler;
 
 	public void start() {
@@ -38,4 +38,17 @@ public class EnterPoint {
 		acceptor.dispose();
 		logger.info("tekobd2 acceptor stoped.");
 	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+
+	public void setHandler(TekIoHandler handler) {
+		this.handler = handler;
+	}
+	
 }

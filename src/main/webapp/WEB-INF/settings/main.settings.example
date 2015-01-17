@@ -1,16 +1,67 @@
-wialonb3.enabled = 1
-wialonb3.host = 194.28.112.5
-wialonb3.port = 50381
-messageprocessing.threads.count = 10
+main.wialonb3.scoring.host = 194.28.112.5
+main.wialonb3.scoring.port = 50189
+
+main.terminal.tek.host = localhost
+main.terminal.tek.port = 9093
+
+main.terminal.cguard.host = localhost
+main.terminal.cguard.port = 9091
+main.wialonb3.cguard.host = localhost
+main.wialonb3.cguard.port = 9092
 
 
-block.distance.percent = 20
 
-cguard.host = localhost
-cguard.port = 9091
+; hibernate update structure
+hibernate.hbm2ddl.auto=update
 
-wialonb3.cguard.host = remote_ip
-wialonb3.cguard.port = remote_port
+; hibernate recreate structure
+hibernate.hbm2ddl.auto=create-drop
 
-tekobd2.host = localhost
-tekobd2.port = 9093
+
+; HSQLDB in memory
+jdbc.driverClassName=org.hsqldb.jdbcDriver
+jdbc.url=jdbc:hsqldb:mem:tb2014
+jdbc.username=sa
+jdbc.password=
+hibernate.dialect=org.hibernate.dialect.HSQLDialect
+hibernate.show_sql=true
+hibernate.hbm2ddl.auto=create-drop
+
+; HSQLDB on disk
+jdbc.driverClassName=org.hsqldb.jdbcDriver
+jdbc.url=jdbc:hsqldb:file:D:/db_data/hsqldb/tb2014/tb2014
+jdbc.username=sa
+jdbc.password=
+hibernate.dialect=org.hibernate.dialect.HSQLDialect
+hibernate.show_sql=true
+hibernate.hbm2ddl.auto=create-drop
+
+
+; POSTGRES
+jdbc.driverClassName=org.postgresql.Driver
+jdbc.url=jdbc:postgresql://localhost:5432/tb2014
+jdbc.username=tb2014
+jdbc.password=tb2014
+hibernate.dialect=org.hibernate.dialect.PostgreSQL82Dialect
+hibernate.show_sql=true
+hibernate.hbm2ddl.auto=create-drop
+
+; MYSQL
+jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://195.206.252.78:3306/tb2014
+jdbc.username=scoring
+jdbc.password=
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+hibernate.show_sql=false
+hibernate.hbm2ddl.auto=create-drop
+
+; munic in postgres
+jdbc.driverClassName=org.postgresql.Driver
+jdbc.url=jdbc:postgresql://localhost:5432/munic
+jdbc.username=munic
+jdbc.password=munic
+hibernate.dialect=org.hibernate.dialect.PostgreSQL82Dialect
+hibernate.show_sql=false
+hibernate.hbm2ddl.auto=update
+;hibernate.hbm2ddl.auto=create-drop
+

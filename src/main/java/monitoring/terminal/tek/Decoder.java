@@ -22,6 +22,10 @@ class Decoder extends CumulativeProtocolDecoder {
 
 	private MessageParser messageParser;
 
+	public void setMessageParser(MessageParser messageParser) {
+		this.messageParser = messageParser;
+	}
+
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
 

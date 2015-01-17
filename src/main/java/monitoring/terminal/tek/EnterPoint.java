@@ -17,12 +17,15 @@ public class EnterPoint {
 	private Integer port;
 	private TekIoHandler handler;
 
+	private Encoder encoder;
+	private Decoder decoder;
+
 	public void start() {
 		try {
 			logger.info("Starting tekobd2 acceptor.");
 
 			acceptor = new NioSocketAcceptor();
-			acceptor.getFilterChain().addLast("tekobd2", new ProtocolCodecFilter(new Encoder(), new Decoder()));
+			acceptor.getFilterChain().addLast("tekobd2", new ProtocolCodecFilter(encoder, decoder));
 			acceptor.setDefaultLocalAddress(new InetSocketAddress(host, port));
 			acceptor.setHandler(handler);
 			acceptor.bind();
@@ -50,5 +53,13 @@ public class EnterPoint {
 	public void setHandler(TekIoHandler handler) {
 		this.handler = handler;
 	}
-	
+
+	public void setEncoder(Encoder encoder) {
+		this.encoder = encoder;
+	}
+
+	public void setDecoder(Decoder decoder) {
+		this.decoder = decoder;
+	}
+
 }

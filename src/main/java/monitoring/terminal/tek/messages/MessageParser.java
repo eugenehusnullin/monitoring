@@ -12,6 +12,10 @@ public class MessageParser {
 
 	private MessageFactoryDetector messageFactoryDetector;
 
+	public void setMessageFactoryDetector(MessageFactoryDetector messageFactoryDetector) {
+		this.messageFactoryDetector = messageFactoryDetector;
+	}
+
 	public TekMessage parse(IoBuffer in, int length) throws Exception {
 
 		ByteBuffer buffer = MessageUtilities.preprocessIncoming(in, length);

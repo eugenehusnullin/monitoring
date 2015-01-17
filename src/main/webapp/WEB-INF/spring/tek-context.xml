@@ -14,6 +14,12 @@
 		<property name="handler">
 			<ref bean="tekIoHandler" />
 		</property>
+		<property name="decoder">
+			<ref bean="tekDecoder"/>
+		</property>
+		<property name="encoder">
+			<ref bean="tekEncoder"/>
+		</property>
 	</bean>
 
 	<bean name="tekIoHandler" class="monitoring.terminal.tek.TekIoHandler">
@@ -55,5 +61,23 @@
 	<bean name="tekWialonScoring" class="monitoring.handler.wialon.WialonCommHandler">
 		<property name="host" value="${main.wialonb3.scoring.host}"></property>
 		<property name="port" value="${main.wialonb3.scoring.port}"></property>
+	</bean>
+	
+	<bean name="tekDecoder" class="monitoring.terminal.tek.Decoder">
+		<property name="messageParser">
+			<ref bean="tekMessageParser"/>
+		</property>
+	</bean>
+	
+	<bean name="tekMessageParser" class="monitoring.terminal.tek.messages.MessageParser">
+		<property name="messageFactoryDetector">
+			<bean class="monitoring.terminal.tek.messages.factory.MessageFactoryDetector"></bean>
+		</property>
+	</bean>
+	
+	<bean name="tekEncoder" class="monitoring.terminal.tek.Encoder">
+		<property name="responseCreatorDetector">
+			<bean class="monitoring.terminal.tek.responses.ResponseCreatorDetector"></bean>
+		</property>
 	</bean>
 </beans>

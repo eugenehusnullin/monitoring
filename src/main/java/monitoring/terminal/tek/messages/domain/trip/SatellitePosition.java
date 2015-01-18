@@ -22,11 +22,11 @@ public class SatellitePosition {
 	}
 	
 	public double getLatitude() {
-		return latitude;
+		return latitude / 1000000;
 	}
 
 	public double getLongitude() {
-		return longitude;
+		return longitude / 1000000;
 	}
 
 	public short getElevation() {

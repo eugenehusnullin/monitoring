@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import monitoring.terminal.tek.messages.MessageParser;
+import monitoring.terminal.tek.messages.domain.LoginMessage;
 import monitoring.terminal.tek.messages.domain.RegistrationMessage;
 import monitoring.terminal.tek.messages.domain.TripDataMessage;
 import monitoring.terminal.tek.messages.factory.MessageFactoryDetector;
@@ -72,59 +73,42 @@ public class DecoderTest {
 			assertNotNull(message.getBaseStationPosition());
 			assertNull(message.getAlarmData());
 			assertNull(message.getDtcData());
+			
+
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-//	@Test
-//	public void testRegistrationPacketLength0() {
-//		String s = "7E300000008140875475760010287E";
-//		byte[] inBytes = ByteUtilities.hexToBytes(s);
-//		IoBuffer in = IoBuffer.wrap(inBytes);
-//		try {
-//			// TekMessage message = TekMessage.parseMessage(in, inBytes.length);
-//			Decoder decoder = new Decoder();
-//			RegistrationMessage message = (RegistrationMessage) decoder.process(in);
-//			assertEquals(message.getMessageId(), 0x3000);
-//			assertEquals(message.getBodyLength(), 0x0);
-//			assertEquals(message.getTerminalId(), 814087547576L);
-//
-////			if (message instanceof HasResponse) {
-////				byte[] outBytes = ((HasResponse) message).makeResponse();
-////				String outString = ByteUtilities.bytesToHex(outBytes);
-////				assertEquals("B0000006814087547576001000100053434FF8", outString);
-////				// System.out.println(outString);
-////			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testLoginPacket() {
-//		String s = "7E30020003814087351432000E53434F357E";
-//		byte[] inBytes = ByteUtilities.hexToBytes(s);
-//		IoBuffer in = IoBuffer.wrap(inBytes);
-//		try {
-//			// TekMessage message = TekMessage.parseMessage(in, inBytes.length);
-//			Decoder decoder = new Decoder();
-//			LoginMessage message = (LoginMessage) decoder.process(in);
-//			assertEquals(message.getMessageId(), 0x3002);
-//			assertEquals(message.getBodyLength(), 0x3);
-//			assertEquals(message.getTerminalId(), 814087351432L);
-//
-////			if (message instanceof HasResponse) {
-////				byte[] outBytes = ((HasResponse) message).makeResponse();
-////				String outString = ByteUtilities.bytesToHex(outBytes);
-////				// System.out.println(outString);
-////				assertEquals("B0030005814087351432000E000E300200D1", outString);
-////			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+	@Test
+	public void testRegistrationPacketLength0() {
+		String s = "7E300000008140875475760010287E";
+		byte[] inBytes = ByteUtilities.hexToBytes(s);
+		IoBuffer in = IoBuffer.wrap(inBytes);
+		try {
+			Decoder decoder = createDecoder();
+			RegistrationMessage message = (RegistrationMessage) decoder.process(in);
+			assertEquals(message.getMessageType(), 0x3000);
+			assertEquals(message.getBodyLength(), 0x0);
+			assertEquals(message.getTerminalId(), 814087547576L);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testLoginPacket() {
+		String s = "7E30020003814087351432000E53434F357E";
+		byte[] inBytes = ByteUtilities.hexToBytes(s);
+		IoBuffer in = IoBuffer.wrap(inBytes);
+		try {
+			Decoder decoder = createDecoder();
+			LoginMessage message = (LoginMessage) decoder.process(in);
+			assertEquals(message.getMessageType(), 0x3002);
+			assertEquals(message.getBodyLength(), 0x3);
+			assertEquals(message.getTerminalId(), 814087351432L);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

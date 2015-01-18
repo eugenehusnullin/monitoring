@@ -76,16 +76,28 @@ public class MunicMessage implements Message {
 	}
 
 	public Integer getAccX() {
+		if (getIntegerField("BEHAVE_ACC_X_BEGIN") == null || getIntegerField("BEHAVE_ACC_X_PEAK") == null ||
+				getIntegerField("BEHAVE_ACC_X_END") == null) {
+					return null;
+				}
 		return Math.max(Math.max(getIntegerField("BEHAVE_ACC_X_BEGIN"), getIntegerField("BEHAVE_ACC_X_PEAK")),
 				getIntegerField("BEHAVE_ACC_X_END"));
 	}
 	
 	public Integer getAccY() {
+		if (getIntegerField("BEHAVE_ACC_Y_BEGIN") == null || getIntegerField("BEHAVE_ACC_Y_PEAK") == null ||
+				getIntegerField("BEHAVE_ACC_Y_END") == null) {
+					return null;
+				}
 		return Math.max(Math.max(getIntegerField("BEHAVE_ACC_Y_BEGIN"), getIntegerField("BEHAVE_ACC_Y_PEAK")),
 				getIntegerField("BEHAVE_ACC_Y_END"));
 	}
 	
 	public Integer getAccZ() {
+		if (getIntegerField("BEHAVE_ACC_Z_BEGIN") == null || getIntegerField("BEHAVE_ACC_Z_PEAK") == null ||
+				getIntegerField("BEHAVE_ACC_Z_END") == null) {
+					return null;
+				}
 		return Math.max(Math.max(getIntegerField("BEHAVE_ACC_Z_BEGIN"), getIntegerField("BEHAVE_ACC_Z_PEAK")),
 				getIntegerField("BEHAVE_ACC_Z_END"));
 	}

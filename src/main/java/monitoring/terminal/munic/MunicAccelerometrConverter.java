@@ -21,12 +21,20 @@ public class MunicAccelerometrConverter implements AccelerometrConverter {
 			return null;
 		}
 
+		Integer accX = municMessage.getAccX();
+		Integer accY = municMessage.getAccY();
+		Integer accZ = municMessage.getAccZ();
+		
+		if (accX == null || accY == null || accZ == null) {
+			return null;
+		}
+		
 		Accelerometr accelerometr = new Accelerometr();
 		accelerometr.setTerminalId(municMessage.getTerminalId());
 		accelerometr.setDate(municMessage.getRecordedAt());
-		accelerometr.setAccX(municMessage.getAccX());
-		accelerometr.setAccY(municMessage.getAccY());
-		accelerometr.setAccZ(municMessage.getAccZ());
+		accelerometr.setAccX(accX);
+		accelerometr.setAccY(accY);
+		accelerometr.setAccZ(accZ);
 		return accelerometr;
 	}
 

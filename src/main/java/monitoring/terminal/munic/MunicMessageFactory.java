@@ -28,16 +28,18 @@ public class MunicMessageFactory {
 	}
 
 	private void ignitionProof(MunicMessage municMessage) {
-		synchronized (ignitionStateMap) {
-			if (municMessage.getDioIgnition() != null) {
-				ignitionStateMap.put(municMessage.getTerminalId(), municMessage.getDioIgnition());
-			} else {
-				Boolean ignitionState = ignitionStateMap.get(municMessage.getTerminalId());
-				if (ignitionState != null) {
-					municMessage.setDioIgnition(ignitionState);
+		if (municMessage.isTrackEvent()) {
+			synchronized (ignitionStateMap) {
+				if (municMessage.getDioIgnition() != null) {
+					ignitionStateMap.put(municMessage.getTerminalId(), municMessage.getDioIgnition());
+				} else {
+					Boolean ignitionState = ignitionStateMap.get(municMessage.getTerminalId());
+					if (ignitionState != null) {
+						municMessage.setDioIgnition(ignitionState);
+					}
 				}
+				ignitionStateMap.notifyAll();
 			}
-			ignitionStateMap.notifyAll();
 		}
 	}
 }

@@ -197,6 +197,10 @@ public class MunicMessage implements Message {
 	 */
 
 	private Boolean getBooleanField(String key) {
+		if (jsonFields == null) {
+			return null;
+		}
+
 		JSONObject jsonObject = jsonFields.optJSONObject(key);
 		if (jsonObject != null) {
 			return Base64Utils.decodeBase64Boolean(jsonObject.getString("b64_value"));
@@ -206,6 +210,10 @@ public class MunicMessage implements Message {
 	}
 
 	private Integer getIntegerField(String key) {
+		if (jsonFields == null) {
+			return null;
+		}
+
 		JSONObject jsonObject = jsonFields.optJSONObject(key);
 		if (jsonObject != null) {
 			return Base64Utils.decodeBase64Integer(jsonObject.getString("b64_value"));
@@ -216,6 +224,10 @@ public class MunicMessage implements Message {
 
 	@SuppressWarnings("unused")
 	private String getStringField(String key) {
+		if (jsonFields == null) {
+			return null;
+		}
+
 		JSONObject jsonObject = jsonFields.optJSONObject(key);
 		if (jsonObject != null) {
 			return Base64Utils.decodeBase64String(jsonObject.getString("b64_value"));
@@ -225,6 +237,10 @@ public class MunicMessage implements Message {
 	}
 
 	private boolean containsFieldStartsWith(String startsWith) {
+		if (jsonFields == null) {
+			return false;
+		}
+
 		boolean contains = false;
 		for (Object key : jsonFields.keySet()) {
 			String keyString = (String) key;

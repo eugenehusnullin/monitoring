@@ -19,6 +19,7 @@ public class MunicMessage implements Message {
 	private String event;
 	private double latitude = Double.NaN;
 	private double longitude = Double.NaN;
+	private Boolean dioIgnition = null;
 
 	public void setJsonMessage(JSONObject jsonMessage) throws JSONException, ParseException {
 		JSONObject meta = jsonMessage.getJSONObject("meta");
@@ -99,7 +100,14 @@ public class MunicMessage implements Message {
 	}
 
 	public Boolean getDioIgnition() {
+		if (this.dioIgnition != null) {
+			return this.dioIgnition;
+		}
 		return getBooleanField("DIO_IGNITION");
+	}
+	
+	public void setDioIgnition(Boolean dioIgnition) {
+		this.dioIgnition = dioIgnition;
 	}
 
 	public Double getDirection() {

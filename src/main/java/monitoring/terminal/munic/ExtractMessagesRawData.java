@@ -1,6 +1,5 @@
 package monitoring.terminal.munic;
 
-import java.text.ParseException;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
@@ -9,7 +8,6 @@ import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
@@ -20,14 +18,7 @@ class ExtractMessagesRawData implements RawHandler {
 
 	private List<Handler> handlers;
 	private HandlerStrategy strategy;
-
-	public void setHandlers(List<Handler> handlers) {
-		this.handlers = handlers;
-	}
-	
-	public void setStrategy(HandlerStrategy strategy) {
-		this.strategy = strategy;
-	}
+	private MunicMessageFactory municMessageFactory;
 
 	@Override
 	public void procces(String message) {
@@ -36,20 +27,17 @@ class ExtractMessagesRawData implements RawHandler {
 			queue.notifyAll();
 		}
 	}
-	
-	private void proccesWriter(String message) {
+
+	private void proccesMessage(String message) {
 		JSONTokener jsonTokener = new JSONTokener(message);
 		JSONArray jsonArray = (JSONArray) jsonTokener.nextValue();
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			MunicMessage municMessage = new MunicMessage();
-			try {
-				municMessage.setJsonMessage(jsonObject);
+			MunicMessage municMessage = municMessageFactory.createMessage(jsonObject);
+			if (municMessage != null) {
 				for (Handler handler : handlers) {
 					handler.handle(municMessage, strategy);
 				}
-			} catch (JSONException | ParseException e) {
-				logger.error(e.toString());
 			}
 		}
 	}
@@ -73,7 +61,7 @@ class ExtractMessagesRawData implements RawHandler {
 					}
 
 					if (message != null) {
-						proccesWriter(message);
+						proccesMessage(message);
 					}
 				} catch (Exception e) {
 					logger.error("ExtractMessagesRawData exception in RecieverMunicRawDataRunnable.", e);
@@ -102,6 +90,16 @@ class ExtractMessagesRawData implements RawHandler {
 		}
 	}
 
+	public void setHandlers(List<Handler> handlers) {
+		this.handlers = handlers;
+	}
 
+	public void setStrategy(HandlerStrategy strategy) {
+		this.strategy = strategy;
+	}
+
+	public void setMunicMessageFactory(MunicMessageFactory municMessageFactory) {
+		this.municMessageFactory = municMessageFactory;
+	}
 
 }

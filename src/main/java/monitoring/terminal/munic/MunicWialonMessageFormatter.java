@@ -24,6 +24,10 @@ public class MunicWialonMessageFormatter implements MessageFormatter {
 
 		DataPacket dataPacket = new DataPacket();
 		PositionHelper.initPosition(dataPacket, municMessage);
+		
+		if (municMessage.getDioIgnition() != null) {
+			dataPacket.getParams().put("ignition", municMessage.getDioIgnition().booleanValue() ? "1" : "0");
+		}
 		return dataPacket;
 	}
 

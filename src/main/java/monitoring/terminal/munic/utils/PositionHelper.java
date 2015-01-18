@@ -10,8 +10,12 @@ public class PositionHelper {
 			position.setCourse(municMessage.getDirection().doubleValue());
 		}
 		position.setDate(municMessage.getRecordedAt());
-		position.setLat(municMessage.getLatitude());
-		position.setLon(municMessage.getLongitude());
+		if (municMessage.getLatitude() != null) {
+			position.setLat(municMessage.getLatitude());
+		}
+		if (municMessage.getLongitude() != null) {
+			position.setLon(municMessage.getLongitude());
+		}
 		if (municMessage.getSpeed() != null) {
 			position.setSpeed(municMessage.getSpeed());
 		}

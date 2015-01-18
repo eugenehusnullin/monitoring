@@ -17,8 +17,8 @@ public class MunicMessage implements Message {
 	private JSONObject jsonPayload;
 	private JSONObject jsonFields;
 	private String event;
-	private double latitude = Double.NaN;
-	private double longitude = Double.NaN;
+	private Double latitude = null;
+	private Double longitude = null;
 	private Boolean dioIgnition = null;
 
 	public void setJsonMessage(JSONObject jsonMessage) throws JSONException, ParseException {
@@ -41,21 +41,21 @@ public class MunicMessage implements Message {
 		if (isTrackEvent()) {
 			JSONArray loc = jsonPayload.optJSONArray("loc");
 			if (loc != null) {
-				longitude = loc.optDouble(0);
-				latitude = loc.optDouble(1);
+				longitude = loc.getDouble(0);
+				latitude = loc.getDouble(1);
 			}
 		}
 	}
 
 	public boolean hasGeo() {
-		return latitude != Double.NaN && longitude != Double.NaN;
+		return latitude != null && longitude != null;
 	}
 
-	public double getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public double getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 

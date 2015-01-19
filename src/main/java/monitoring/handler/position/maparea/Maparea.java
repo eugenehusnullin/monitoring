@@ -1,16 +1,15 @@
-package monitoring.domain;
+package monitoring.handler.position.maparea;
 
 import java.awt.geom.Path2D;
 import java.io.Serializable;
 import java.util.List;
 
-public class TopMapzone implements Serializable {
+public class Maparea implements Serializable {
 	private static final long serialVersionUID = -8659914248870197177L;
 	private Integer id;
 	private String name;
 	private Integer type;
-
-	private List<TopMapzonePoint> points;
+	private List<MapareaPoint> points;
 
 	private Path2D boundary;
 
@@ -18,12 +17,12 @@ public class TopMapzone implements Serializable {
 		boundary = new Path2D.Double();
 
 		boolean isFirst = true;
-		for (TopMapzonePoint point : points) {
+		for (MapareaPoint point : points) {
 			if (isFirst) {
-				boundary.moveTo(point.getLat(), point.getLng());
+				boundary.moveTo(point.getLat(), point.getLon());
 				isFirst = false;
 			} else {
-				boundary.lineTo(point.getLat(), point.getLng());
+				boundary.lineTo(point.getLat(), point.getLon());
 			}
 		}
 		boundary.closePath();
@@ -55,11 +54,11 @@ public class TopMapzone implements Serializable {
 		this.type = type;
 	}
 
-	public List<TopMapzonePoint> getPoints() {
+	public List<MapareaPoint> getPoints() {
 		return points;
 	}
 
-	public void setPoints(List<TopMapzonePoint> points) {
+	public void setPoints(List<MapareaPoint> points) {
 		this.points = points;
 	}
 

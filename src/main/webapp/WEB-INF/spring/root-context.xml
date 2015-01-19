@@ -37,7 +37,14 @@
 		<property name="packagesToScan" value="monitoring" />
 	</bean>
 	
+	<bean name="mapareaDetector" class="monitoring.handler.position.maparea.MapareaDetector" init-method="start">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"/>
+		</property>
+	</bean>
+	
 	<import resource="tek-context.xml"/>
+	<import resource="scoring-context.xml"/>
 	
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">

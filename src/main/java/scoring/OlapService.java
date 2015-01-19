@@ -1,4 +1,4 @@
-package monitoring.terminal.munic.trash;
+package scoring;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;

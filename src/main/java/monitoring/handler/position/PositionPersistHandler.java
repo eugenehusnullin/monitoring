@@ -1,5 +1,7 @@
 package monitoring.handler.position;
 
+import java.util.List;
+
 import monitoring.domain.Message;
 import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
@@ -14,9 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class PositionPersistHandler implements Handler {
 	private static final Logger logger = LoggerFactory.getLogger(PositionPersistHandler.class);
 	private SessionFactory sessionFactory;
-	
+	private List<PositionHandler> positionHandlers;
+
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+
+	public void setPositionHandlers(List<PositionHandler> positionHandlers) {
+		this.positionHandlers = positionHandlers;
 	}
 
 	@Transactional
@@ -31,6 +38,12 @@ public class PositionPersistHandler implements Handler {
 				if (position != null) {
 					Session session = sessionFactory.getCurrentSession();
 					session.save(position);
+
+					if (positionHandlers != null) {
+						for (PositionHandler positionHandler : positionHandlers) {
+							positionHandler.handle(position);
+						}
+					}
 				}
 			}
 

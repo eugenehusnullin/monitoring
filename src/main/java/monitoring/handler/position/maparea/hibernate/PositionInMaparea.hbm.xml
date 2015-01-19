@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="monitoring.handler.position.maparea">
+	<class name="PositionInMaparea" table="position_maparea">
+		<composite-id>
+			<key-many-to-one name="position" column="positionid"></key-many-to-one>
+			<key-many-to-one name="maparea" column="mapareaid"></key-many-to-one>
+		</composite-id>
+	</class>
+</hibernate-mapping>

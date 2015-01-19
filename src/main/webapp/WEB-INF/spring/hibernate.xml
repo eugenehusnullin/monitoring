@@ -6,10 +6,11 @@
 <hibernate-configuration>
 	<session-factory>
 		<mapping resource="monitoring/terminal/munic/domain/hibernate/MunicRawData.hbm.xml" />
-		<mapping resource="monitoring/handler/position/hibernate/Position.hbm.xml" />
 		<mapping resource="monitoring/handler/accelerometer/hibernate/Accelerometr.hbm.xml" />
-<!-- 		<mapping resource="monitoring/domain/hibernate/TerminalDetach.hbm.xml" /> -->		
-<!-- 		<mapping resource="monitoring/domain/hibernate/TopMapzone.hbm.xml" /> -->
-<!-- 		<mapping resource="monitoring/domain/hibernate/TopMapzonePoint.hbm.xml" /> -->
+		<mapping resource="monitoring/handler/position/hibernate/Position.hbm.xml" />
+		<mapping resource="monitoring/handler/position/maparea/hibernate/Maparea.hbm.xml" />
+		<mapping resource="monitoring/handler/position/maparea/hibernate/MapareaPoint.hbm.xml" />
+		<mapping resource="monitoring/handler/position/maparea/hibernate/PositionInMaparea.hbm.xml" />
+<!-- 		<mapping resource="monitoring/domain/hibernate/TerminalDetach.hbm.xml" /> -->
 	</session-factory>
 </hibernate-configuration>

@@ -17,7 +17,7 @@ public class PersistRawData implements RawHandler {
 	public void procces(String message) {
 		MunicRawData municRawData = new MunicRawData();
 		municRawData.setRawData(message);
-		municRawData.setArrived(DateUtils.getUTC(new Date()));
+		municRawData.setArrived(DateUtils.localTimeToOtherTimeZone(new Date(), DateUtils.TIMEZONEID_UTC));
 
 		Session session = sessionFactory.getCurrentSession();
 		session.save(municRawData);

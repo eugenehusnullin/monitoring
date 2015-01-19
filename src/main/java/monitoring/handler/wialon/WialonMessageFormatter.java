@@ -1,7 +1,10 @@
 package monitoring.handler.wialon;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map.Entry;
+
+import monitoring.utils.DateUtils;
 
 class WialonMessageFormatter {
 
@@ -9,8 +12,10 @@ class WialonMessageFormatter {
 
 		StringBuilder sb = new StringBuilder();
 		insertPair("terminalId", Long.toString(dataPacket.getTerminalId()), sb);
+
+		Date recordedAt = DateUtils.changeTimezone(dataPacket.getDate(), DateUtils.TIMEZONEID_UTC, DateUtils.TIMEZONEID_MOSCOW);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		insertPair("recorded_at", dateFormat.format(dataPacket.getDate()), sb);
+		insertPair("recorded_at", dateFormat.format(recordedAt), sb);
 
 		if (dataPacket.getLat() != null) {
 			insertPair("lat", String.valueOf(dataPacket.getLat()), sb);
@@ -33,7 +38,7 @@ class WialonMessageFormatter {
 		if (dataPacket.getAltitude() != null) {
 			insertPair("altitude", String.valueOf(dataPacket.getAltitude()), sb);
 		}
-		
+
 		for (Entry<String, String> entry : dataPacket.getParams().entrySet()) {
 			insertPair(entry.getKey(), entry.getValue(), sb);
 		}

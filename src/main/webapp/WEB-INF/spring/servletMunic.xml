@@ -20,6 +20,7 @@
 		<property name="mappings">
 			<value>
 				scoring/*=scoring
+				restore/*=restore
 			</value>
 		</property>
 	</bean>
@@ -49,22 +50,26 @@
 			</list>
 		</property>
 		<property name="strategy">
-			<bean name="municHandlerStrategy" class="monitoring.terminal.munic.MunicHandlerStrategy">
-				<property name="positionConverter">
-					<bean class="monitoring.terminal.munic.MunicPositionConverter"></bean>
-				</property>
-				<property name="messageFormatter">
-					<bean class="monitoring.terminal.munic.MunicWialonMessageFormatter"></bean>
-				</property>
-				<property name="accelerometrConverter">
-					<bean class="monitoring.terminal.munic.MunicAccelerometrConverter"></bean>
-				</property>
-			</bean>
+			<ref bean="municHandlerStrategy"/>
 		</property>
 		<property name="municMessageFactory">
-			<bean class="monitoring.terminal.munic.MunicMessageFactory"></bean>
+			<ref bean="municMessageFactory"/>
 		</property>
 	</bean>
+
+	<bean name="municHandlerStrategy" class="monitoring.terminal.munic.MunicHandlerStrategy">
+		<property name="positionConverter">
+			<bean class="monitoring.terminal.munic.MunicPositionConverter"></bean>
+		</property>
+		<property name="messageFormatter">
+			<bean class="monitoring.terminal.munic.MunicWialonMessageFormatter"></bean>
+		</property>
+		<property name="accelerometrConverter">
+			<bean class="monitoring.terminal.munic.MunicAccelerometrConverter"></bean>
+		</property>
+	</bean>
+
+	<bean name="municMessageFactory" class="monitoring.terminal.munic.MunicMessageFactory"></bean>
 
 	<bean name="municPositionPersist" class="monitoring.handler.position.PositionPersistHandler">
 		<property name="sessionFactory">
@@ -74,20 +79,52 @@
 			<ref bean="mapareaDetector" />
 		</property>
 	</bean>
-	
+
 	<bean name="municAccelerometrPersist" class="monitoring.handler.accelerometer.AccelerometrPersistHandler">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory"/>
 		</property>
 	</bean>
-	
+
 	<bean name="municWialonScoring" class="monitoring.handler.wialon.WialonCommHandler">
 		<property name="host" value="${main.wialonb3.scoring.host}"></property>
 		<property name="port" value="${main.wialonb3.scoring.port}"></property>
 	</bean>
 
 
-
+	<!-- 	RESTORE CONTROLLER -->
+	<bean name="restore" class="monitoring.terminal.munic.RestoreController">
+		<property name="restoreProcessor">
+			<bean class="monitoring.terminal.munic.RestoreProcessor">
+				<property name="sessionFactory">
+					<ref bean="sessionFactory" />
+				</property>
+				<property name="rawHandlers">
+					<list>
+						<ref bean="extractMessagesRestore"/>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<bean name="extractMessagesRestore" class="monitoring.terminal.munic.ExtractMessagesRawData"
+		init-method="startProcessing" destroy-method="stopProcessing">
+		<property name="handlers">
+			<list>
+				<ref bean="municPositionPersist" />
+				<ref bean="municAccelerometrPersist"/>
+			</list>
+		</property>
+		<property name="strategy">
+			<ref bean="municHandlerStrategy"/>
+		</property>
+		<property name="municMessageFactory">
+			<ref bean="municMessageFactory"/>
+		</property>
+	</bean>
+	
+	
+	
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
 		in the /WEB-INF/views directory -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

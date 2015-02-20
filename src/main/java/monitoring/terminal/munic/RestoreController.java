@@ -24,7 +24,7 @@ public class RestoreController extends MultiActionController {
 			String date1String = request.getParameter("date1");
 			String date2String = request.getParameter("date2");
 			
-			SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+			SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			try {
 				Date date1 = dateFormatter.parse(date1String);
 				Date date2 = dateFormatter.parse(date2String);

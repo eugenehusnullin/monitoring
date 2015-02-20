@@ -13,8 +13,8 @@
 	<h1>${inject}</h1>
 
 	<form method="POST">
-		<input type="text" name="date1" value="dd-MM-yyyy HH:mm"/>
-		<input type="text" name="date2" value="dd-MM-yyyy HH:mm"/>
+		<input type="text" name="date1" value="dd-MM-yyyy HH:mm:ss"/>
+		<input type="text" name="date2" value="dd-MM-yyyy HH:mm:ss"/>
 		<br /> <input type="submit" value="try restore" />
 	</form>
 

@@ -75,30 +75,38 @@ public class MunicMessage implements Message {
 		return containsFieldStartsWith("BEHAVE_");
 	}
 
-	public Integer getAccX() {
-		if (getIntegerField("BEHAVE_ACC_X_BEGIN") == null || getIntegerField("BEHAVE_ACC_X_PEAK") == null ||
-				getIntegerField("BEHAVE_ACC_X_END") == null) {
-					return null;
-				}
-		return Math.max(Math.max(getIntegerField("BEHAVE_ACC_X_BEGIN"), getIntegerField("BEHAVE_ACC_X_PEAK")),
-				getIntegerField("BEHAVE_ACC_X_END"));
+	private Integer getAbsMax(Integer a1, Integer a2, Integer a3) {
+		return Math.abs(a1) > Math.abs(a2) ? (Math.abs(a1) > Math.abs(a3) ? a1 : a3)
+				: (Math.abs(a2) > Math.abs(a3) ? a2 : a3);
 	}
-	
+
+	public Integer getAccX() {
+		Integer accxBegin = getIntegerField("BEHAVE_ACC_X_BEGIN");
+		Integer accxPeak = getIntegerField("BEHAVE_ACC_X_PEAK");
+		Integer accxEnd = getIntegerField("BEHAVE_ACC_X_END");
+
+		if (accxBegin == null || accxPeak == null || accxEnd == null) {
+			return null;
+		}
+
+		return getAbsMax(accxBegin, accxPeak, accxEnd);
+	}
+
 	public Integer getAccY() {
-		if (getIntegerField("BEHAVE_ACC_Y_BEGIN") == null || getIntegerField("BEHAVE_ACC_Y_PEAK") == null ||
-				getIntegerField("BEHAVE_ACC_Y_END") == null) {
-					return null;
-				}
-		return Math.max(Math.max(getIntegerField("BEHAVE_ACC_Y_BEGIN"), getIntegerField("BEHAVE_ACC_Y_PEAK")),
+		if (getIntegerField("BEHAVE_ACC_Y_BEGIN") == null || getIntegerField("BEHAVE_ACC_Y_PEAK") == null
+				|| getIntegerField("BEHAVE_ACC_Y_END") == null) {
+			return null;
+		}
+		return getAbsMax(getIntegerField("BEHAVE_ACC_Y_BEGIN"), getIntegerField("BEHAVE_ACC_Y_PEAK"),
 				getIntegerField("BEHAVE_ACC_Y_END"));
 	}
-	
+
 	public Integer getAccZ() {
-		if (getIntegerField("BEHAVE_ACC_Z_BEGIN") == null || getIntegerField("BEHAVE_ACC_Z_PEAK") == null ||
-				getIntegerField("BEHAVE_ACC_Z_END") == null) {
-					return null;
-				}
-		return Math.max(Math.max(getIntegerField("BEHAVE_ACC_Z_BEGIN"), getIntegerField("BEHAVE_ACC_Z_PEAK")),
+		if (getIntegerField("BEHAVE_ACC_Z_BEGIN") == null || getIntegerField("BEHAVE_ACC_Z_PEAK") == null
+				|| getIntegerField("BEHAVE_ACC_Z_END") == null) {
+			return null;
+		}
+		return getAbsMax(getIntegerField("BEHAVE_ACC_Z_BEGIN"), getIntegerField("BEHAVE_ACC_Z_PEAK"),
 				getIntegerField("BEHAVE_ACC_Z_END"));
 	}
 
@@ -117,7 +125,7 @@ public class MunicMessage implements Message {
 		}
 		return getBooleanField("DIO_IGNITION");
 	}
-	
+
 	public void setDioIgnition(Boolean dioIgnition) {
 		this.dioIgnition = dioIgnition;
 	}

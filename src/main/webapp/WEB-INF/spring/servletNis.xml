@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:ws="http://www.springframework.org/schema/web-services"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<context:component-scan base-package="monitoring.protocol.nis" />
+	<ws:annotation-driven/>
+<!-- 	<context:property-placeholder location="WEB-INF\settings\main.settings" /> -->
+
+	<ws:dynamic-wsdl id="nis" portTypeName="Nis"
+		locationUri="/nis">
+		<ws:xsd location="WEB-INF\classes\monitoring\protocol\nis\nis.xsd" />
+	</ws:dynamic-wsdl>
+
+<bean id="messageFactory" class="monitoring.protocol.nis.NisSaajSoapMessageFactory"/>
+<!-- 	<bean class="monitoring.protocol.nis.NisEndpoint" name="nisEndpoint"></bean> -->
+
+<!-- 	<ws:interceptors>	 -->
+<!-- 	<ref bean="nisEndpoint" /> -->
+<!-- 		<ws:payloadRoot namespaceUri="http://monitoring/protocol/nis/ws" -->
+<!-- 			localPart="PutCoord"> -->
+<!-- 			<ref bean="nisEndpoint" /> -->
+<!-- 		</ws:payloadRoot> -->
+<!-- 		<ws:payloadRoot namespaceUri="http://monitoring/protocol/nis/ws">			 -->
+<!-- 			<ref bean="nisEndpoint" /> -->
+<!-- 		</ws:payloadRoot> -->
+<!-- 	</ws:interceptors> -->
+
+	
+</beans>

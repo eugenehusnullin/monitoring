@@ -10,6 +10,7 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+
 	<servlet>
 		<servlet-name>munic</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -23,21 +24,18 @@
 		<servlet-name>munic</servlet-name>
 		<url-pattern>/munic/*</url-pattern>
 	</servlet-mapping>
+
 	<servlet>
-		<servlet-name>nis-ws</servlet-name>
-		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+		<servlet-name>nis</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/spring/servletNis.xml</param-value>
 		</init-param>
-		<init-param>
-			<param-name>transformWsdlLocations</param-name>
-			<param-value>true</param-value>
-		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>nis-ws</servlet-name>
+		<servlet-name>nis</servlet-name>
 		<url-pattern>/nis/*</url-pattern>
 	</servlet-mapping>
 </web-app>

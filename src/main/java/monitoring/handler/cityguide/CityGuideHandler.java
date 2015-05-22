@@ -42,7 +42,7 @@ public class CityGuideHandler implements Handler {
 			pointsElement.setAttribute("id", Long.toString(m.getTerminalId()));
 			doc.appendChild(pointsElement);
 
-			Element pointElement = doc.createElement("points");
+			Element pointElement = doc.createElement("point");
 			pointElement.setAttribute("speed", Double.toString(m.getSpeed()));
 			pointElement.setAttribute("lat", Double.toString(m.getLat()));
 			pointElement.setAttribute("lon", Double.toString(m.getLon()));

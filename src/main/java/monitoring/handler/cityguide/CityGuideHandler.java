@@ -1,6 +1,7 @@
 package monitoring.handler.cityguide;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,6 +16,7 @@ import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
 import monitoring.protocol.nis.NisMessage;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -47,7 +49,14 @@ public class CityGuideHandler implements Handler {
 			pointElement.setAttribute("isotime", parseToIsoTime(m.getTime()));
 			pointsElement.appendChild(pointElement);
 
-			HttpUtils.postDocumentOverHttp(doc, url, logger);
+			HttpURLConnection con = HttpUtils.postDocumentOverHttp(doc, url, logger);
+			if (con.getResponseCode() == 200) {
+				logger.debug("CityGuideHandler success send point.");
+			} else {
+				String reason = IOUtils.toString(con.getInputStream());
+				logger.warn("CityGuideHandler error send point. Error code=" + con.getResponseCode() + ", reason: "
+						+ reason);
+			}
 		} catch (ParserConfigurationException | IOException | TransformerException
 				| TransformerFactoryConfigurationError e) {
 			logger.error("CityGuideHandler error.", e);

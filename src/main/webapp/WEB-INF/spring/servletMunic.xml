@@ -20,7 +20,7 @@
 		<property name="mappings">
 			<value>
 				scoring/*=scoring
-				restore/*=restore
+<!-- 				restore/*=restore -->
 			</value>
 		</property>
 	</bean>
@@ -92,7 +92,7 @@
 	</bean>
 
 
-	<!-- 	RESTORE CONTROLLER -->
+	<!-- 	RESTORE CONTROLLER 
 	<bean name="restore" class="monitoring.terminal.munic.RestoreController">
 		<property name="restoreProcessor">
 			<bean class="monitoring.terminal.munic.RestoreProcessor">
@@ -121,7 +121,7 @@
 		<property name="municMessageFactory">
 			<ref bean="municMessageFactory"/>
 		</property>
-	</bean>
+	</bean> -->
 	
 	
 	

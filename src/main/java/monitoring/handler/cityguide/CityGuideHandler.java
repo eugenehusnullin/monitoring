@@ -43,7 +43,7 @@ public class CityGuideHandler implements Handler {
 			doc.appendChild(pointsElement);
 
 			Element pointElement = doc.createElement("point");
-			pointElement.setAttribute("speed", Double.toString(m.getSpeed()));
+			pointElement.setAttribute("speed", Integer.toString(Double.valueOf(m.getSpeed()).intValue()));
 			pointElement.setAttribute("lat", Double.toString(m.getLat()));
 			pointElement.setAttribute("lon", Double.toString(m.getLon()));
 			pointElement.setAttribute("isotime", parseToIsoTime(m.getTime()));

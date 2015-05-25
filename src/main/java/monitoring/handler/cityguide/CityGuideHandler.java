@@ -49,7 +49,7 @@ public class CityGuideHandler implements Handler {
 			pointElement.setAttribute("isotime", parseToIsoTime(m.getTime()));
 			pointsElement.appendChild(pointElement);
 
-			HttpURLConnection con = HttpUtils.postDocumentOverHttp(doc, url, logger);
+			HttpURLConnection con = HttpUtils.postDocumentOverHttp(doc, url, "text/plain", logger);
 			if (con.getResponseCode() == 200) {
 				logger.debug("CityGuideHandler success send point.");
 			} else {

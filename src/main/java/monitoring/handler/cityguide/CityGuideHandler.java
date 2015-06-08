@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import utils.DatetimeUtils;
 import utils.HttpUtils;
 
 public class CityGuideHandler implements Handler {
@@ -46,7 +47,7 @@ public class CityGuideHandler implements Handler {
 			pointElement.setAttribute("speed", Integer.toString(Double.valueOf(m.getSpeed()).intValue()));
 			pointElement.setAttribute("lat", Double.toString(m.getLat()));
 			pointElement.setAttribute("lon", Double.toString(m.getLon()));
-			pointElement.setAttribute("isotime", parseToIsoTime(m.getTime()));
+			pointElement.setAttribute("isotime", parseToIsoTime(DatetimeUtils.utcToLocal(m.getTime()).getTime()));
 			pointsElement.appendChild(pointElement);
 
 			HttpURLConnection con = HttpUtils.postDocumentOverHttp(doc, url, "text/plain", logger);

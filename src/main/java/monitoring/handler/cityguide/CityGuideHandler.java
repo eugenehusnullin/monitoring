@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -71,6 +72,7 @@ public class CityGuideHandler implements Handler {
 	private String parseToIsoTime(Date time) {
 		// 2014-10-23T11:01:57+0300
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		df.setTimeZone(TimeZone.getTimeZone(DatetimeUtils.TIMEZONEID_UTC));
 		return df.format(time);
 	}
 }

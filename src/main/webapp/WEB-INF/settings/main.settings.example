@@ -11,6 +11,9 @@ main.wialonb3.cguard.port = 9092
 
 main.cityguide.url = http://localhost:8080
 
+main.position.checkinterval = 60
+main.position.maxspeed = 80
+
 
 ; hibernate update structure
 hibernate.hbm2ddl.auto=update

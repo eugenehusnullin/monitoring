@@ -4,12 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import monitoring.domain.Message;
-import monitoring.utils.Base64Utils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import monitoring.domain.Message;
+import monitoring.utils.Base64Utils;
 
 public class MunicMessage implements Message {
 	private long terminalId;
@@ -20,6 +20,7 @@ public class MunicMessage implements Message {
 	private Double latitude = null;
 	private Double longitude = null;
 	private Boolean dioIgnition = null;
+	private Boolean gprmcValid = null;
 
 	public void setJsonMessage(JSONObject jsonMessage) throws JSONException, ParseException {
 		JSONObject meta = jsonMessage.getJSONObject("meta");
@@ -43,6 +44,11 @@ public class MunicMessage implements Message {
 			if (loc != null) {
 				longitude = loc.getDouble(0);
 				latitude = loc.getDouble(1);
+			}
+			
+			String gprmcValidString = getStringField("GPRMC_VALID");
+			if (gprmcValidString != null) {
+				gprmcValid = gprmcValidString.equals("A");
 			}
 		}
 	}
@@ -242,7 +248,6 @@ public class MunicMessage implements Message {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private String getStringField(String key) {
 		if (jsonFields == null) {
 			return null;
@@ -270,5 +275,13 @@ public class MunicMessage implements Message {
 			}
 		}
 		return contains;
+	}
+
+	public Boolean getGprmcValid() {
+		return gprmcValid;
+	}
+
+	public void setGprmcValid(Boolean gprmcValid) {
+		this.gprmcValid = gprmcValid;
 	}
 }

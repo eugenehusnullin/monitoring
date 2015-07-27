@@ -13,6 +13,7 @@ public class Position {
 	private Double accuracy;
 	private Double course;
 	private Double altitude;
+	private Boolean valid;
 
 	public Long getId() {
 		return id;
@@ -102,5 +103,13 @@ public class Position {
 
 	public void setTerminalId(Long terminalId) {
 		this.terminalId = terminalId;
+	}
+
+	public Boolean getValid() {
+		return valid;
+	}
+
+	public void setValid(Boolean valid) {
+		this.valid = valid;
 	}
 }

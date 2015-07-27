@@ -78,6 +78,14 @@
 		<property name="positionHandlers">
 			<ref bean="mapareaDetector" />
 		</property>
+		<property name="deviceStateHolder">
+			<ref bean="deviceStateHolder"/>
+		</property>
+	</bean>
+	
+	<bean name="deviceStateHolder">
+		<property name="checkInterval" value="${main.position.checkinterval}" />
+		<property name="maxSpeed" value="${main.position.maxspeed}" />
 	</bean>
 
 	<bean name="municAccelerometrPersist" class="monitoring.handler.accelerometer.AccelerometrPersistHandler">

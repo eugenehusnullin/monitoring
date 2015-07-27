@@ -12,13 +12,13 @@ import org.slf4j.LoggerFactory;
 public class MunicMessageFactory {
 	private static final Logger logger = LoggerFactory.getLogger(MunicMessageFactory.class);
 
-	private Map<Long, Boolean> ignitionStateMap = new HashMap<Long, Boolean>();
+	private Map<Long, State> stateMap = new HashMap<Long, State>();
 
 	public MunicMessage createMessage(JSONObject jsonObject) {
 		MunicMessage municMessage = new MunicMessage();
 		try {
 			municMessage.setJsonMessage(jsonObject);
-			ignitionProof(municMessage);
+			stateProof(municMessage);
 
 		} catch (JSONException | ParseException e) {
 			logger.error(e.toString());
@@ -27,18 +27,37 @@ public class MunicMessageFactory {
 		return municMessage;
 	}
 
-	private void ignitionProof(MunicMessage municMessage) {
+	private void stateProof(MunicMessage municMessage) {
 		if (municMessage.isTrackEvent()) {
-			synchronized (ignitionStateMap) {
+			synchronized (stateMap) {
+				State state = stateMap.get(municMessage.getTerminalId());
+				if (state == null) {
+					state = new State();
+					stateMap.put(municMessage.getTerminalId(), state);
+				}
+
+				// ignition
 				if (municMessage.getDioIgnition() != null) {
-					ignitionStateMap.put(municMessage.getTerminalId(), municMessage.getDioIgnition());
+					state.setIgnition(municMessage.getDioIgnition());
 				} else {
-					Boolean ignitionState = ignitionStateMap.get(municMessage.getTerminalId());
+					Boolean ignitionState = state.getIgnition();
 					if (ignitionState != null) {
 						municMessage.setDioIgnition(ignitionState);
 					}
 				}
-				ignitionStateMap.notifyAll();
+
+				// gprmc valid
+				if (municMessage.getGprmcValid() != null) {
+					state.setGpsValid(municMessage.getGprmcValid());
+				} else {
+					Boolean gprmcValid = state.getGpsValid();
+					if (gprmcValid != null) {
+						municMessage.setGprmcValid(gprmcValid);
+					}
+				}
+
+				// notify all threads
+				stateMap.notifyAll();
 			}
 		}
 	}

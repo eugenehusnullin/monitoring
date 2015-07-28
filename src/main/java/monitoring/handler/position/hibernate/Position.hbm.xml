@@ -17,5 +17,7 @@
 		<property name="accuracy"></property>
 		<property name="course"></property>
 		<property name="altitude"></property>
+		<property name="gpsValid"></property>
+		<property name="abnormal"></property>
 	</class>
 </hibernate-mapping>

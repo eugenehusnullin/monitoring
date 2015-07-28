@@ -13,7 +13,8 @@ public class Position {
 	private Double accuracy;
 	private Double course;
 	private Double altitude;
-	private Boolean valid;
+	private Boolean gpsValid;
+	private Boolean abnormal;
 
 	public Long getId() {
 		return id;
@@ -105,11 +106,19 @@ public class Position {
 		this.terminalId = terminalId;
 	}
 
-	public Boolean getValid() {
-		return valid;
+	public Boolean getAbnormal() {
+		return abnormal;
 	}
 
-	public void setValid(Boolean valid) {
-		this.valid = valid;
+	public void setAbnormal(Boolean abnormal) {
+		this.abnormal = abnormal;
+	}
+
+	public Boolean getGpsValid() {
+		return gpsValid;
+	}
+
+	public void setGpsValid(Boolean gpsValid) {
+		this.gpsValid = gpsValid;
 	}
 }

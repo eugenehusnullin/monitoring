@@ -43,12 +43,12 @@ public class PositionPersistHandler implements Handler {
 
 				if (position != null) {
 
-					if (checkCrazy(position)) {
+					position.setAbnormal(checkCrazy(position));
+					if (position.getAbnormal()) {
 						// don't valid or crazy speed
 						logger.info("Crazy position detected: TerminalId=" + position.getTerminalId() + " Date="
-								+ position.getDate() + " Valid=" + position.getValid() + " Speed="
+								+ position.getDate() + " Valid=" + position.getGpsValid() + " Speed="
 								+ position.getSpeed());
-						return;
 					}
 
 					Session session = sessionFactory.getCurrentSession();

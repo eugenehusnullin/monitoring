@@ -83,7 +83,7 @@
 		</property>
 	</bean>
 	
-	<bean name="deviceStateHolder">
+	<bean name="deviceStateHolder" class="monitoring.state.DeviceStateHolderImpl">
 		<property name="checkInterval" value="${main.position.checkinterval}" />
 		<property name="maxSpeed" value="${main.position.maxspeed}" />
 	</bean>

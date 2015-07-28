@@ -19,5 +19,8 @@ public class PositionHelper {
 		if (municMessage.getSpeed() != null) {
 			position.setSpeed(municMessage.getSpeed());
 		}
+		if (municMessage.getGprmcValid() != null) {
+			position.setGpsValid(municMessage.getGprmcValid());
+		}
 	}
 }

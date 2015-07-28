@@ -23,7 +23,7 @@ public class DeviceStateHolderImpl implements DeviceStateHolder {
 	@Override
 	public boolean checkCrazy(Position position) {
 		synchronized (lastBads) {
-			if (!position.getGpsValid()) {
+			if (position.getGpsValid() != null && !position.getGpsValid()) {
 				lastBads.put(position.getTerminalId(), position.getDate());
 				return true;
 

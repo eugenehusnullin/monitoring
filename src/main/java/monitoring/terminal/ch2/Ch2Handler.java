@@ -1,5 +1,7 @@
 package monitoring.terminal.ch2;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +13,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import monitoring.handler.Handler;
+import monitoring.handler.HandlerStrategy;
 
 public class Ch2Handler {
 	private static final Logger logger = LoggerFactory.getLogger(Ch2Handler.class);
@@ -22,6 +26,17 @@ public class Ch2Handler {
 	private EventLoopGroup workerGroup;
 	private ServerBootstrap serverBootstrap;
 	private ChannelFuture channelFuture;
+
+	private List<Handler> handlers;
+	private HandlerStrategy strategy;
+
+	public void setHandlers(List<Handler> handlers) {
+		this.handlers = handlers;
+	}
+
+	public void setStrategy(HandlerStrategy strategy) {
+		this.strategy = strategy;
+	}
 
 	public void setHost(String host) {
 		this.host = host;
@@ -41,7 +56,8 @@ public class Ch2Handler {
 				.childHandler(new ChannelInitializer<SocketChannel>() {
 					@Override
 					protected void initChannel(SocketChannel ch) throws Exception {
-						ch.pipeline().addLast(new FlowSeparator(), new MessageDecoder(), new MessageHandler());
+						ch.pipeline().addLast(new FlowSeparator(), new MessageDecoder(),
+								new MessageHandler(handlers, strategy));
 					}
 				})
 				.option(ChannelOption.SO_BACKLOG, 128)

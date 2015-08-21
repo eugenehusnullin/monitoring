@@ -68,6 +68,10 @@ public class PositionPersistHandler implements Handler {
 	}
 
 	private boolean checkCrazy(Position position) {
-		return deviceStateHolder.checkCrazy(position);
+		if (deviceStateHolder != null) {
+			return deviceStateHolder.checkCrazy(position);
+		} else {
+			return false;
+		}
 	}
 }

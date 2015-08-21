@@ -11,5 +11,38 @@
 		init-method="run" destroy-method="stop">
 		<property name="host" value="${main.terminal.ch2.host}"></property>
 		<property name="port" value="${main.terminal.ch2.port}"></property>
+		
+		<property name="handlers">
+			<list>
+				<ref bean="ch2PositionPersist" />
+				<ref bean="ch2WialonScoring"/>
+			</list>
+		</property>
+		<property name="strategy">
+			<ref bean="ch2HandlerStrategy"/>
+		</property>
+	</bean>
+	
+	<bean name="ch2PositionPersist" class="monitoring.handler.position.PositionPersistHandler">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+		<property name="positionHandlers">
+			<ref bean="mapareaDetector" />
+		</property>
+	</bean>
+	
+	<bean name="ch2WialonScoring" class="monitoring.handler.wialon.WialonCommHandler">
+		<property name="host" value="${main.wialonb3.scoring.host}"></property>
+		<property name="port" value="${main.wialonb3.scoring.port}"></property>
+	</bean>
+	
+	<bean name="ch2HandlerStrategy" class="monitoring.terminal.ch2.Ch2HandlerStrategy">
+		<property name="positionConverter">
+			<bean class="monitoring.terminal.ch2.Ch2PositionConverter"></bean>
+		</property>
+		<property name="messageFormatter">
+			<bean class="monitoring.terminal.ch2.Ch2WialonMessageFormatter"></bean>
+		</property>
 	</bean>
 </beans>

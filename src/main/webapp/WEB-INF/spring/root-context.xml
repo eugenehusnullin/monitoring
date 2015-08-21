@@ -45,6 +45,7 @@
 	
 	<import resource="tek-context.xml"/>
 	<import resource="scoring-context.xml"/>
+	<import resource="ch2-context.xml"/>
 	
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">

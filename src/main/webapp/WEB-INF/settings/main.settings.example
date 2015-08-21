@@ -9,6 +9,9 @@ main.terminal.cguard.port = 9091
 main.wialonb3.cguard.host = localhost
 main.wialonb3.cguard.port = 9092
 
+main.terminal.ch2.host = localhost
+main.terminal.ch2.port = 9094
+
 main.cityguide.url = http://localhost:8080
 
 main.position.checkinterval = 60

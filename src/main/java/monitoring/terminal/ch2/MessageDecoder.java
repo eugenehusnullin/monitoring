@@ -14,6 +14,9 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		String s = (String) msg;
+		if (logger.isDebugEnabled()) {
+			logger.debug(s);
+		}
 		String[] arr = s.split(",");
 		// String id = arr[0];
 		String cmd = arr[1];

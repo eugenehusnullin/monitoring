@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
 import io.netty.handler.codec.ReplayingDecoder;
 
 public class FlowSeparator extends ReplayingDecoder<Void> {
@@ -43,32 +44,31 @@ public class FlowSeparator extends ReplayingDecoder<Void> {
 			}
 		}
 	}
-
-	// @Override
-	// public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise)
-	// throws Exception {
-	// logger.debug("disconnect");
-	// super.disconnect(ctx, promise);
-	// }
-
+	
+	@Override
+	public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+		logger.debug("disconnect");
+		super.disconnect(ctx, promise);
+	}
+	
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		logger.debug("channelInactive");
 		super.channelInactive(ctx);
 	}
-
+	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		logger.debug("channelActive");
 		super.channelActive(ctx);
 	}
-
+	
 	@Override
 	public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
 		logger.debug("channelRegistered");
 		super.channelRegistered(ctx);
 	}
-
+	
 	@Override
 	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
 		logger.debug("channelUnregistered");

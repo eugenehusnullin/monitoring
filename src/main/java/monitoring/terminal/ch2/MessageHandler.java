@@ -5,12 +5,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
 
-public class MessageHandler extends ChannelInboundHandlerAdapter {
+public class MessageHandler extends ChannelHandlerAdapter {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(MessageHandler.class);
 

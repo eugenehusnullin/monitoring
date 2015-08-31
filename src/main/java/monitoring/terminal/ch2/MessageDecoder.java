@@ -5,16 +5,15 @@ import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 
-public class MessageDecoder extends ChannelInboundHandlerAdapter {
+public class MessageDecoder extends ChannelHandlerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(MessageDecoder.class);
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		String s = (String) msg;
-		logger.info(s);
 		String[] arr = s.split(",");
 		// String id = arr[0];
 		String cmd = arr[1];
@@ -24,7 +23,6 @@ public class MessageDecoder extends ChannelInboundHandlerAdapter {
 		switch (cmd) {
 		case "CMD-T":
 		case "CMD-D":
-
 			m = fill(arr);
 			break;
 

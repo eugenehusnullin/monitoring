@@ -46,9 +46,9 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		// DATE TIME
 		String date = arr[3].substring(arr[3].indexOf(":") + 1);
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(0, 2)));
+		cal.set(Calendar.YEAR, 2000 + Integer.parseInt(date.substring(0, 2)));
 		cal.set(Calendar.MONTH, Integer.parseInt(date.substring(2, 4)));
-		cal.set(Calendar.YEAR, 2000 + Integer.parseInt(date.substring(4)));
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(4)));
 
 		String time = arr[4].substring(arr[4].indexOf(":") + 1);
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time.substring(0, 2)));

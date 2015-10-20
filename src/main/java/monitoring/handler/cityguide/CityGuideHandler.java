@@ -12,19 +12,18 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
-import monitoring.domain.Message;
-import monitoring.handler.Handler;
-import monitoring.handler.HandlerStrategy;
-import monitoring.protocol.nis.NisMessage;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import utils.DatetimeUtils;
-import utils.HttpUtils;
+import monitoring.domain.Message;
+import monitoring.handler.Handler;
+import monitoring.handler.HandlerStrategy;
+import monitoring.protocol.nis.NisMessage;
+import monitoring.utils.DateUtils;
+import monitoring.utils.HttpUtils;
 
 public class CityGuideHandler implements Handler {
 	private static final Logger logger = LoggerFactory.getLogger(CityGuideHandler.class);
@@ -48,7 +47,7 @@ public class CityGuideHandler implements Handler {
 			pointElement.setAttribute("speed", Integer.toString(Double.valueOf(m.getSpeed()).intValue()));
 			pointElement.setAttribute("lat", Double.toString(m.getLat()));
 			pointElement.setAttribute("lon", Double.toString(m.getLon()));
-			pointElement.setAttribute("isotime", parseToIsoTime(DatetimeUtils.utcToLocal(m.getTime()).getTime()));
+			pointElement.setAttribute("isotime", parseToIsoTime(DateUtils.utcToLocal(m.getTime()).getTime()));
 			pointsElement.appendChild(pointElement);
 
 			HttpURLConnection con = HttpUtils.postDocumentOverHttp(doc, url, "text/plain", logger);
@@ -72,7 +71,7 @@ public class CityGuideHandler implements Handler {
 	private String parseToIsoTime(Date time) {
 		// 2014-10-23T11:01:57+0300
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-		df.setTimeZone(TimeZone.getTimeZone(DatetimeUtils.TIMEZONEID_UTC));
+		df.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return df.format(time);
 	}
 }

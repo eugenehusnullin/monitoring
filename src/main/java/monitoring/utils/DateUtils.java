@@ -32,4 +32,20 @@ public class DateUtils {
 		
 		return localTimeToOtherTimeZone(calendar1.getTime(), timeZone2);
 	}
+	
+	public static Calendar utcToLocal(Date utcDate) {
+		// 1) utcDate without time zone
+		Calendar localCalendar = Calendar.getInstance();
+		localCalendar.setTime(utcDate);
+
+		// 2) now apply UTC time zone
+		Calendar utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		utcCalendar.set(localCalendar.get(Calendar.YEAR),
+				localCalendar.get(Calendar.MONTH),
+				localCalendar.get(Calendar.DAY_OF_MONTH),
+				localCalendar.get(Calendar.HOUR_OF_DAY),
+				localCalendar.get(Calendar.MINUTE));
+
+		return utcCalendar;
+	}
 }

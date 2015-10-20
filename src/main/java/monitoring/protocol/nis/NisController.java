@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
-import monitoring.handler.Handler;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import utils.XmlUtils;
+import monitoring.handler.Handler;
+import monitoring.utils.XmlUtils;
 
 public class NisController extends MultiActionController {
 	private static final Logger logger = LoggerFactory.getLogger(NisController.class);

@@ -34,7 +34,9 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 			break;
 		}
 
-		super.channelRead(ctx, m);
+		if (m != null) {
+			super.channelRead(ctx, m);
+		}
 	}
 
 	private Ch2Message fill(String[] arr) {

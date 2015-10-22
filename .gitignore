@@ -1,11 +1,8 @@
-.settings/*
-target/*
 .classpath
 .project
+.settings/*
+.gradle/*
 /build
-/target
-jdbc.settings
-log4j.properties
-main.settings
-.springBeans
+WebContent/WEB-INF/settings/main.settings
+WebContent/lib/*
 src/main/resources/logback.xml

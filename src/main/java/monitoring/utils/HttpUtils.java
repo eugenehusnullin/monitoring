@@ -28,7 +28,7 @@ public class HttpUtils {
 			throws IOException,
 			TransformerConfigurationException, TransformerException, TransformerFactoryConfigurationError {
 		String raw = XmlUtils.nodeToString(document.getFirstChild());
-		logger.info(raw);
+		logger.debug(raw);
 		return postRawData(raw, url, "UTF-8", contentType);
 	}
 

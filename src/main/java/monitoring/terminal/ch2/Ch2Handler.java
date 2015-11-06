@@ -13,6 +13,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.Future;
 import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
 
@@ -70,8 +71,15 @@ public class Ch2Handler {
 	public void stop() throws InterruptedException {
 		channelFuture.channel().close();
 		channelFuture.channel().closeFuture().sync();
-		bossGroup.shutdownGracefully();
-		workerGroup.shutdownGracefully();
+		@SuppressWarnings("rawtypes")
+		Future fb = bossGroup.shutdownGracefully();
+		@SuppressWarnings("rawtypes")
+		Future fw = workerGroup.shutdownGracefully();
+		
+		try {
+	        fb.await();
+	        fw.await();
+	    } catch (InterruptedException ignore) {}
 
 		logger.info("Ch2 socket stoped.");
 	}

@@ -5,21 +5,20 @@ import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import monitoring.domain.Message;
-import monitoring.handler.HandlerStrategy;
-import monitoring.handler.MessageFormatter;
-import monitoring.handler.TerminalSession;
-
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.future.IoFutureListener;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.filter.codec.prefixedstring.PrefixedStringDecoder;
 import org.apache.mina.filter.codec.prefixedstring.PrefixedStringEncoder;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import monitoring.domain.Message;
+import monitoring.handler.HandlerStrategy;
+import monitoring.handler.MessageFormatter;
+import monitoring.handler.TerminalSession;
 
 class WialonIoHandler extends IoHandlerAdapter implements IoFutureListener<ConnectFuture> {
 	private static final Logger logger = LoggerFactory.getLogger(WialonIoHandler.class);
@@ -56,7 +55,7 @@ class WialonIoHandler extends IoHandlerAdapter implements IoFutureListener<Conne
 		connector.getFilterChain().addLast(
 				"codec",
 				new ProtocolCodecFilter(new PrefixedStringEncoder(Charset.forName("ASCII"), 2),
-						new PrefixedStringDecoder(Charset.forName("ASCII"), 2)));
+						new SimpleDecoder()));
 		connector.setHandler(this);
 	}
 

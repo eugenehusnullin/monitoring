@@ -16,15 +16,20 @@ public class MessageHandler extends ChannelHandlerAdapter {
 
 	private List<Handler> handlers;
 	private HandlerStrategy strategy;
+	private Ch2TerminalsSessionsKeeper terminalsSessionsKeeper;
 
-	public MessageHandler(List<Handler> handlers, HandlerStrategy strategy) {
+	public MessageHandler(List<Handler> handlers, HandlerStrategy strategy, Ch2TerminalsSessionsKeeper terminalsSessionsKeeper) {
 		this.handlers = handlers;
 		this.strategy = strategy;
+		this.terminalsSessionsKeeper = terminalsSessionsKeeper;
 	}
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		Ch2Message m = (Ch2Message) msg;
+		
+		terminalsSessionsKeeper.putTerminalSession(m.getTerminalId(), ctx);
+		
 		for (Handler handler : handlers) {
 			handler.handle(m, strategy);
 		}

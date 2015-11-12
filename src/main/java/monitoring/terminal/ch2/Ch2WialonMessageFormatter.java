@@ -23,7 +23,8 @@ public class Ch2WialonMessageFormatter implements MessageFormatter {
 
 	@Override
 	public Message toTerminalFormatt(Message message) {
-		return null;
+		return message;
+		// WialonMessage wm = (WialonMessage) message;
 	}
 
 }

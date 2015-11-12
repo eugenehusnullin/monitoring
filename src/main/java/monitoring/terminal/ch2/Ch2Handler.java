@@ -30,6 +30,7 @@ public class Ch2Handler {
 
 	private List<Handler> handlers;
 	private HandlerStrategy strategy;
+	private Ch2TerminalsSessionsKeeper terminalsSessionsKeeper;
 
 	public void setHandlers(List<Handler> handlers) {
 		this.handlers = handlers;
@@ -46,6 +47,10 @@ public class Ch2Handler {
 	public void setPort(int port) {
 		this.port = port;
 	}
+	
+	public void setTerminalsSessionsKeeper(Ch2TerminalsSessionsKeeper terminalsSessionsKeeper) {
+		this.terminalsSessionsKeeper = terminalsSessionsKeeper;
+	}
 
 	public void run() throws InterruptedException {
 		bossGroup = new NioEventLoopGroup();
@@ -58,7 +63,7 @@ public class Ch2Handler {
 					@Override
 					protected void initChannel(SocketChannel ch) throws Exception {
 						ch.pipeline().addLast(new FlowSeparator(), new MessageDecoder(),
-								new MessageHandler(handlers, strategy));
+								new MessageHandler(handlers, strategy, terminalsSessionsKeeper));
 					}
 				})
 				.option(ChannelOption.SO_BACKLOG, 128)

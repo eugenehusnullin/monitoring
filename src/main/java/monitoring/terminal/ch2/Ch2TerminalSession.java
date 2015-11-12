@@ -23,6 +23,8 @@ public class Ch2TerminalSession implements TerminalSession {
 	@Override
 	public void write(Message message) {
 		WialonMessage wm = (WialonMessage) message;
+		
+		logger.info("Send command to ch2 block: " + wm.getStrMessage());
 		ByteBuf b = ctx.alloc().buffer(wm.getStrMessage().length());
 		try {
 			b.writeBytes(wm.getStrMessage().getBytes("ASCII"));

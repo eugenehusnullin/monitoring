@@ -151,6 +151,8 @@ class WialonIoHandler extends IoHandlerAdapter implements IoFutureListener<Conne
 				WialonMessage wialonMessage = new WialonMessage();
 				wialonMessage.setStrMessage((String) message);
 				wialonMessage.setTerminalId(terminalId);
+				
+				logger.info("Recieved message from wialon: " + wialonMessage.getStrMessage());
 
 				Message m = messageFormatter.toTerminalFormatt(wialonMessage);
 				if (m != null) {

@@ -41,5 +41,8 @@ public class PositionHelper {
 		if (m.getValidLocation() != null) {
 			position.setGpsValid(m.getValidLocation());
 		}
+		if (m.getCourse() != null) {
+			position.setCourse((double) m.getCourse());
+		}
 	}
 }

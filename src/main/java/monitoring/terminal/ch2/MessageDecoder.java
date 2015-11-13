@@ -40,6 +40,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 	}
 
 	private Ch2Message fill(String[] arr) {
+		// 860719028553836,CMD-T,A,DATE:151113,TIME:100131,LAT:55.7923483N,LOT:037.7523600E,Speed:040.1,1-0-0-0-99-31,010,25002-1E17-4F03,10,0.98,0,-21,18,122,-1,-1,-1
 		Ch2Message m = new Ch2Message();
 		m.setTerminalId(Long.parseLong(arr[0]));
 		m.setCmd(arr[1]);
@@ -70,6 +71,13 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		// SPEED
 		String speed = arr[7].substring(arr[7].indexOf(":") + 1);
 		m.setSpeed(Double.parseDouble(speed));
+
+		// course
+		try {
+			m.setCourse(Integer.parseInt(arr[9]));
+		} catch (Exception e) {
+			logger.error("Get course failure.", e);
+		}
 
 		return m;
 	}

@@ -22,11 +22,17 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		String cmd = arr[1];
 
 		Ch2Message m = null;
+		Ch2Response r = null;
 
 		switch (cmd) {
 		case "CMD-T":
 		case "CMD-D":
 			m = fill(arr);
+			break;
+
+		case "CMD-Z":
+			r = fillResponse(arr);
+			logger.info("Response: " + s);
 			break;
 
 		default:
@@ -36,7 +42,16 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 
 		if (m != null) {
 			super.channelRead(ctx, m);
+		} else {
+			super.channelRead(ctx, r);
 		}
+	}
+
+	private Ch2Response fillResponse(String[] arr) {
+		Ch2Response r = new Ch2Response();
+		r.setTerminalId(Long.parseLong(arr[0]));
+		r.setResponse(arr[2]);
+		return r;
 	}
 
 	private Ch2Message fill(String[] arr) {

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import monitoring.domain.Message;
 import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
 
@@ -26,8 +27,7 @@ public class MessageHandler extends ChannelHandlerAdapter {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		Ch2Message m = (Ch2Message) msg;
-		
+		Message m = (Message) msg;
 		terminalsSessionsKeeper.putTerminalSession(m.getTerminalId(), ctx);
 		
 		for (Handler handler : handlers) {

@@ -93,6 +93,17 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		} catch (Exception e) {
 			logger.error("Get course failure.", e);
 		}
+		
+		// is have accelerometer and gyroscope
+		if (arr.length > 15) {
+			m.setAx(Integer.parseInt(arr[14]));
+			m.setAy(Integer.parseInt(arr[15]));
+			m.setAz(Integer.parseInt(arr[16]));
+			
+			m.setGx(Integer.parseInt(arr[17]));
+			m.setGy(Integer.parseInt(arr[18]));
+			m.setGz(Integer.parseInt(arr[19]));
+		}
 
 		return m;
 	}

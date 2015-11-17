@@ -14,6 +14,60 @@ public class Ch2Message implements Message {
 	private Double speed;
 	private String other;
 	private Integer course;
+	private Integer ax;
+	private Integer ay;
+	private Integer az;
+	private Integer gx;
+	private Integer gy;
+	private Integer gz;
+
+	public Integer getAx() {
+		return ax;
+	}
+
+	public void setAx(Integer ax) {
+		this.ax = ax;
+	}
+
+	public Integer getAy() {
+		return ay;
+	}
+
+	public void setAy(Integer ay) {
+		this.ay = ay;
+	}
+
+	public Integer getAz() {
+		return az;
+	}
+
+	public void setAz(Integer az) {
+		this.az = az;
+	}
+
+	public Integer getGx() {
+		return gx;
+	}
+
+	public void setGx(Integer gx) {
+		this.gx = gx;
+	}
+
+	public Integer getGy() {
+		return gy;
+	}
+
+	public void setGy(Integer gy) {
+		this.gy = gy;
+	}
+
+	public Integer getGz() {
+		return gz;
+	}
+
+	public void setGz(Integer gz) {
+		this.gz = gz;
+	}
 
 	public String getCmd() {
 		return cmd;

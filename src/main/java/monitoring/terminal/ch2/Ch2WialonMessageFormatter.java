@@ -18,6 +18,16 @@ public class Ch2WialonMessageFormatter implements MessageFormatter {
 
 			DataPacket dataPacket = new DataPacket();
 			PositionHelper.initPosition(dataPacket, ch2Message);
+			
+			if(ch2Message.getAx() != null) {
+				dataPacket.getParams().put("ax", ch2Message.getAx().toString());
+				dataPacket.getParams().put("ay", ch2Message.getAy().toString());
+				dataPacket.getParams().put("az", ch2Message.getAz().toString());
+				
+				dataPacket.getParams().put("gx", ch2Message.getGx().toString());
+				dataPacket.getParams().put("gy", ch2Message.getGy().toString());
+				dataPacket.getParams().put("gz", ch2Message.getGz().toString());
+			}
 			return dataPacket;
 
 		} else if (message instanceof Ch2Response) {

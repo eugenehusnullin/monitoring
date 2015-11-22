@@ -74,8 +74,9 @@ public class Ch2Handler {
 	}
 
 	public void stop() throws InterruptedException {
-		channelFuture.channel().close();
-		channelFuture.channel().closeFuture().sync();
+		ChannelFuture closeFuture = channelFuture.channel().close();
+		closeFuture.sync();
+
 		@SuppressWarnings("rawtypes")
 		Future fb = bossGroup.shutdownGracefully();
 		@SuppressWarnings("rawtypes")

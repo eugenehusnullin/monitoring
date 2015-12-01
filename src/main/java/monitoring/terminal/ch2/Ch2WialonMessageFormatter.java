@@ -36,7 +36,7 @@ public class Ch2WialonMessageFormatter implements MessageFormatter {
 			DataPacket dataPacket = new DataPacket();
 			dataPacket.setTerminalId(r.getTerminalId());
 			dataPacket.setDate(DateUtils.localTimeToOtherTimeZone(new Date(), DateUtils.TIMEZONEID_UTC));
-			dataPacket.getParams().put("response", r.getResponse());
+			dataPacket.getParams().put("response", r.getResponse().replace("=", "#"));
 			return dataPacket;
 
 		} else {

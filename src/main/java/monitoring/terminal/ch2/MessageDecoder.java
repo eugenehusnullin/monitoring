@@ -31,7 +31,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 			break;
 
 		case "CMD-Z":
-			r = fillResponse(arr);
+			r = fillResponse(arr, s);
 			logger.info("Response: " + s);
 			break;
 
@@ -47,10 +47,12 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		}
 	}
 
-	private Ch2Response fillResponse(String[] arr) {
+	private Ch2Response fillResponse(String[] arr, String msg) {
+		// 860719028547457,CMD-Z,$300=3.48,328.95,30286
 		Ch2Response r = new Ch2Response();
 		r.setTerminalId(Long.parseLong(arr[0]));
-		r.setResponse(arr[2]);
+		int index = msg.indexOf("CMD-Z", 0) + 6;
+		r.setResponse(msg.substring(index));
 		return r;
 	}
 

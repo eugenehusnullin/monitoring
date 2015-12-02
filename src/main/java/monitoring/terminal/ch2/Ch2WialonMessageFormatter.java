@@ -1,6 +1,7 @@
 package monitoring.terminal.ch2;
 
 import java.util.Date;
+import java.util.Map;
 
 import monitoring.domain.Message;
 import monitoring.handler.MessageFormatter;
@@ -20,13 +21,18 @@ public class Ch2WialonMessageFormatter implements MessageFormatter {
 			PositionHelper.initPosition(dataPacket, ch2Message);
 			
 			if(ch2Message.getAx() != null) {
-				dataPacket.getParams().put("ax", ch2Message.getAx().toString());
-				dataPacket.getParams().put("ay", ch2Message.getAy().toString());
-				dataPacket.getParams().put("az", ch2Message.getAz().toString());
+				Map<String, String> params = dataPacket.getParams();
+				params.put("ax", ch2Message.getAx().toString());
+				params.put("ay", ch2Message.getAy().toString());
+				params.put("az", ch2Message.getAz().toString());
 				
-				dataPacket.getParams().put("gx", ch2Message.getGx().toString());
-				dataPacket.getParams().put("gy", ch2Message.getGy().toString());
-				dataPacket.getParams().put("gz", ch2Message.getGz().toString());
+				params.put("gx", ch2Message.getGx().toString());
+				params.put("gy", ch2Message.getGy().toString());
+				params.put("gz", ch2Message.getGz().toString());
+				
+				params.put("laccid", ch2Message.getLaccid());
+				params.put("gpssignal", ch2Message.getGpsSignal());
+				params.put("hdop", Double.toString(ch2Message.getHdop()));
 			}
 			return dataPacket;
 

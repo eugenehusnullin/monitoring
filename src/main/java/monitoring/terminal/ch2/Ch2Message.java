@@ -20,6 +20,9 @@ public class Ch2Message implements Message {
 	private Integer gx;
 	private Integer gy;
 	private Integer gz;
+	private String laccid;
+	private double hdop;
+	private String gpsSignal;
 
 	public Integer getAx() {
 		return ax;
@@ -140,6 +143,30 @@ public class Ch2Message implements Message {
 
 	public void setCourse(Integer course) {
 		this.course = course;
+	}
+
+	public String getLaccid() {
+		return laccid;
+	}
+
+	public void setLaccid(String laccid) {
+		this.laccid = laccid;
+	}
+
+	public double getHdop() {
+		return hdop;
+	}
+
+	public void setHdop(double hdop) {
+		this.hdop = hdop;
+	}
+
+	public String getGpsSignal() {
+		return gpsSignal;
+	}
+
+	public void setGpsSignal(String gpsSignal) {
+		this.gpsSignal = gpsSignal;
 	}
 
 }

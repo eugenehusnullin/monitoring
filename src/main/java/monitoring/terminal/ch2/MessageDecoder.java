@@ -97,12 +97,23 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		}
 
 		// laccid
-		String[] laccidArr = arr[10].split("-");
-		String laccid = laccidArr[1].concat(laccidArr[2]);
-		m.setLaccid(laccid);
+		try {
+			if (!arr[10].isEmpty()) {
+				String[] laccidArr = arr[10].split("-");
+				String laccid = laccidArr[1].concat(laccidArr[2]);
+				m.setLaccid(laccid);
+			}
+		} catch (Exception e) {
+			logger.error("Get laccid failure.", e);
+		}
 
-		m.setGpsSignal(arr[11]);
-		m.setHdop(Double.parseDouble(arr[12]));
+		if (!arr[11].isEmpty()) {
+			m.setGpsSignal(arr[11]);
+		}
+
+		if (!arr[12].isEmpty()) {
+			m.setHdop(Double.parseDouble(arr[12]));
+		}
 
 		// is have accelerometer and gyroscope
 		if (arr.length > 15) {

@@ -53,6 +53,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		r.setTerminalId(Long.parseLong(arr[0]));
 		int index = msg.indexOf("CMD-Z", 0) + 6;
 		r.setResponse(msg.substring(index));
+		r.setResponseType(msg.substring(index, index + 2));
 		return r;
 	}
 

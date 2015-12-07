@@ -2,7 +2,7 @@ package monitoring.domain;
 
 import java.util.Date;
 
-public class TerminalDetach {
+public class AlarmDeviceDetached {
 	private Long id;
 	private Long terminalId;
 	private Date eventDate;

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import monitoring.domain.TerminalDetach;
+import monitoring.domain.AlarmDeviceDetached;
 import monitoring.handler.position.Position;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
@@ -168,7 +168,7 @@ public class Handler extends IoHandlerAdapter {
 									terminalDetachMap.put(imei, true);
 
 									logger.info("save to table");
-									TerminalDetach terminalDetach = new TerminalDetach();
+									AlarmDeviceDetached terminalDetach = new AlarmDeviceDetached();
 									terminalDetach.setEventDate(messageDate);
 									terminalDetach.setTerminalId(imei);
 

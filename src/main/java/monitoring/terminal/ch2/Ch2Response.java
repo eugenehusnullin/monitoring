@@ -5,6 +5,7 @@ import monitoring.domain.Message;
 public class Ch2Response implements Message {
 	private long terminalId;
 	private String response;
+	private String responseType;
 
 	@Override
 	public long getTerminalId() {
@@ -21,6 +22,14 @@ public class Ch2Response implements Message {
 
 	public void setResponse(String response) {
 		this.response = response;
+	}
+
+	public String getResponseType() {
+		return responseType;
+	}
+
+	public void setResponseType(String responseType) {
+		this.responseType = responseType;
 	}
 
 }

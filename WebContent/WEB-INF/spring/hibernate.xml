@@ -11,6 +11,8 @@
 		<mapping resource="monitoring/handler/position/maparea/hibernate/Maparea.hbm.xml" />
 		<mapping resource="monitoring/handler/position/maparea/hibernate/MapareaPoint.hbm.xml" />
 		<mapping resource="monitoring/handler/position/maparea/hibernate/PositionInMaparea.hbm.xml" />
-<!-- 		<mapping resource="monitoring/domain/hibernate/TerminalDetach.hbm.xml" /> -->
+		<mapping resource="monitoring/domain/hibernate/AlarmDeviceDetached.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/AlarmVinChanged.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/Car.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

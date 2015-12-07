@@ -4,7 +4,7 @@
 		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="monitoring.domain">
-	<class name="TerminalDetach" table="terminal_detach">
+	<class name="AlarmDeviceDetached" table="terminal_detach">
 		<id name="id">
 			<generator class="identity" />
 		</id>

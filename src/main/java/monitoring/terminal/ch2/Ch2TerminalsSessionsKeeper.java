@@ -60,7 +60,7 @@ public class Ch2TerminalsSessionsKeeper {
 	}
 
 	@Transactional
-	@Scheduled(cron = "0 0/1 * * * *")
+	@Scheduled(cron = "0 0/5 * * * *")
 	public void demo() {
 		logger.info("Start scheduled demo processing...");
 

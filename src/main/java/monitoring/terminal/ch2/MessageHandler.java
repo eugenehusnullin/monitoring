@@ -11,7 +11,6 @@ import io.netty.channel.ChannelHandlerContext;
 import monitoring.domain.Message;
 import monitoring.handler.Handler;
 import monitoring.handler.HandlerStrategy;
-import monitoring.utils.ByteUtilities;
 
 public class MessageHandler extends ChannelHandlerAdapter {
 	@SuppressWarnings("unused")
@@ -52,9 +51,7 @@ public class MessageHandler extends ChannelHandlerAdapter {
 				Ch2Response mr = (Ch2Response) m;
 				if (mr.getResponseType().equals("88")) {
 					if (!mr.getResponse().startsWith("88 00 00 00 00 00 00 00 00 00")) {
-						String vin = mr.getResponse().substring(3);
-						vin = vin.replace(" ", "");
-						vin = ByteUtilities.hexToAscii(vin);
+						String vin = mr.getResponse().substring(4);
 						demoInfo.setVin(vin);
 					}
 				}

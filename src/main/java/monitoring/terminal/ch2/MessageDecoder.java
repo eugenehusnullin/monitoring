@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import monitoring.utils.ByteUtilities;
 
 public class MessageDecoder extends ChannelHandlerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(MessageDecoder.class);
@@ -54,6 +55,15 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		int index = msg.indexOf("CMD-Z", 0) + 6;
 		r.setResponse(msg.substring(index));
 		r.setResponseType(msg.substring(index, index + 2));
+		
+		if (r.getResponseType().equals("88")) {
+			if (!r.getResponse().startsWith("88 00 00 00 00 00 00 00 00 00")) {
+				String vin = r.getResponse().substring(3);
+				vin = vin.replace(" ", "");
+				vin = ByteUtilities.hexToAscii(vin);
+				r.setResponse("VIN-" + vin);
+			}
+		}
 		return r;
 	}
 

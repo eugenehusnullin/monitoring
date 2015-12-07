@@ -95,7 +95,7 @@ public class Ch2TerminalsSessionsKeeper {
 		if (nowMs > demoInfo.getLastDateCoord().getTime()) {
 			if (!demoInfo.isDetachAlarmed()) {
 				logger.info(imei.toString() + ", device detached.");
-				makeAlarmDetach(imei);
+				makeAlarmDetach(imei, car.getId());
 				demoInfo.setDetachAlarmed(true);
 			}
 			return;
@@ -103,7 +103,13 @@ public class Ch2TerminalsSessionsKeeper {
 
 		if (demoInfo.getVin() != null && !demoInfo.getVin().isEmpty()) {
 			logger.info(imei.toString() + ", device have vin.");
-			if (!car.getVin().equals(demoInfo.getVin())) {
+			if (car.getVin() == null || car.getVin().isEmpty()) {
+				car.setVin(demoInfo.getVin());
+				sessionFactory.getCurrentSession().save(car);
+				return;
+			}
+			
+			if (car.getVin() != null && !car.getVin().equals(demoInfo.getVin())) {
 				if (!demoInfo.isVinChangeAlarmed()) {
 					logger.info(imei.toString() + ", vin changed.");
 					makeAlarmVinChange(imei, demoInfo.getVin(), car.getVin(), car.getId());
@@ -113,9 +119,10 @@ public class Ch2TerminalsSessionsKeeper {
 		}
 	}
 
-	private void makeAlarmDetach(Long imei) {
+	private void makeAlarmDetach(Long imei, Long carId) {
 		AlarmDeviceDetached alarm = new AlarmDeviceDetached();
 		alarm.setTerminalId(imei);
+		alarm.setCarId(carId);
 		alarm.setEventDate(new Date());
 		sessionFactory.getCurrentSession().save(alarm);
 	}
@@ -126,6 +133,7 @@ public class Ch2TerminalsSessionsKeeper {
 		alarm.setVinOld(vinOld);
 		alarm.setAlarmDate(new Date());
 		alarm.setCarId(carId);
+		alarm.setImei(imei);
 		sessionFactory.getCurrentSession().save(alarm);
 	}
 

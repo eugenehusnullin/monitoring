@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class AlarmVinChanged {
 	private Long carId;
+	private Long imei;
 	private String vinNew;
 	private String vinOld;
 	private Date alarmDate;
@@ -38,6 +39,14 @@ public class AlarmVinChanged {
 
 	public void setAlarmDate(Date alarmDate) {
 		this.alarmDate = alarmDate;
+	}
+
+	public Long getImei() {
+		return imei;
+	}
+
+	public void setImei(Long imei) {
+		this.imei = imei;
 	}
 
 	// autoId int(11)

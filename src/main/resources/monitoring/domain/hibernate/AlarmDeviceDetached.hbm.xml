@@ -9,6 +9,7 @@
 			<generator class="identity" />
 		</id>
 		<property name="terminalId"></property>
+		<property name="carId" column="autoId"></property>
 		<property name="eventDate"></property>
 	</class>
 </hibernate-mapping>

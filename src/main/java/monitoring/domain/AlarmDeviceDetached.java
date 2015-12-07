@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class AlarmDeviceDetached {
 	private Long id;
+	private Long carId;
 	private Long terminalId;
 	private Date eventDate;
 
@@ -29,5 +30,13 @@ public class AlarmDeviceDetached {
 
 	public void setEventDate(Date eventDate) {
 		this.eventDate = eventDate;
+	}
+
+	public Long getCarId() {
+		return carId;
+	}
+
+	public void setCarId(Long carId) {
+		this.carId = carId;
 	}
 }

@@ -6,6 +6,7 @@
 <hibernate-mapping package="monitoring.domain">
 	<class name="AlarmVinChanged" table="top_auto_vin_change">
 		<id name="carId" column="autoId"></id>
+		<property name="imei" column="imei"></property>
 		<property name="vinNew" column="VINnew"></property>
 		<property name="vinOld" column="VINold"></property>
 		<property name="alarmDate" column="datetime"></property>

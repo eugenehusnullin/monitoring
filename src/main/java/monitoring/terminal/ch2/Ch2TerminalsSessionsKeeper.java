@@ -134,7 +134,7 @@ public class Ch2TerminalsSessionsKeeper {
 		alarm.setAlarmDate(new Date());
 		alarm.setCarId(carId);
 		alarm.setImei(imei);
-		sessionFactory.getCurrentSession().save(alarm);
+		sessionFactory.getCurrentSession().saveOrUpdate(alarm);
 	}
 
 	private void senCommandGetVin(Long imei) {

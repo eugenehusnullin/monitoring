@@ -21,8 +21,12 @@ public class DateUtils {
 
 		// 2) apply UTC time zone
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
-		calendar.set(source.get(Calendar.YEAR), source.get(Calendar.MONTH), source.get(Calendar.DAY_OF_MONTH),
-				source.get(Calendar.HOUR_OF_DAY), source.get(Calendar.MINUTE), source.get(Calendar.SECOND));
+		calendar.set(source.get(Calendar.YEAR), 
+				source.get(Calendar.MONTH)-1, 
+				source.get(Calendar.DAY_OF_MONTH),
+				source.get(Calendar.HOUR_OF_DAY), 
+				source.get(Calendar.MINUTE), 
+				source.get(Calendar.SECOND));
 
 		return calendar;
 	}

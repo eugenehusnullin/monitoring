@@ -67,8 +67,9 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		return r;
 	}
 
-	private Ch2Message fill(String[] arr) {
-		// 860719028553836,CMD-T,A,DATE:151113,TIME:100131,LAT:55.7923483N,LOT:037.7523600E,Speed:040.1,1-0-0-0-99-31,010,25002-1E17-4F03,10,0.98,0,-21,18,122,-1,-1,-1
+	public Ch2Message fill(String[] arr) {
+// 860719028553836,CMD-T,A,DATE:151113,TIME:100131,LAT:55.7923483N,LOT:037.7523600E,Speed:040.1,1-0-0-0-99-31,010,25002-1E17-4F03,10,0.98,0,-21,18,122,-1,-1,-1
+// 860719028553836,CMD-T,V,DATE:151208,TIME:111333,LAT:55.1664883N,LOT:061.3897166E,Speed:001.1,1-1-0-0-81-22,000,25002-1CE9-765A,3,,0,46,-28,214,-1,-1,-1
 		Ch2Message m = new Ch2Message();
 		m.setTerminalId(Long.parseLong(arr[0]));
 		m.setCmd(arr[1]);
@@ -78,7 +79,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		String date = arr[3].substring(arr[3].indexOf(":") + 1);
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, 2000 + Integer.parseInt(date.substring(0, 2)));
-		cal.set(Calendar.MONTH, Integer.parseInt(date.substring(2, 4)));
+		cal.set(Calendar.MONTH, Integer.parseInt(date.substring(2, 4)) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(4)));
 
 		String time = arr[4].substring(arr[4].indexOf(":") + 1);

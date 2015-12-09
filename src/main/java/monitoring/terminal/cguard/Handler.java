@@ -77,7 +77,7 @@ public class Handler extends IoHandlerAdapter {
 				if (Pattern.matches("\\d{6}\\s\\d{6}", firstElement)) {
 					Calendar calendar = Calendar.getInstance();
 					calendar.set(Integer.parseInt(firstElement.substring(0, 2)),
-							Integer.parseInt(firstElement.substring(2, 4)),
+							Integer.parseInt(firstElement.substring(2, 4))-1,
 							Integer.parseInt(firstElement.substring(4, 6)),
 							Integer.parseInt(firstElement.substring(7, 9)),
 							Integer.parseInt(firstElement.substring(9, 11)),

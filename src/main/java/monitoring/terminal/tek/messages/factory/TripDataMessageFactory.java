@@ -29,9 +29,12 @@ public class TripDataMessageFactory extends MessageFactory {
 		// uploading time
 		String timeString = ByteUtilities.bcdToString(buffer, 6);
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(Integer.parseInt(timeString.substring(0, 2)), Integer.parseInt(timeString.substring(2, 4)),
-				Integer.parseInt(timeString.substring(4, 6)), Integer.parseInt(timeString.substring(6, 8)),
-				Integer.parseInt(timeString.substring(8, 10)), Integer.parseInt(timeString.substring(10)));
+		calendar.set(Integer.parseInt(timeString.substring(0, 2)),
+				Integer.parseInt(timeString.substring(2, 4)) - 1,
+				Integer.parseInt(timeString.substring(4, 6)),
+				Integer.parseInt(timeString.substring(6, 8)),
+				Integer.parseInt(timeString.substring(8, 10)),
+				Integer.parseInt(timeString.substring(10)));
 		calendar.add(Calendar.HOUR_OF_DAY, -8);
 		tripDataMessage.setUploadingTime(calendar.getTime());
 

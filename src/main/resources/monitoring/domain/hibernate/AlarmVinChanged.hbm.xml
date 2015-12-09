@@ -5,7 +5,10 @@
 
 <hibernate-mapping package="monitoring.domain">
 	<class name="AlarmVinChanged" table="top_auto_vin_change">
-		<id name="carId" column="autoId"></id>
+		<id name="id">
+			<generator class="identity" />
+		</id>
+		<property name="carId" column="autoId"></property>
 		<property name="imei" column="imei"></property>
 		<property name="vinNew" column="VINnew"></property>
 		<property name="vinOld" column="VINold"></property>

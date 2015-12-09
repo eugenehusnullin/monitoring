@@ -3,6 +3,7 @@ package monitoring.domain;
 import java.util.Date;
 
 public class AlarmVinChanged {
+	private Long id;
 	private Long carId;
 	private Long imei;
 	private String vinNew;
@@ -47,6 +48,14 @@ public class AlarmVinChanged {
 
 	public void setImei(Long imei) {
 		this.imei = imei;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	// autoId int(11)

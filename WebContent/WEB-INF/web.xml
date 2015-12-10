@@ -20,6 +20,10 @@
     <servlet-name>munic</servlet-name>
     <url-pattern>/munic/*</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>munic</servlet-name>
+    <url-pattern>/mega-f/*</url-pattern>
+  </servlet-mapping>
   <servlet>
     <servlet-name>nis</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

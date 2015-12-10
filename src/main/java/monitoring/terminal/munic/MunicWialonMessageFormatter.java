@@ -28,6 +28,10 @@ public class MunicWialonMessageFormatter implements MessageFormatter {
 		if (municMessage.getDioIgnition() != null) {
 			dataPacket.getParams().put("ignition", municMessage.getDioIgnition().booleanValue() ? "1" : "0");
 		}
+		
+		if (municMessage.getOdometer() != null) {
+			dataPacket.getParams().put("odometer", municMessage.getOdometer().toString());
+		}
 		return dataPacket;
 	}
 

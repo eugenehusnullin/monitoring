@@ -153,6 +153,10 @@ public class MunicMessage implements Message {
 			return null;
 		}
 	}
+	
+	public Integer getOdometer() {
+		return getIntegerField("MDI_OBD_MILEAGE");
+	}
 
 	/*
 	 * Other fields: getIntegerField("ODO_FULL") getStringField("GPRMC_VALID")

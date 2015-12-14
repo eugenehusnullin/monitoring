@@ -50,6 +50,8 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 
 	private Ch2Response fillResponse(String[] arr, String msg) {
 		// 860719028547457,CMD-Z,$300=3.48,328.95,30286
+		// 860719028533101,CMD-Z,85 00 00 72 94
+		// 860719028533101,CMD-Z,88 58 57 38 41 4E 32 4E 45 39 46 48 30 31 38 39 39 39 
 		Ch2Response r = new Ch2Response();
 		r.setTerminalId(Long.parseLong(arr[0]));
 		int index = msg.indexOf("CMD-Z", 0) + 6;
@@ -63,6 +65,10 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 				vin = ByteUtilities.hexToAscii(vin);
 				r.setResponse("VIN-" + vin);
 			}
+		} else if (r.getResponseType().equals("88")) {
+			String odom = r.getResponse().substring(3);
+			odom = odom.replace(" ", "");
+			r.setResponse("ODOM-" + Long.parseLong(odom, 16));
 		}
 		return r;
 	}

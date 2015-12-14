@@ -11,6 +11,7 @@ import monitoring.utils.ByteUtilities;
 
 public class MessageDecoder extends ChannelHandlerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(MessageDecoder.class);
+	private static final float lsb = 7.81f;
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -135,9 +136,9 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 
 		// is have accelerometer and gyroscope
 		if (arr.length > 15) {
-			m.setAx(Integer.parseInt(arr[14]));
-			m.setAy(Integer.parseInt(arr[15]));
-			m.setAz(Integer.parseInt(arr[16]));
+			m.setAx(Math.round(Integer.parseInt(arr[14]) * lsb));
+			m.setAy(Math.round(Integer.parseInt(arr[15]) * lsb));
+			m.setAz(Math.round(Integer.parseInt(arr[16]) * lsb));
 
 			m.setGx(Integer.parseInt(arr[17]));
 			m.setGy(Integer.parseInt(arr[18]));

@@ -17,6 +17,9 @@ public class Base64UtilsTest {
 		System.out.println("accz begin - " + Base64Utils.decodeBase64Integer("///7/A=="));
 		System.out.println("accz peak - " + Base64Utils.decodeBase64Integer("///7/w=="));
 		System.out.println("accz end - " + Base64Utils.decodeBase64Integer("///8Fg=="));
+		
+		System.out.println("mega-f odometr - " + Base64Utils.decodeBase64String("NDQzNy4wMDA="));
+		
 	}
 
 }

@@ -12,6 +12,8 @@ import monitoring.domain.Message;
 import monitoring.utils.Base64Utils;
 
 public class MunicMessage implements Message {
+	private final String megafAccount = "mega-f";
+	
 	private long terminalId;
 	private Date recordedAt;
 	private JSONObject jsonPayload;
@@ -21,10 +23,12 @@ public class MunicMessage implements Message {
 	private Double longitude = null;
 	private Boolean dioIgnition = null;
 	private Boolean gprmcValid = null;
+	private String account;
 
 	public void setJsonMessage(JSONObject jsonMessage) throws JSONException, ParseException {
 		JSONObject meta = jsonMessage.getJSONObject("meta");
 		event = meta.getString("event");
+		account = meta.getString("account");
 
 		jsonPayload = jsonMessage.getJSONObject("payload");
 		terminalId = Long.parseLong(jsonPayload.getString("asset"));
@@ -51,6 +55,10 @@ public class MunicMessage implements Message {
 				gprmcValid = gprmcValidString.equals("A");
 			}
 		}
+	}
+	
+	private boolean isMegaf() {
+		return account.equals(megafAccount);
 	}
 
 	public boolean hasGeo() {
@@ -246,7 +254,12 @@ public class MunicMessage implements Message {
 
 		JSONObject jsonObject = jsonFields.optJSONObject(key);
 		if (jsonObject != null) {
-			return Base64Utils.decodeBase64Integer(jsonObject.getString("b64_value"));
+			if (!isMegaf()) {
+				return Base64Utils.decodeBase64Integer(jsonObject.getString("b64_value"));
+			} else {
+				String v = Base64Utils.decodeBase64String(jsonObject.getString("b64_value"));
+				return Math.toIntExact(Math.round(Double.parseDouble(v)));
+			}
 		} else {
 			return null;
 		}

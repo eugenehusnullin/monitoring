@@ -240,8 +240,13 @@ public class MunicMessage implements Message {
 		}
 
 		JSONObject jsonObject = jsonFields.optJSONObject(key);
-		if (jsonObject != null) {
-			return Base64Utils.decodeBase64Boolean(jsonObject.getString("b64_value"));
+		if (jsonObject != null) {			
+			if (!isMegaf()) {
+				return Base64Utils.decodeBase64Boolean(jsonObject.getString("b64_value"));
+			} else {
+				String v = Base64Utils.decodeBase64String(jsonObject.getString("b64_value"));
+				return Boolean.parseBoolean(v);
+			}
 		} else {
 			return null;
 		}

@@ -147,7 +147,11 @@ public class MunicMessage implements Message {
 	public Double getDirection() {
 		Integer dirInteger = getIntegerField("GPS_DIR");
 		if (dirInteger != null) {
-			return dirInteger.doubleValue() / 100;
+			if (isMegaf()) {
+				return dirInteger.doubleValue();
+			} else {
+				return dirInteger.doubleValue() / 100;
+			}
 		} else {
 			return null;
 		}

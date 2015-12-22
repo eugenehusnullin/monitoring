@@ -2,7 +2,6 @@ package monitoring.terminal.ch2;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
@@ -11,7 +10,6 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +60,7 @@ public class Ch2TerminalsSessionsKeeper {
 	public void demo() {
 		logger.info("Start scheduled demo processing...");
 
-		for (Long imei : demoInfoMap.keySet()) {
+		for (Long imei : sessionMap.keySet()) {
 			Ch2DemoInfo demoInfo = demoInfoMap.get(imei);
 
 			if (demoInfo != null) {
@@ -106,7 +104,7 @@ public class Ch2TerminalsSessionsKeeper {
 				sessionFactory.getCurrentSession().save(car);
 				return;
 			}
-			
+
 			if (car.getVin() != null && !car.getVin().equals(demoInfo.getVin())) {
 				if (!demoInfo.isVinChangeAlarmed()) {
 					logger.info(imei.toString() + ", vin changed.");

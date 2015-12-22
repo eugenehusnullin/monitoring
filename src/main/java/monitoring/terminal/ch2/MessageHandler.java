@@ -57,8 +57,6 @@ public class MessageHandler extends ChannelHandlerAdapter {
 				}
 			}
 		}
-
-		super.channelRead(ctx, msg);
 	}
 
 }

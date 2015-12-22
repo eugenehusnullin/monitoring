@@ -73,6 +73,3 @@ hibernate.hbm2ddl.auto=update
 ;hibernate.hbm2ddl.auto=create-drop
 
 
-; DEMO 2015.12.05
-demo.imeis = 860719028553836,860719028553837
-

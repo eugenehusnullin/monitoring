@@ -47,7 +47,7 @@ public class Ch2Handler {
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
 	public void setTerminalsSessionsKeeper(Ch2TerminalsSessionsKeeper terminalsSessionsKeeper) {
 		this.terminalsSessionsKeeper = terminalsSessionsKeeper;
 	}
@@ -62,7 +62,9 @@ public class Ch2Handler {
 				.childHandler(new ChannelInitializer<SocketChannel>() {
 					@Override
 					protected void initChannel(SocketChannel ch) throws Exception {
-						ch.pipeline().addLast(new FlowSeparator(), new MessageDecoder(),
+						ch.pipeline().addLast(
+								new FlowSeparator(),
+								new MessageDecoder(),
 								new MessageHandler(handlers, strategy, terminalsSessionsKeeper));
 					}
 				})
@@ -81,11 +83,12 @@ public class Ch2Handler {
 		Future fb = bossGroup.shutdownGracefully();
 		@SuppressWarnings("rawtypes")
 		Future fw = workerGroup.shutdownGracefully();
-		
+
 		try {
-	        fb.await();
-	        fw.await();
-	    } catch (InterruptedException ignore) {}
+			fb.await();
+			fw.await();
+		} catch (InterruptedException ignore) {
+		}
 
 		logger.info("Ch2 socket stoped.");
 	}

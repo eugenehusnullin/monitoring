@@ -30,8 +30,6 @@ public class Ch2TerminalsSessionsKeeper {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	@Value("#{mainSettings['demo.imeis'].split(',')}")
-	private List<Long> demoImeis;
 	private Map<Long, Ch2DemoInfo> demoInfoMap = new HashMap<>();
 	private String commandGetVin = ":123456Z08#";
 
@@ -64,7 +62,7 @@ public class Ch2TerminalsSessionsKeeper {
 	public void demo() {
 		logger.info("Start scheduled demo processing...");
 
-		for (Long imei : demoImeis) {
+		for (Long imei : demoInfoMap.keySet()) {
 			Ch2DemoInfo demoInfo = demoInfoMap.get(imei);
 
 			if (demoInfo != null) {

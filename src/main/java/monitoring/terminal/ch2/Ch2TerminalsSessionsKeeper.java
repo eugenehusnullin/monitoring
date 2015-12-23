@@ -30,6 +30,7 @@ public class Ch2TerminalsSessionsKeeper {
 
 	private Map<Long, Ch2DemoInfo> demoInfoMap = new HashMap<>();
 	private String commandGetVin = ":123456Z08#";
+	private String commandObsoleteGetVin = ":123456Z296#";
 
 	public Ch2TerminalSession getTerminalSession(long terminalId) {
 		synchronized (sessionMap) {
@@ -141,7 +142,13 @@ public class Ch2TerminalsSessionsKeeper {
 			wm.setStrMessage(commandGetVin);
 			terminalSession.write(wm);
 
-			logger.info("Sended command get VIN to terminal: " + imei.toString());
+			logger.info("Sended command get VIN to terminal: " + commandGetVin + " " + imei.toString());
+						
+			// send obsolete command
+			WialonMessage wm2 = new WialonMessage();
+			wm2.setTerminalId(imei);
+			wm2.setStrMessage(commandObsoleteGetVin);
+			terminalSession.write(wm2);
 		}
 	}
 

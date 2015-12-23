@@ -50,33 +50,43 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 	}
 
 	private Ch2Response fillResponse(String[] arr, String msg) {
+		// 860719028547457,CMD-Z,$296=XW8AN2NE9FH018999
 		// 860719028547457,CMD-Z,$300=3.48,328.95,30286
 		// 860719028533101,CMD-Z,85 00 00 72 94
-		// 860719028533101,CMD-Z,88 58 57 38 41 4E 32 4E 45 39 46 48 30 31 38 39 39 39 
+		// 860719028533101,CMD-Z,88 58 57 38 41 4E 32 4E 45 39 46 48 30 31 38 39 39 39
 		Ch2Response r = new Ch2Response();
 		r.setTerminalId(Long.parseLong(arr[0]));
 		int index = msg.indexOf("CMD-Z", 0) + 6;
 		r.setResponse(msg.substring(index));
-		r.setResponseType(msg.substring(index, index + 2));
-		
-		if (r.getResponseType().equals("88")) {
-			if (!r.getResponse().startsWith("88 00 00 00 00 00 00 00 00 00")) {
-				String vin = r.getResponse().substring(3);
-				vin = vin.replace(" ", "");
-				vin = ByteUtilities.hexToAscii(vin);
-				r.setResponse("VIN-" + vin);
+
+		if (msg.charAt(index) == '$') {
+			r.setResponseType(msg.substring(index+1, index + 4));
+			
+			if (r.getResponseType().equals("296")) {
+				r.setResponse("VIN-" + msg.substring(index+5));
 			}
-		} else if (r.getResponseType().equals("88")) {
-			String odom = r.getResponse().substring(3);
-			odom = odom.replace(" ", "");
-			r.setResponse("ODOM-" + Long.parseLong(odom, 16));
+		} else {
+			r.setResponseType(msg.substring(index, index + 2));
+
+			if (r.getResponseType().equals("88")) {
+				if (!r.getResponse().startsWith("88 00 00 00 00 00 00 00 00 00")) {
+					String vin = r.getResponse().substring(3);
+					vin = vin.replace(" ", "");
+					vin = ByteUtilities.hexToAscii(vin);
+					r.setResponse("VIN-" + vin);
+				}
+			} else if (r.getResponseType().equals("85")) {
+				String odom = r.getResponse().substring(3);
+				odom = odom.replace(" ", "");
+				r.setResponse("ODOM-" + Long.parseLong(odom, 16));
+			}
 		}
 		return r;
 	}
 
 	public Ch2Message fill(String[] arr) {
-// 860719028553836,CMD-T,A,DATE:151113,TIME:100131,LAT:55.7923483N,LOT:037.7523600E,Speed:040.1,1-0-0-0-99-31,010,25002-1E17-4F03,10,0.98,0,-21,18,122,-1,-1,-1
-// 860719028553836,CMD-T,V,DATE:151208,TIME:111333,LAT:55.1664883N,LOT:061.3897166E,Speed:001.1,1-1-0-0-81-22,000,25002-1CE9-765A,3,,0,46,-28,214,-1,-1,-1
+		// 860719028553836,CMD-T,A,DATE:151113,TIME:100131,LAT:55.7923483N,LOT:037.7523600E,Speed:040.1,1-0-0-0-99-31,010,25002-1E17-4F03,10,0.98,0,-21,18,122,-1,-1,-1
+		// 860719028553836,CMD-T,V,DATE:151208,TIME:111333,LAT:55.1664883N,LOT:061.3897166E,Speed:001.1,1-1-0-0-81-22,000,25002-1CE9-765A,3,,0,46,-28,214,-1,-1,-1
 		Ch2Message m = new Ch2Message();
 		m.setTerminalId(Long.parseLong(arr[0]));
 		m.setCmd(arr[1]);

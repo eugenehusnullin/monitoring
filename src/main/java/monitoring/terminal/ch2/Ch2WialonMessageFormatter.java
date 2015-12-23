@@ -33,6 +33,10 @@ public class Ch2WialonMessageFormatter implements MessageFormatter {
 				params.put("laccid", ch2Message.getLaccid());
 				params.put("gpssignal", ch2Message.getGpsSignal());
 				params.put("hdop", Double.toString(ch2Message.getHdop()));
+				
+				if(ch2Message.getVin() != null && !ch2Message.getVin().isEmpty()) {
+					params.put("vin", ch2Message.getVin());
+				}
 			}
 			return dataPacket;
 

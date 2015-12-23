@@ -23,6 +23,7 @@ public class Ch2Message implements Message {
 	private String laccid;
 	private double hdop;
 	private String gpsSignal;
+	private String vin;
 
 	public Integer getAx() {
 		return ax;
@@ -167,6 +168,14 @@ public class Ch2Message implements Message {
 
 	public void setGpsSignal(String gpsSignal) {
 		this.gpsSignal = gpsSignal;
+	}
+
+	public String getVin() {
+		return vin;
+	}
+
+	public void setVin(String vin) {
+		this.vin = vin;
 	}
 
 }

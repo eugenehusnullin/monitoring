@@ -32,10 +32,6 @@ public class MessageHandler extends ChannelHandlerAdapter {
 		Message m = (Message) msg;
 		terminalsSessionsKeeper.putTerminalSession(m.getTerminalId(), ctx);
 
-		for (Handler handler : handlers) {
-			handler.handle(m, strategy);
-		}
-
 		// demo
 		Ch2DemoInfo demoInfo = terminalsSessionsKeeper.getDemoInfo(m.getTerminalId());
 		if (demoInfo != null) {
@@ -47,6 +43,10 @@ public class MessageHandler extends ChannelHandlerAdapter {
 				demoInfo.setLastDateCoord(new Date());
 				demoInfo.setLat(mm.getLatitude());
 				demoInfo.setLon(mm.getLongitude());
+
+				if (demoInfo.getVin() != null) {
+					mm.setVin(demoInfo.getVin());
+				}
 			} else if (m instanceof Ch2Response) {
 				Ch2Response mr = (Ch2Response) m;
 				if (mr.getResponseType().equals("88")) {
@@ -54,9 +54,15 @@ public class MessageHandler extends ChannelHandlerAdapter {
 						String vin = mr.getResponse().substring(4);
 						demoInfo.setVin(vin);
 					}
+				} else if (mr.getResponseType().equals("296")) {
+					String vin = mr.getResponse().substring(4);
+					demoInfo.setVin(vin);
 				}
 			}
 		}
-	}
 
+		for (Handler handler : handlers) {
+			handler.handle(m, strategy);
+		}
+	}
 }

@@ -1,6 +1,7 @@
 package monitoring.terminal.ch2;
 
 import monitoring.handler.AccelerometrConverter;
+import monitoring.handler.GyroConverter;
 import monitoring.handler.HandlerStrategyAdapter;
 import monitoring.handler.MessageFormatter;
 import monitoring.handler.PositionConverter;
@@ -11,6 +12,7 @@ public class Ch2HandlerStrategy extends HandlerStrategyAdapter {
 	private MessageFormatter messageFormatter;
 	private Ch2TerminalsSessionsKeeper terminalsSessionsKeeper;
 	private AccelerometrConverter accelerometrConverter;
+	private GyroConverter gyroConverter;
 
 	@Override
 	public PositionConverter getPositionConverter() {
@@ -32,6 +34,11 @@ public class Ch2HandlerStrategy extends HandlerStrategyAdapter {
 		return accelerometrConverter;
 	}
 
+	@Override
+	public GyroConverter getGyroConverter() {
+		return gyroConverter;
+	}
+
 	public void setAccelerometrConverter(AccelerometrConverter accelerometrConverter) {
 		this.accelerometrConverter = accelerometrConverter;
 	}
@@ -46,5 +53,9 @@ public class Ch2HandlerStrategy extends HandlerStrategyAdapter {
 
 	public void setTerminalsSessionsKeeper(Ch2TerminalsSessionsKeeper terminalsSessionsKeeper) {
 		this.terminalsSessionsKeeper = terminalsSessionsKeeper;
+	}
+
+	public void setGyroConverter(GyroConverter gyroConverter) {
+		this.gyroConverter = gyroConverter;
 	}
 }

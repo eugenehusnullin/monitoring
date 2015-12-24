@@ -17,6 +17,7 @@
 				<ref bean="ch2PositionPersist" />
 				<ref bean="ch2WialonScoring" />
 				<ref bean="ch2AccelerometrPersist"/>
+				<ref bean="ch2Gyro" />
 			</list>
 		</property>
 		<property name="strategy">
@@ -44,6 +45,10 @@
 			<ref bean="sessionFactory"/>
 		</property>
 	</bean>
+	
+	<bean name="ch2Gyro" class="monitoring.handler.gyro.GyroHandler">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
 
 	<bean name="ch2HandlerStrategy" class="monitoring.terminal.ch2.Ch2HandlerStrategy">
 		<property name="positionConverter">
@@ -55,6 +60,9 @@
 		<property name="terminalsSessionsKeeper"><ref bean="ch2TerminalsSessionsKeeper"/></property>
 		<property name="accelerometrConverter">
 			<bean class="monitoring.terminal.ch2.Ch2AccelerometrConverter"></bean>
+		</property>
+		<property name="gyroConverter">
+			<bean class="monitoring.terminal.ch2.Ch2GyroConverter"></bean>
 		</property>
 	</bean>
 

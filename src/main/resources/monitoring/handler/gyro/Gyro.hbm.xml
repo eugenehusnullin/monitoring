@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="monitoring.handler.gyro">
+	<class name="Gyro" table="gyro">
+		<id name="id">
+			<generator class="identity" />
+		</id>
+		<property name="terminalId"></property>
+		<property name="date"></property>
+		<property name="gx" column="gx"></property>
+		<property name="gy" column="gy"></property>
+		<property name="gz" column="gz"></property>
+	</class>
+</hibernate-mapping>

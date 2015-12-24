@@ -1,10 +1,8 @@
 package monitoring.handler;
 
-
 /**
- * An adapter class for {@link HandlerStrategy}. You can extend this class and
- * selectively override required methods only. All methods do nothing by
- * default.
+ * An adapter class for {@link HandlerStrategy}. You can extend this class and selectively override required methods
+ * only. All methods do nothing by default.
  * 
  */
 public class HandlerStrategyAdapter implements HandlerStrategy {
@@ -26,6 +24,11 @@ public class HandlerStrategyAdapter implements HandlerStrategy {
 
 	@Override
 	public AccelerometrConverter getAccelerometrConverter() {
+		return null;
+	}
+
+	@Override
+	public GyroConverter getGyroConverter() {
 		return null;
 	}
 

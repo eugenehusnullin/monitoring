@@ -72,7 +72,7 @@ public class Ch2TerminalsSessionsKeeper {
 				demoInfoMap.put(imei, demoInfo);
 			}
 
-			senCommandGetVin(imei);
+			senCommandGetVin(imei, demoInfo);
 		}
 	}
 
@@ -134,21 +134,27 @@ public class Ch2TerminalsSessionsKeeper {
 		sessionFactory.getCurrentSession().saveOrUpdate(alarm);
 	}
 
-	private void senCommandGetVin(Long imei) {
+	private void senCommandGetVin(Long imei, Ch2DemoInfo demoInfo) {
 		Ch2TerminalSession terminalSession = getTerminalSession(imei);
 		if (terminalSession != null) {
-			WialonMessage wm = new WialonMessage();
-			wm.setTerminalId(imei);
-			wm.setStrMessage(commandGetVin);
-			terminalSession.write(wm);
 
-			logger.info("Sended command get VIN to terminal: " + commandGetVin + " " + imei.toString());
-						
-			// send obsolete command
-			WialonMessage wm2 = new WialonMessage();
-			wm2.setTerminalId(imei);
-			wm2.setStrMessage(commandObsoleteGetVin);
-			terminalSession.write(wm2);
+			boolean ver = demoInfo.changeVersion();
+
+			if (ver) {
+				WialonMessage wm = new WialonMessage();
+				wm.setTerminalId(imei);
+				wm.setStrMessage(commandGetVin);
+				terminalSession.write(wm);
+				logger.info("Sended command get VIN to terminal: " + commandGetVin + " " + imei.toString());
+
+			} else {
+				// send obsolete command
+				WialonMessage wm2 = new WialonMessage();
+				wm2.setTerminalId(imei);
+				wm2.setStrMessage(commandObsoleteGetVin);
+				terminalSession.write(wm2);
+				logger.info("Sended command get VIN to terminal: " + commandObsoleteGetVin + " " + imei.toString());
+			}
 		}
 	}
 

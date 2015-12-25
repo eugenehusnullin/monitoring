@@ -7,9 +7,16 @@ public class Ch2DemoInfo {
 	private Double lat = null;
 	private Double lon = null;
 	private String vin = null;
+	private boolean oldVersion = false;
 
 	private boolean detachAlarmed = false;
 	private boolean vinChangeAlarmed = false;
+
+	public boolean changeVersion() {
+		boolean result = oldVersion;
+		oldVersion = !oldVersion;
+		return result;
+	}
 
 	public Date getLastDateCoord() {
 		return lastDateCoord;

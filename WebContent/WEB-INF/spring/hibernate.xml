@@ -15,5 +15,6 @@
 		<mapping resource="monitoring/domain/hibernate/AlarmVinChanged.hbm.xml" />
 		<mapping resource="monitoring/domain/hibernate/Car.hbm.xml" />
 		<mapping resource="monitoring/handler/gyro/Gyro.hbm.xml" />
+		<mapping resource="monitoring/handler/speedlimit/SpeedLimit.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

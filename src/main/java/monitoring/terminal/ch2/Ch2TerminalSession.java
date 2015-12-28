@@ -1,6 +1,6 @@
 package monitoring.terminal.ch2;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +13,7 @@ import monitoring.handler.wialon.WialonMessage;
 
 public class Ch2TerminalSession implements TerminalSession {
 	private static final Logger logger = LoggerFactory.getLogger(Ch2TerminalSession.class);
+	private Charset asciiCharset = Charset.forName("ASCII");
 
 	private ChannelHandlerContext ctx;
 
@@ -26,13 +27,9 @@ public class Ch2TerminalSession implements TerminalSession {
 
 		logger.info("Send command to ch2 block: " + wm.getStrMessage());
 		ByteBuf b = ctx.alloc().buffer(wm.getStrMessage().length());
-		try {
-			b.writeBytes(wm.getStrMessage().getBytes("ASCII"));
-			ctx.write(b);
-			ctx.flush();
-		} catch (UnsupportedEncodingException e) {
-			logger.error("Send to terminal error.", e);
-		}
+		b.writeBytes(wm.getStrMessage().getBytes(asciiCharset));
+		ctx.write(b);
+		ctx.flush();
 	}
 
 	public void setSession(ChannelHandlerContext ctx) {

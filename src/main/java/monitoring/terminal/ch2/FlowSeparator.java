@@ -13,6 +13,7 @@ import io.netty.handler.codec.ReplayingDecoder;
 
 public class FlowSeparator extends ReplayingDecoder<Void> {
 	private static final Logger logger = LoggerFactory.getLogger(FlowSeparator.class);
+	private Charset asciiCharset = Charset.forName("ASCII");
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -29,7 +30,7 @@ public class FlowSeparator extends ReplayingDecoder<Void> {
 				in.readerIndex(startIndex + 1);
 				ByteBuf buf = in.readBytes(endIndex - startIndex - 2);
 				in.readByte();
-				String body = buf.toString(Charset.forName("ASCII"));
+				String body = buf.toString(asciiCharset);
 				out.add(body);
 
 				if (logger.isDebugEnabled()) {

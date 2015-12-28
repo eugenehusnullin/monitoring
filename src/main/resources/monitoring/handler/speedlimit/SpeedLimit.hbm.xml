@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="monitoring.handler.speedlimit">
+	<class name="SpeedLimit" table="speedlimit">
+		<id name="id">
+			<generator class="identity" />
+		</id>
+		<property name="terminalId"></property>
+		<property name="date"></property>
+		<property name="limit" column="speedlimit"></property>
+		<property name="speed" column="speed"></property>
+	</class>
+</hibernate-mapping>

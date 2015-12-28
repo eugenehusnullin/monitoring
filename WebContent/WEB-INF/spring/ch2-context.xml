@@ -18,6 +18,7 @@
 				<ref bean="ch2WialonScoring" />
 				<ref bean="ch2AccelerometrPersist"/>
 				<ref bean="ch2Gyro" />
+				<ref bean="ch2SpeedLimit" />
 			</list>
 		</property>
 		<property name="strategy">
@@ -47,6 +48,10 @@
 	</bean>
 	
 	<bean name="ch2Gyro" class="monitoring.handler.gyro.GyroHandler">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean name="ch2SpeedLimit" class="monitoring.handler.speedlimit.SpeedLimitHandler">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 

@@ -22,6 +22,14 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		String[] arr = s.split(",");
 		// String id = arr[0];
 		String cmd = arr[1];
+		int shift = 0;
+		
+		if (cmd.equals("PWR saved") || cmd.equals("Sorry Not Support")) {
+			cmd = arr[3];
+			shift = 2;
+		} else if (cmd.equals(" ERROR!")) {
+			cmd = "CMD-T";
+		}
 
 		Ch2Message m = null;
 		Ch2Response r = null;
@@ -29,7 +37,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		switch (cmd) {
 		case "CMD-T":
 		case "CMD-D":
-			m = fill(arr);
+			m = fill(arr, shift, cmd);
 			break;
 
 		case "CMD-Z":
@@ -84,22 +92,22 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		return r;
 	}
 
-	public Ch2Message fill(String[] arr) {
+	public Ch2Message fill(String[] arr, int shift, String cmd) {
 		// 860719028553836,CMD-T,A,DATE:151113,TIME:100131,LAT:55.7923483N,LOT:037.7523600E,Speed:040.1,1-0-0-0-99-31,010,25002-1E17-4F03,10,0.98,0,-21,18,122,-1,-1,-1
 		// 860719028553836,CMD-T,V,DATE:151208,TIME:111333,LAT:55.1664883N,LOT:061.3897166E,Speed:001.1,1-1-0-0-81-22,000,25002-1CE9-765A,3,,0,46,-28,214,-1,-1,-1
 		Ch2Message m = new Ch2Message();
 		m.setTerminalId(Long.parseLong(arr[0]));
-		m.setCmd(arr[1]);
-		m.setValidLocation(arr[2].equals("A"));
+		m.setCmd(cmd);
+		m.setValidLocation(arr[shift + 2].equals("A"));
 
 		// DATE TIME
-		String date = arr[3].substring(arr[3].indexOf(":") + 1);
+		String date = arr[shift + 3].substring(arr[shift + 3].indexOf(":") + 1);
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, 2000 + Integer.parseInt(date.substring(0, 2)));
 		cal.set(Calendar.MONTH, Integer.parseInt(date.substring(2, 4)) - 1);
 		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(4)));
 
-		String time = arr[4].substring(arr[4].indexOf(":") + 1);
+		String time = arr[shift + 4].substring(arr[shift + 4].indexOf(":") + 1);
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time.substring(0, 2)));
 		cal.set(Calendar.MINUTE, Integer.parseInt(time.substring(2, 4)));
 		cal.set(Calendar.SECOND, Integer.parseInt(time.substring(4)));
@@ -107,28 +115,28 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		m.setDate(cal.getTime());
 
 		// LATITUDE
-		String lat = arr[5].substring(arr[5].indexOf(":") + 1, arr[5].length() - 1);
+		String lat = arr[shift + 5].substring(arr[shift + 5].indexOf(":") + 1, arr[shift + 5].length() - 1);
 		m.setLatitude(Double.parseDouble(lat));
 
 		// LONGITUDE
-		String lon = arr[6].substring(arr[6].indexOf(":") + 1, arr[6].length() - 1);
+		String lon = arr[shift + 6].substring(arr[shift + 6].indexOf(":") + 1, arr[shift + 6].length() - 1);
 		m.setLongitude(Double.parseDouble(lon));
 
 		// SPEED
-		String speed = arr[7].substring(arr[7].indexOf(":") + 1);
+		String speed = arr[shift + 7].substring(arr[shift + 7].indexOf(":") + 1);
 		m.setSpeed(Double.parseDouble(speed));
 
 		// course
 		try {
-			m.setCourse(Integer.parseInt(arr[9]));
+			m.setCourse(Integer.parseInt(arr[shift + 9]));
 		} catch (Exception e) {
 			logger.error("Get course failure.", e);
 		}
 
 		// laccid
 		try {
-			if (!arr[10].isEmpty()) {
-				String[] laccidArr = arr[10].split("-");
+			if (!arr[shift + 10].isEmpty()) {
+				String[] laccidArr = arr[shift + 10].split("-");
 				String laccid = laccidArr[1].concat(laccidArr[2]);
 				m.setLaccid(laccid);
 			}
@@ -136,23 +144,23 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 			logger.error("Get laccid failure.", e);
 		}
 
-		if (!arr[11].isEmpty()) {
-			m.setGpsSignal(arr[11]);
+		if (!arr[shift + 11].isEmpty()) {
+			m.setGpsSignal(arr[shift + 11]);
 		}
 
-		if (!arr[12].isEmpty()) {
-			m.setHdop(Double.parseDouble(arr[12]));
+		if (!arr[shift + 12].isEmpty()) {
+			m.setHdop(Double.parseDouble(arr[shift + 12]));
 		}
 
 		// is have accelerometer and gyroscope
-		if (arr.length > 15) {
-			m.setAx(Math.round(Integer.parseInt(arr[14]) * lsb));
-			m.setAy(Math.round(Integer.parseInt(arr[15]) * lsb));
-			m.setAz(Math.round(Integer.parseInt(arr[16]) * lsb));
+		if (arr.length > (shift + 15)) {
+			m.setAx(Math.round(Integer.parseInt(arr[shift + 14]) * lsb));
+			m.setAy(Math.round(Integer.parseInt(arr[shift + 15]) * lsb));
+			m.setAz(Math.round(Integer.parseInt(arr[shift + 16]) * lsb));
 
-			m.setGx(Integer.parseInt(arr[17]));
-			m.setGy(Integer.parseInt(arr[18]));
-			m.setGz(Integer.parseInt(arr[19]));
+			m.setGx(Integer.parseInt(arr[shift + 17]));
+			m.setGy(Integer.parseInt(arr[shift + 18]));
+			m.setGz(Integer.parseInt(arr[shift + 19]));
 		}
 
 		return m;

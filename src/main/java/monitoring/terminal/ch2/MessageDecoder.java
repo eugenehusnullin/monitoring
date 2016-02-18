@@ -1,6 +1,7 @@
 package monitoring.terminal.ch2;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,15 @@ import monitoring.utils.ByteUtilities;
 public class MessageDecoder extends ChannelHandlerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(MessageDecoder.class);
 	private static final float lsb = 7.81f;
+	private List<Long> terminalIds;
+	
+	public MessageDecoder(List<Long> terminalIds) {
+		setTerminalIds(terminalIds);
+	}
+
+	public void setTerminalIds(List<Long> terminalIds) {
+		this.terminalIds = terminalIds;
+	}
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -157,6 +167,12 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 			m.setAx(Math.round(Integer.parseInt(arr[shift + 14]) * lsb));
 			m.setAy(Math.round(Integer.parseInt(arr[shift + 15]) * lsb));
 			m.setAz(Math.round(Integer.parseInt(arr[shift + 16]) * lsb));
+			
+			if (terminalIds != null && terminalIds.contains(m.getTerminalId())) {
+				m.setAx(m.getAx() + 250);
+				m.setAy(m.getAy() + 50);
+				m.setAz(m.getAz() - 20);
+			}
 
 			m.setGx(Integer.parseInt(arr[shift + 17]));
 			m.setGy(Integer.parseInt(arr[shift + 18]));

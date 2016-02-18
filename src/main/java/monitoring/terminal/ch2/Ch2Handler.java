@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -31,6 +32,9 @@ public class Ch2Handler {
 	private List<Handler> handlers;
 	private HandlerStrategy strategy;
 	private Ch2TerminalsSessionsKeeper terminalsSessionsKeeper;
+
+	@Value("#{'${main.terminal.ch2.correctterminalids}'.split(',')}") 
+	private List<Long> correctTerminalIds;
 
 	public void setHandlers(List<Handler> handlers) {
 		this.handlers = handlers;
@@ -64,7 +68,7 @@ public class Ch2Handler {
 					protected void initChannel(SocketChannel ch) throws Exception {
 						ch.pipeline().addLast(
 								new FlowSeparator(),
-								new MessageDecoder(),
+								new MessageDecoder(correctTerminalIds),
 								new MessageHandler(handlers, strategy, terminalsSessionsKeeper));
 					}
 				})

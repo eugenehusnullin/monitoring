@@ -14,7 +14,8 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(MessageDecoder.class);
 	private static final float lsb = 7.81f;
 	private List<Long> terminalIds;
-	
+	private Long deviceId = null;
+
 	public MessageDecoder(List<Long> terminalIds) {
 		setTerminalIds(terminalIds);
 	}
@@ -29,11 +30,12 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		if (logger.isDebugEnabled()) {
 			logger.debug(s);
 		}
+
 		String[] arr = s.split(",");
 		// String id = arr[0];
 		String cmd = arr[1];
 		int shift = 0;
-		
+
 		if (cmd.equals("PWR saved") || cmd.equals("Sorry Not Support")) {
 			cmd = arr[3];
 			shift = 2;
@@ -47,7 +49,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		switch (cmd) {
 		case "CMD-T":
 		case "CMD-D":
-			m = fill(arr, shift, cmd);
+			m = fill(arr, shift, cmd, s);
 			break;
 
 		case "CMD-Z":
@@ -56,6 +58,12 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 			break;
 
 		default:
+			if (deviceId != null) {
+				m = new Ch2Message();
+				m.setTerminalId(deviceId);
+				m.setRaw(s);
+			}
+
 			logger.warn("Don`t know how to decode this message of Ch2 device: " + s);
 			break;
 		}
@@ -73,15 +81,19 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		// 860719028533101,CMD-Z,85 00 00 72 94
 		// 860719028533101,CMD-Z,88 58 57 38 41 4E 32 4E 45 39 46 48 30 31 38 39 39 39
 		Ch2Response r = new Ch2Response();
+		r.setRaw(msg);
 		r.setTerminalId(Long.parseLong(arr[0]));
+		if (deviceId == null) {
+			deviceId = r.getTerminalId();
+		}
 		int index = msg.indexOf("CMD-Z", 0) + 6;
 		r.setResponse(msg.substring(index));
 
 		if (msg.charAt(index) == '$') {
-			r.setResponseType(msg.substring(index+1, index + 4));
-			
+			r.setResponseType(msg.substring(index + 1, index + 4));
+
 			if (r.getResponseType().equals("296")) {
-				r.setResponse("VIN-" + msg.substring(index+5));
+				r.setResponse("VIN-" + msg.substring(index + 5));
 			}
 		} else {
 			r.setResponseType(msg.substring(index, index + 2));
@@ -102,11 +114,15 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		return r;
 	}
 
-	public Ch2Message fill(String[] arr, int shift, String cmd) {
+	public Ch2Message fill(String[] arr, int shift, String cmd, String msg) {
 		// 860719028553836,CMD-T,A,DATE:151113,TIME:100131,LAT:55.7923483N,LOT:037.7523600E,Speed:040.1,1-0-0-0-99-31,010,25002-1E17-4F03,10,0.98,0,-21,18,122,-1,-1,-1
 		// 860719028553836,CMD-T,V,DATE:151208,TIME:111333,LAT:55.1664883N,LOT:061.3897166E,Speed:001.1,1-1-0-0-81-22,000,25002-1CE9-765A,3,,0,46,-28,214,-1,-1,-1
 		Ch2Message m = new Ch2Message();
+		m.setRaw(msg);
 		m.setTerminalId(Long.parseLong(arr[0]));
+		if (deviceId == null) {
+			deviceId = m.getTerminalId();
+		}
 		m.setCmd(cmd);
 		m.setValidLocation(arr[shift + 2].equals("A"));
 
@@ -167,7 +183,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 			m.setAx(Math.round(Integer.parseInt(arr[shift + 14]) * lsb));
 			m.setAy(Math.round(Integer.parseInt(arr[shift + 15]) * lsb));
 			m.setAz(Math.round(Integer.parseInt(arr[shift + 16]) * lsb));
-			
+
 			if (terminalIds != null && terminalIds.contains(m.getTerminalId())) {
 				m.setAx(m.getAx() + 250);
 				m.setAy(m.getAy() + 50);

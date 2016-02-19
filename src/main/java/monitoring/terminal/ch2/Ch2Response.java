@@ -6,6 +6,7 @@ public class Ch2Response implements Message {
 	private long terminalId;
 	private String response;
 	private String responseType;
+	private String raw;
 
 	@Override
 	public long getTerminalId() {
@@ -30,6 +31,14 @@ public class Ch2Response implements Message {
 
 	public void setResponseType(String responseType) {
 		this.responseType = responseType;
+	}
+
+	public String getRaw() {
+		return raw;
+	}
+
+	public void setRaw(String raw) {
+		this.raw = raw;
 	}
 
 }

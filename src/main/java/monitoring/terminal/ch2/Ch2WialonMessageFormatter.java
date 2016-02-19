@@ -37,6 +37,8 @@ public class Ch2WialonMessageFormatter implements MessageFormatter {
 				if(ch2Message.getVin() != null && !ch2Message.getVin().isEmpty()) {
 					params.put("vin", ch2Message.getVin());
 				}
+				
+				params.put("raw", ch2Message.getRaw());
 			}
 			return dataPacket;
 

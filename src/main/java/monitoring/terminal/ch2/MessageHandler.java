@@ -1,6 +1,5 @@
 package monitoring.terminal.ch2;
 
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -30,36 +29,8 @@ public class MessageHandler extends ChannelHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		Message m = (Message) msg;
-		terminalsSessionsKeeper.putTerminalSession(m.getTerminalId(), ctx);
 
-		// demo
-		Ch2DemoInfo demoInfo = terminalsSessionsKeeper.getDemoInfo(m.getTerminalId());
-		if (demoInfo != null) {
-			demoInfo.setDetachAlarmed(false);
-			demoInfo.setVinChangeAlarmed(false);
-
-			if (m instanceof Ch2Message) {
-				Ch2Message mm = (Ch2Message) m;
-				demoInfo.setLastDateCoord(new Date());
-				demoInfo.setLat(mm.getLatitude());
-				demoInfo.setLon(mm.getLongitude());
-
-				if (demoInfo.getVin() != null) {
-					mm.setVin(demoInfo.getVin());
-				}
-			} else if (m instanceof Ch2Response) {
-				Ch2Response mr = (Ch2Response) m;
-				if (mr.getResponseType().equals("88")) {
-					if (!mr.getResponse().startsWith("88 00 00 00 00 00 00 00 00 00")) {
-						String vin = mr.getResponse().substring(4);
-						demoInfo.setVin(vin);
-					}
-				} else if (mr.getResponseType().equals("296")) {
-					String vin = mr.getResponse().substring(4);
-					demoInfo.setVin(vin);
-				}
-			}
-		}
+		terminalsSessionsKeeper.messageArrived(m, ctx);
 
 		for (Handler handler : handlers) {
 			handler.handle(m, strategy);

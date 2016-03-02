@@ -7,7 +7,10 @@ public class Ch2DemoInfo {
 	private Double lat = null;
 	private Double lon = null;
 	private String vin = null;
-	private boolean oldVersion = false;
+	private Long mileage = null;
+	
+	
+	private boolean oldVersion = false;	
 
 	private boolean detachAlarmed = false;
 	private boolean vinChangeAlarmed = false;
@@ -64,5 +67,13 @@ public class Ch2DemoInfo {
 
 	public void setVin(String vin) {
 		this.vin = vin;
+	}
+
+	public Long getMileage() {
+		return mileage;
+	}
+
+	public void setMileage(Long mileage) {
+		this.mileage = mileage;
 	}
 }

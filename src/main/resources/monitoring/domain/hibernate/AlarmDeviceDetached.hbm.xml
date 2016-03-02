@@ -9,7 +9,16 @@
 			<generator class="identity" />
 		</id>
 		<property name="terminalId"></property>
-		<property name="carId" column="autoId"></property>
-		<property name="eventDate"></property>
+		<property name="carId" column="autoId"></property>		
+		
+		<property name="offDate"></property>
+		<property name="offLat"></property>
+		<property name="offLon"></property>
+		<property name="offMileage"></property>
+		
+		<property name="onDate"></property>
+		<property name="onLat"></property>
+		<property name="onLon"></property>
+		<property name="onMileage"></property>
 	</class>
 </hibernate-mapping>

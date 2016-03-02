@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import io.netty.channel.ChannelHandlerContext;
 import monitoring.domain.AlarmDeviceDetached;
 import monitoring.domain.AlarmVinChanged;
 import monitoring.domain.Car;
+import monitoring.domain.Message;
 import monitoring.handler.wialon.WialonMessage;
 
 @EnableScheduling
@@ -31,6 +33,69 @@ public class Ch2TerminalsSessionsKeeper {
 	private Map<Long, Ch2DemoInfo> demoInfoMap = new HashMap<>();
 	private String commandGetVin = ":123456Z08#";
 	private String commandObsoleteGetVin = ":123456Z296#";
+
+	@Transactional
+	public void messageArrived(Message message, ChannelHandlerContext ctx) {
+		Car car = getCar(message.getTerminalId());
+		if (car == null) {
+			logger.info(message.getTerminalId() + ", device not found in scoring.");
+			return;
+		}
+
+		putTerminalSession(message.getTerminalId(), ctx);
+
+		// demo
+		Ch2DemoInfo demoInfo = getDemoInfo(message.getTerminalId());
+		if (demoInfo != null) {
+			if (message instanceof Ch2Message) {
+				Ch2Message mm = (Ch2Message) message;
+				demoInfo.setLastDateCoord(new Date());
+				demoInfo.setLat(mm.getLatitude());
+				demoInfo.setLon(mm.getLongitude());
+
+				if (demoInfo.getVin() != null) {
+					mm.setVin(demoInfo.getVin());
+				}
+
+				if (demoInfo.isDetachAlarmed()) {
+					AlarmDeviceDetached last = getLastAlarmDeviceDetached(message.getTerminalId());
+					if (last != null) {
+						last.setOnDate(new Date());
+						last.setOnLat(demoInfo.getLat());
+						last.setOnLon(demoInfo.getLon());
+						last.setOnMileage(demoInfo.getMileage());
+						sessionFactory.getCurrentSession().update(last);
+					}
+					demoInfo.setDetachAlarmed(false);
+				}
+
+				if (demoInfo.isVinChangeAlarmed() && car.getVin() != null && demoInfo.getVin() != null
+						&& car.getVin().equals(demoInfo.getVin())) {
+					AlarmVinChanged last = getLastAlarmVinChanged(message.getTerminalId());
+					if (last != null) {
+						last.setOnDate(new Date());
+						last.setOnLat(demoInfo.getLat());
+						last.setOnLon(demoInfo.getLon());
+						last.setOnMileage(demoInfo.getMileage());
+						sessionFactory.getCurrentSession().update(last);
+					}
+					demoInfo.setVinChangeAlarmed(false);
+				}
+
+			} else if (message instanceof Ch2Response) {
+				Ch2Response mr = (Ch2Response) message;
+				if (mr.getResponseType().equals("88")) {
+					if (!mr.getResponse().startsWith("88 00 00 00 00 00 00 00 00 00")) {
+						String vin = mr.getResponse().substring(4);
+						demoInfo.setVin(vin);
+					}
+				} else if (mr.getResponseType().equals("296")) {
+					String vin = mr.getResponse().substring(4);
+					demoInfo.setVin(vin);
+				}
+			}
+		}
+	}
 
 	public Ch2TerminalSession getTerminalSession(long terminalId) {
 		synchronized (sessionMap) {
@@ -72,7 +137,7 @@ public class Ch2TerminalsSessionsKeeper {
 				demoInfoMap.put(imei, demoInfo);
 			}
 
-			senCommandGetVin(imei, demoInfo);
+			sendCommandGetVin(imei, demoInfo);
 		}
 	}
 
@@ -92,7 +157,7 @@ public class Ch2TerminalsSessionsKeeper {
 		if (nowMs > demoInfo.getLastDateCoord().getTime()) {
 			if (!demoInfo.isDetachAlarmed()) {
 				logger.info(imei.toString() + ", device detached.");
-				makeAlarmDetach(imei, car.getId());
+				makeAlarmDetach(imei, car.getId(), demoInfo);
 				demoInfo.setDetachAlarmed(true);
 			}
 			return;
@@ -109,32 +174,42 @@ public class Ch2TerminalsSessionsKeeper {
 			if (car.getVin() != null && !car.getVin().equals(demoInfo.getVin())) {
 				if (!demoInfo.isVinChangeAlarmed()) {
 					logger.info(imei.toString() + ", vin changed.");
-					makeAlarmVinChange(imei, demoInfo.getVin(), car.getVin(), car.getId());
+					makeAlarmVinChange(imei, demoInfo.getVin(), car.getVin(), car.getId(), demoInfo);
 					return;
 				}
 			}
 		}
 	}
 
-	private void makeAlarmDetach(Long imei, Long carId) {
+	private void makeAlarmDetach(Long imei, Long carId, Ch2DemoInfo demoInfo) {
 		AlarmDeviceDetached alarm = new AlarmDeviceDetached();
 		alarm.setTerminalId(imei);
 		alarm.setCarId(carId);
-		alarm.setEventDate(new Date());
+
+		alarm.setOffDate(new Date());
+		alarm.setOffLat(demoInfo.getLat());
+		alarm.setOffLon(demoInfo.getLon());
+		alarm.setOffMileage(demoInfo.getMileage());
+
 		sessionFactory.getCurrentSession().save(alarm);
 	}
 
-	private void makeAlarmVinChange(Long imei, String vinNew, String vinOld, Long carId) {
+	private void makeAlarmVinChange(Long imei, String vinNew, String vinOld, Long carId, Ch2DemoInfo demoInfo) {
 		AlarmVinChanged alarm = new AlarmVinChanged();
 		alarm.setVinNew(vinNew);
 		alarm.setVinOld(vinOld);
-		alarm.setAlarmDate(new Date());
 		alarm.setCarId(carId);
 		alarm.setImei(imei);
+
+		alarm.setOffDate(new Date());
+		alarm.setOffLat(demoInfo.getLat());
+		alarm.setOffLon(demoInfo.getLon());
+		alarm.setOffMileage(demoInfo.getMileage());
+
 		sessionFactory.getCurrentSession().saveOrUpdate(alarm);
 	}
 
-	private void senCommandGetVin(Long imei, Ch2DemoInfo demoInfo) {
+	private void sendCommandGetVin(Long imei, Ch2DemoInfo demoInfo) {
 		Ch2TerminalSession terminalSession = getTerminalSession(imei);
 		if (terminalSession != null) {
 
@@ -160,7 +235,29 @@ public class Ch2TerminalsSessionsKeeper {
 
 	private Car getCar(long imei) {
 		Session session = sessionFactory.getCurrentSession();
-		return (Car) session.createCriteria(Car.class).add(Restrictions.eq("imei", imei)).uniqueResult();
+		return (Car) session.createCriteria(Car.class)
+				.add(Restrictions.eq("imei", imei))
+				.uniqueResult();
+	}
+
+	private AlarmDeviceDetached getLastAlarmDeviceDetached(long imei) {
+		Session session = sessionFactory.getCurrentSession();
+
+		return (AlarmDeviceDetached) session.createCriteria(AlarmDeviceDetached.class)
+				.add(Restrictions.eq("terminalId", imei))
+				.addOrder(Order.desc("offDate"))
+				.setMaxResults(1)
+				.uniqueResult();
+	}
+
+	private AlarmVinChanged getLastAlarmVinChanged(long imei) {
+		Session session = sessionFactory.getCurrentSession();
+
+		return (AlarmVinChanged) session.createCriteria(AlarmVinChanged.class)
+				.add(Restrictions.eq("imei", imei))
+				.addOrder(Order.desc("offDate"))
+				.setMaxResults(1)
+				.uniqueResult();
 	}
 
 }

@@ -169,7 +169,7 @@ public class Handler extends IoHandlerAdapter {
 
 									logger.info("save to table");
 									AlarmDeviceDetached terminalDetach = new AlarmDeviceDetached();
-									terminalDetach.setEventDate(messageDate);
+									terminalDetach.setOffDate(messageDate);
 									terminalDetach.setTerminalId(imei);
 
 									//lowService.saveTerminalDetach(terminalDetach);

@@ -12,6 +12,15 @@
 		<property name="imei" column="imei"></property>
 		<property name="vinNew" column="VINnew"></property>
 		<property name="vinOld" column="VINold"></property>
-		<property name="alarmDate" column="datetime"></property>
+		
+		<property name="offDate"></property>
+		<property name="offLat"></property>
+		<property name="offLon"></property>
+		<property name="offMileage"></property>
+		
+		<property name="onDate"></property>
+		<property name="onLat"></property>
+		<property name="onLon"></property>
+		<property name="onMileage"></property>
 	</class>
 </hibernate-mapping>

@@ -8,7 +8,16 @@ public class AlarmVinChanged {
 	private Long imei;
 	private String vinNew;
 	private String vinOld;
-	private Date alarmDate;
+
+	private Date offDate;
+	private Double offLat;
+	private Double offLon;
+	private Long offMileage;
+
+	private Date onDate;
+	private Double onLat;
+	private Double onLon;
+	private Long onMileage;
 
 	public Long getCarId() {
 		return carId;
@@ -34,14 +43,6 @@ public class AlarmVinChanged {
 		this.vinOld = vinOld;
 	}
 
-	public Date getAlarmDate() {
-		return alarmDate;
-	}
-
-	public void setAlarmDate(Date alarmDate) {
-		this.alarmDate = alarmDate;
-	}
-
 	public Long getImei() {
 		return imei;
 	}
@@ -58,9 +59,68 @@ public class AlarmVinChanged {
 		this.id = id;
 	}
 
-	// autoId int(11)
-	// VINnew varchar(255)
-	// VINold varchar(255)
-	// changeDate datetime
+	public Date getOffDate() {
+		return offDate;
+	}
+
+	public void setOffDate(Date offDate) {
+		this.offDate = offDate;
+	}
+
+	public Double getOffLat() {
+		return offLat;
+	}
+
+	public void setOffLat(Double offLat) {
+		this.offLat = offLat;
+	}
+
+	public Double getOffLon() {
+		return offLon;
+	}
+
+	public void setOffLon(Double offLon) {
+		this.offLon = offLon;
+	}
+
+	public Long getOffMileage() {
+		return offMileage;
+	}
+
+	public void setOffMileage(Long offMileage) {
+		this.offMileage = offMileage;
+	}
+
+	public Date getOnDate() {
+		return onDate;
+	}
+
+	public void setOnDate(Date onDate) {
+		this.onDate = onDate;
+	}
+
+	public Double getOnLat() {
+		return onLat;
+	}
+
+	public void setOnLat(Double onLat) {
+		this.onLat = onLat;
+	}
+
+	public Double getOnLon() {
+		return onLon;
+	}
+
+	public void setOnLon(Double onLon) {
+		this.onLon = onLon;
+	}
+
+	public Long getOnMileage() {
+		return onMileage;
+	}
+
+	public void setOnMileage(Long onMileage) {
+		this.onMileage = onMileage;
+	}
 
 }

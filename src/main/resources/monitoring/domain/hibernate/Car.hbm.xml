@@ -10,5 +10,6 @@
 		</id>
 		<property name="imei" column="IMEI"></property>
 		<property name="vin" column="VIN"></property>
+		<property name="initDate" column="initDate"></property>
 	</class>
 </hibernate-mapping>

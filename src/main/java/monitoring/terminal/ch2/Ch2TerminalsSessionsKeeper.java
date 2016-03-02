@@ -42,6 +42,11 @@ public class Ch2TerminalsSessionsKeeper {
 			return;
 		}
 
+		if (car.getInitDate() == null) {
+			car.setInitDate(new Date());
+			sessionFactory.getCurrentSession().save(car);
+		}
+
 		putTerminalSession(message.getTerminalId(), ctx);
 
 		// demo

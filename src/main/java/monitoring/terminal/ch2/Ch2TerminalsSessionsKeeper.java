@@ -167,7 +167,7 @@ public class Ch2TerminalsSessionsKeeper {
 	}
 
 	@Transactional
-	@Scheduled(cron = "0 0/6 * * * *")
+	@Scheduled(cron = "0 0/1 * * * *")
 	public void demo() {
 		logger.info("Start scheduled demo processing...");
 
@@ -187,7 +187,7 @@ public class Ch2TerminalsSessionsKeeper {
 		}
 
 		Date now = new Date();
-		long nowMs = now.getTime() - (5 * 60 * 1000);
+		long nowMs = now.getTime() - (6 * 60 * 1000);
 
 		if (nowMs > demoInfo.getLastDateCoord().getTime()) {
 			if (!demoInfo.isDisconnected()) {

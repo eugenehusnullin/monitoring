@@ -92,6 +92,9 @@ public class Ch2TerminalsSessionsKeeper {
 				} else if (mr.getResponseType().equals("296")) {
 					String vin = mr.getResponse().substring(4);
 					demoInfo.setVin(vin);
+				} else if (mr.getResponseType().equals("85")) {
+					String odom = mr.getResponse().substring(5);
+					demoInfo.setMileage(Long.parseLong(odom));
 				}
 			}
 		}

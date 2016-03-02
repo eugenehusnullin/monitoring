@@ -13,6 +13,7 @@
 		<mapping resource="monitoring/handler/position/maparea/hibernate/PositionInMaparea.hbm.xml" />
 		<mapping resource="monitoring/domain/hibernate/AlarmDeviceDetached.hbm.xml" />
 		<mapping resource="monitoring/domain/hibernate/AlarmVinChanged.hbm.xml" />
+		<mapping resource="monitoring/domain/hibernate/AlarmDisconnected.hbm.xml" />
 		<mapping resource="monitoring/domain/hibernate/Car.hbm.xml" />
 		<mapping resource="monitoring/handler/gyro/Gyro.hbm.xml" />
 		<mapping resource="monitoring/handler/speedlimit/SpeedLimit.hbm.xml" />

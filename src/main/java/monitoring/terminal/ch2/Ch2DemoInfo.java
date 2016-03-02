@@ -8,16 +8,33 @@ public class Ch2DemoInfo {
 	private Double lon = null;
 	private String vin = null;
 	private Long mileage = null;
-	
-	
-	private boolean oldVersion = false;	
 
-	private boolean detachAlarmed = false;
-	private boolean vinChangeAlarmed = false;
+	private boolean oldVinVersion = false;
 
-	public boolean changeVersion() {
-		boolean result = oldVersion;
-		oldVersion = !oldVersion;
+	private boolean detached = false;
+	private boolean vinChanged = false;
+	private boolean disconnected = false;
+
+	private Ch2TerminalSession session;
+
+	private long cntMileage = 5;
+	private long cntVin = 11;
+
+	public boolean needMileage() {
+		long mod = cntMileage % 5;
+		cntMileage++;
+		return mod == 0;
+	}
+	
+	public boolean needVin() {
+		long mod = cntVin % 6;
+		cntVin++;
+		return mod == 0;
+	}
+
+	public boolean changeVinVersion() {
+		boolean result = oldVinVersion;
+		oldVinVersion = !oldVinVersion;
 		return result;
 	}
 
@@ -45,20 +62,12 @@ public class Ch2DemoInfo {
 		this.lon = lon;
 	}
 
-	public boolean isDetachAlarmed() {
-		return detachAlarmed;
+	public boolean isDetached() {
+		return detached;
 	}
 
-	public void setDetachAlarmed(boolean detachAlarmed) {
-		this.detachAlarmed = detachAlarmed;
-	}
-
-	public boolean isVinChangeAlarmed() {
-		return vinChangeAlarmed;
-	}
-
-	public void setVinChangeAlarmed(boolean vinChangeAlarmed) {
-		this.vinChangeAlarmed = vinChangeAlarmed;
+	public void setDetached(boolean detachAlarmed) {
+		this.detached = detachAlarmed;
 	}
 
 	public String getVin() {
@@ -75,5 +84,29 @@ public class Ch2DemoInfo {
 
 	public void setMileage(Long mileage) {
 		this.mileage = mileage;
+	}
+
+	public Ch2TerminalSession getSession() {
+		return session;
+	}
+
+	public void setSession(Ch2TerminalSession session) {
+		this.session = session;
+	}
+
+	public boolean isVinChanged() {
+		return vinChanged;
+	}
+
+	public void setVinChanged(boolean vinChanged) {
+		this.vinChanged = vinChanged;
+	}
+
+	public boolean isDisconnected() {
+		return disconnected;
+	}
+
+	public void setDisconnected(boolean disconnected) {
+		this.disconnected = disconnected;
 	}
 }

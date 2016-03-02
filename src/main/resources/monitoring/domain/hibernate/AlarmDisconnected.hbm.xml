@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="monitoring.domain">
+	<class name="AlarmDisconnected" table="terminal_disconnect">
+		<id name="id">
+			<generator class="identity" />
+		</id>
+		<property name="terminalId"></property>
+		<property name="carId" column="autoId"></property>		
+		
+		<property name="offDate"></property>
+		<property name="offLat"></property>
+		<property name="offLon"></property>
+		<property name="offMileage"></property>
+		
+		<property name="onDate"></property>
+		<property name="onLat"></property>
+		<property name="onLon"></property>
+		<property name="onMileage"></property>
+	</class>
+</hibernate-mapping>

@@ -117,6 +117,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 	public Ch2Message fill(String[] arr, int shift, String cmd, String msg) {
 		// 860719028553836,CMD-T,A,DATE:151113,TIME:100131,LAT:55.7923483N,LOT:037.7523600E,Speed:040.1,1-0-0-0-99-31,010,25002-1E17-4F03,10,0.98,0,-21,18,122,-1,-1,-1
 		// 860719028553836,CMD-T,V,DATE:151208,TIME:111333,LAT:55.1664883N,LOT:061.3897166E,Speed:001.1,1-1-0-0-81-22,000,25002-1CE9-765A,3,,0,46,-28,214,-1,-1,-1
+		// 867273021510909,Sorry Not Support,,CMD-T,A,DATE:160301,TIME:155102,LAT:55.8110733N,LOT:037.7410283E,Speed:000.0,1-0-0-0-59-31,000,25002-1E64-705E,8,1.28,0,15,30,-4,-64,-96,54
 		Ch2Message m = new Ch2Message();
 		m.setRaw(msg);
 		m.setTerminalId(Long.parseLong(arr[0]));
@@ -151,6 +152,10 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		// SPEED
 		String speed = arr[shift + 7].substring(arr[shift + 7].indexOf(":") + 1);
 		m.setSpeed(Double.parseDouble(speed));
+		
+		// PLUGED
+		String state = arr[shift + 8];
+		m.setPluged(state.substring(0, 1).equals("1"));
 
 		// course
 		try {

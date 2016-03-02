@@ -25,6 +25,7 @@ public class Ch2Message implements Message {
 	private String gpsSignal;
 	private String vin;
 	private String raw;
+	private Boolean pluged;
 
 	public Integer getAx() {
 		return ax;
@@ -185,6 +186,14 @@ public class Ch2Message implements Message {
 
 	public void setRaw(String raw) {
 		this.raw = raw;
+	}
+
+	public Boolean getPluged() {
+		return pluged;
+	}
+
+	public void setPluged(Boolean pluged) {
+		this.pluged = pluged;
 	}
 
 }

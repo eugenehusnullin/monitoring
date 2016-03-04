@@ -58,6 +58,11 @@ public class Ch2TerminalsSessionsKeeper {
 
 		if (message instanceof Ch2Message) {
 			Ch2Message mm = (Ch2Message) message;
+
+			if (mm.getLongitude() == null || mm.getLatitude() == null) {
+				return;
+			}
+
 			demoInfo.setLastDateCoord(new Date());
 			demoInfo.setLat(mm.getLatitude());
 			demoInfo.setLon(mm.getLongitude());
@@ -127,8 +132,8 @@ public class Ch2TerminalsSessionsKeeper {
 				demoInfo.setVinChanged(false);
 			}
 
-			//sendCommandGetMileage(mm.getTerminalId(), demoInfo);
-			//sendCommandGetVin(mm.getTerminalId(), demoInfo);
+			// sendCommandGetMileage(mm.getTerminalId(), demoInfo);
+			// sendCommandGetVin(mm.getTerminalId(), demoInfo);
 
 		} else if (message instanceof Ch2Response) {
 			Ch2Response mr = (Ch2Response) message;

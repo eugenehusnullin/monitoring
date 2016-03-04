@@ -13,7 +13,10 @@ public class Ch2PositionConverter implements PositionConverter {
 			return null;
 		}
 		
-		Ch2Message m = (Ch2Message) message;		
+		Ch2Message m = (Ch2Message) message;
+		if (m.getLongitude() == null || m.getLatitude() == null) {
+			return null;
+		}
 		
 		Position position = new Position();
 		PositionHelper.initPosition(position, m);

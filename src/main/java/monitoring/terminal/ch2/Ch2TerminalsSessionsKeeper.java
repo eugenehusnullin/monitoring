@@ -127,8 +127,8 @@ public class Ch2TerminalsSessionsKeeper {
 				demoInfo.setVinChanged(false);
 			}
 
-			sendCommandGetMileage(mm.getTerminalId(), demoInfo);
-			sendCommandGetVin(mm.getTerminalId(), demoInfo);
+			//sendCommandGetMileage(mm.getTerminalId(), demoInfo);
+			//sendCommandGetVin(mm.getTerminalId(), demoInfo);
 
 		} else if (message instanceof Ch2Response) {
 			Ch2Response mr = (Ch2Response) message;

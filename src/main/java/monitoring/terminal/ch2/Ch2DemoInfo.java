@@ -17,17 +17,20 @@ public class Ch2DemoInfo {
 
 	private Ch2TerminalSession session;
 
-	private long cntMileage = 5;
-	private long cntVin = 11;
+	private long cntMileage = 100;
+	private long cntVin = 100;
+	
+	private static long mileagePeriod = 109;
+	private static long vinPeriod = 100;
 
 	public boolean needMileage() {
-		long mod = cntMileage % 5;
+		long mod = cntMileage % mileagePeriod;
 		cntMileage++;
 		return mod == 0;
 	}
 	
 	public boolean needVin() {
-		long mod = cntVin % 6;
+		long mod = cntVin % vinPeriod;
 		cntVin++;
 		return mod == 0;
 	}

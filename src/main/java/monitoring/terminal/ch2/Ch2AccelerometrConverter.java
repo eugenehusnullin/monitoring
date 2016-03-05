@@ -17,8 +17,8 @@ public class Ch2AccelerometrConverter implements AccelerometrConverter {
 			return null;
 		}
 
-		if (ch2Message.getAx() >= 180 || ch2Message.getAx() <= -210
-				|| ch2Message.getAy() <= -180 || ch2Message.getAy() >= 180) {
+//		if (ch2Message.getAx() >= 180 || ch2Message.getAx() <= -210
+//				|| ch2Message.getAy() <= -180 || ch2Message.getAy() >= 180) {
 
 			Accelerometr accelerometr = new Accelerometr();
 			accelerometr.setTerminalId(ch2Message.getTerminalId());
@@ -27,9 +27,9 @@ public class Ch2AccelerometrConverter implements AccelerometrConverter {
 			accelerometr.setAccY(ch2Message.getAy());
 			accelerometr.setAccZ(ch2Message.getAz());
 			return accelerometr;
-		} else {
-			return null;
-		}
+//		} else {
+//			return null;
+//		}
 	}
 
 }

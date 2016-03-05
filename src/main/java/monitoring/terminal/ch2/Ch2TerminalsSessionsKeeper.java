@@ -37,11 +37,14 @@ public class Ch2TerminalsSessionsKeeper {
 
 	@Transactional
 	public void messageArrived(Message message, ChannelHandlerContext ctx) {
-		Car car = getCar(message.getTerminalId());
+		Long imei = message.getTerminalId();
+		Car car = getCar(imei);
 		if (car == null) {
-			logger.info(message.getTerminalId() + ", device not found in scoring.");
+			logger.info(imei + ", device not found in scoring.");
 			return;
 		}
+
+		boolean needCheckVIN = false;
 
 		// initDate
 		if (car.getInitDate() == null) {
@@ -49,10 +52,10 @@ public class Ch2TerminalsSessionsKeeper {
 			sessionFactory.getCurrentSession().save(car);
 		}
 
-		Ch2DemoInfo demoInfo = getDemoInfo(message.getTerminalId());
+		Ch2DemoInfo demoInfo = getDemoInfo(imei);
 		if (demoInfo == null) {
 			demoInfo = new Ch2DemoInfo();
-			demoInfosMap.put(message.getTerminalId(), demoInfo);
+			demoInfosMap.put(imei, demoInfo);
 		}
 		putTerminalSession(demoInfo, ctx);
 
@@ -66,15 +69,20 @@ public class Ch2TerminalsSessionsKeeper {
 			demoInfo.setLastDateCoord(new Date());
 			demoInfo.setLat(mm.getLatitude());
 			demoInfo.setLon(mm.getLongitude());
-			if (demoInfo.getVin() != null) {
+
+			if (mm.getVin() != null) {
+				demoInfo.setVin(mm.getVin());
+				needCheckVIN = true;
+				logger.info(imei.toString() + ", device have vin.");
+			} else if (demoInfo.getVin() != null) {
 				mm.setVin(demoInfo.getVin());
 			}
 
 			// detach
 			if (!mm.getPluged() && !demoInfo.isDetached()) {
-				logger.info("===DETACH: " + mm.getTerminalId());
+				logger.info("===DETACH: " + imei);
 				AlarmDeviceDetached alarm = new AlarmDeviceDetached();
-				alarm.setTerminalId(mm.getTerminalId());
+				alarm.setTerminalId(imei);
 				alarm.setCarId(car.getId());
 
 				alarm.setOffDate(new Date());
@@ -89,8 +97,8 @@ public class Ch2TerminalsSessionsKeeper {
 
 			// tach
 			if (mm.getPluged() && demoInfo.isDetached()) {
-				logger.info("===TACH: " + mm.getTerminalId());
-				AlarmDeviceDetached last = getLastAlarmDeviceDetached(message.getTerminalId());
+				logger.info("===TACH: " + imei);
+				AlarmDeviceDetached last = getLastAlarmDeviceDetached(imei);
 				if (last != null) {
 					last.setOnDate(new Date());
 					last.setOnLat(demoInfo.getLat());
@@ -104,8 +112,8 @@ public class Ch2TerminalsSessionsKeeper {
 
 			// connected
 			if (demoInfo.isDisconnected()) {
-				logger.info("===CONNECTED: " + mm.getTerminalId());
-				AlarmDisconnected last = getLastAlarmDisconnected(message.getTerminalId());
+				logger.info("===CONNECTED: " + imei);
+				AlarmDisconnected last = getLastAlarmDisconnected(imei);
 				if (last != null) {
 					last.setOnDate(new Date());
 					last.setOnLat(demoInfo.getLat());
@@ -115,21 +123,6 @@ public class Ch2TerminalsSessionsKeeper {
 				}
 
 				demoInfo.setDisconnected(false);
-
-			}
-
-			if (demoInfo.isVinChanged() && car.getVin() != null && demoInfo.getVin() != null
-					&& car.getVin().equals(demoInfo.getVin())) {
-				logger.info("===VIN_RETURN: " + mm.getTerminalId());
-				AlarmVinChanged last = getLastAlarmVinChanged(message.getTerminalId());
-				if (last != null) {
-					last.setOnDate(new Date());
-					last.setOnLat(demoInfo.getLat());
-					last.setOnLon(demoInfo.getLon());
-					last.setOnMileage(demoInfo.getMileage());
-					sessionFactory.getCurrentSession().update(last);
-				}
-				demoInfo.setVinChanged(false);
 			}
 
 			// sendCommandGetMileage(mm.getTerminalId(), demoInfo);
@@ -141,14 +134,51 @@ public class Ch2TerminalsSessionsKeeper {
 				if (!mr.getResponse().startsWith("88 00 00 00 00 00 00 00 00 00")) {
 					String vin = mr.getResponse().substring(4);
 					demoInfo.setVin(vin);
+					needCheckVIN = true;
+					logger.info(imei.toString() + ", device have vin.");
 				}
 			} else if (mr.getResponseType().equals("296")) {
 				String vin = mr.getResponse().substring(4);
 				demoInfo.setVin(vin);
+				needCheckVIN = true;
+				logger.info(imei.toString() + ", device have vin.");
+
 			} else if (mr.getResponseType().equals("85")) {
 				String odom = mr.getResponse().substring(5);
 				demoInfo.setMileage(Long.parseLong(odom));
 			}
+		}
+
+		// CHECK VIN
+		if (needCheckVIN) {
+
+			if (demoInfo.getVin() != null && !demoInfo.getVin().isEmpty()) {
+
+				if (car.getVin() == null || car.getVin().isEmpty()) {
+					car.setVin(demoInfo.getVin());
+					sessionFactory.getCurrentSession().save(car);
+				}
+
+				else if (!demoInfo.isVinChanged() && !car.getVin().equals(demoInfo.getVin())) {
+					logger.info("===VIN_CHANGED: " + imei.toString());
+					makeAlarmVinChange(imei, demoInfo.getVin(), car.getVin(), car.getId(), demoInfo);
+					demoInfo.setVinChanged(true);
+				}
+
+				else if (demoInfo.isVinChanged() && car.getVin().equals(demoInfo.getVin())) {
+					logger.info("===VIN_RETURN: " + imei);
+					AlarmVinChanged last = getLastAlarmVinChanged(imei);
+					if (last != null) {
+						last.setOnDate(new Date());
+						last.setOnLat(demoInfo.getLat());
+						last.setOnLon(demoInfo.getLon());
+						last.setOnMileage(demoInfo.getMileage());
+						sessionFactory.getCurrentSession().update(last);
+					}
+					demoInfo.setVinChanged(false);
+				}
+			}
+
 		}
 	}
 
@@ -174,45 +204,26 @@ public class Ch2TerminalsSessionsKeeper {
 	@Transactional
 	@Scheduled(cron = "0 0/1 * * * *")
 	public void demo() {
-		logger.info("Start scheduled demo processing...");
-
 		for (Map.Entry<Long, Ch2DemoInfo> entry : demoInfosMap.entrySet()) {
-			checkVin(entry.getKey(), entry.getValue());
+			checkDisconnect(entry.getKey(), entry.getValue());
 		}
 	}
 
-	private void checkVin(Long imei, Ch2DemoInfo demoInfo) {
-		// 860719028553836,CMD-Z,88 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-		// check detach
-
-		Car car = getCar(imei);
-		if (car == null) {
-			logger.info(imei.toString() + ", device not found in scoring.");
-			return;
-		}
-
+	private void checkDisconnect(Long imei, Ch2DemoInfo demoInfo) {
 		Date now = new Date();
 		long nowMs = now.getTime() - (6 * 60 * 1000);
 
 		if (nowMs > demoInfo.getLastDateCoord().getTime()) {
 			if (!demoInfo.isDisconnected()) {
+				Car car = getCar(imei);
+				if (car == null) {
+					logger.info(imei.toString() + ", device not found in scoring.");
+					return;
+				}
+
 				logger.info("===DISCONNECT: " + imei.toString());
 				makeAlarmDisconnected(imei, car.getId(), demoInfo);
 				demoInfo.setDisconnected(true);
-			}
-			return;
-		}
-
-		if (demoInfo.getVin() != null && !demoInfo.getVin().isEmpty()) {
-			logger.info(imei.toString() + ", device have vin.");
-			if (car.getVin() == null || car.getVin().isEmpty()) {
-				car.setVin(demoInfo.getVin());
-				sessionFactory.getCurrentSession().save(car);
-				return;
-			} else if (!car.getVin().equals(demoInfo.getVin()) && !demoInfo.isVinChanged()) {
-				logger.info("===VIN_CHANGED: " + imei.toString());
-				makeAlarmVinChange(imei, demoInfo.getVin(), car.getVin(), car.getId(), demoInfo);
-				return;
 			}
 		}
 	}
@@ -245,6 +256,7 @@ public class Ch2TerminalsSessionsKeeper {
 		sessionFactory.getCurrentSession().saveOrUpdate(alarm);
 	}
 
+	@SuppressWarnings("unused")
 	private void sendCommandGetVin(Long imei, Ch2DemoInfo demoInfo) {
 		Ch2TerminalSession terminalSession = demoInfo.getSession();
 		if (demoInfo.needVin()) {
@@ -266,6 +278,7 @@ public class Ch2TerminalsSessionsKeeper {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void sendCommandGetMileage(Long imei, Ch2DemoInfo demoInfo) {
 		Ch2TerminalSession terminalSession = demoInfo.getSession();
 		if (demoInfo.needMileage()) {

@@ -35,12 +35,17 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		// String id = arr[0];
 		String cmd = arr[1];
 		int shift = 0;
+		boolean hasVIN = false;
 
 		if (cmd.equals("PWR saved") || cmd.equals("Sorry Not Support")) {
 			cmd = arr[3];
 			shift = 2;
 		} else if (cmd.equals(" ERROR!")) {
 			cmd = "CMD-T";
+		} else {
+			cmd = arr[3];
+			shift = 2;
+			hasVIN = true;
 		}
 
 		Ch2Message m = null;
@@ -49,7 +54,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		switch (cmd) {
 		case "CMD-T":
 		case "CMD-D":
-			m = fill(arr, shift, cmd, s);
+			m = fill(arr, shift, cmd, s, hasVIN);
 			break;
 
 		case "CMD-Z":
@@ -114,7 +119,7 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 		return r;
 	}
 
-	public Ch2Message fill(String[] arr, int shift, String cmd, String msg) {
+	public Ch2Message fill(String[] arr, int shift, String cmd, String msg, boolean hasVIN) {
 		// 860719028553836,CMD-T,A,DATE:151113,TIME:100131,LAT:55.7923483N,LOT:037.7523600E,Speed:040.1,1-0-0-0-99-31,010,25002-1E17-4F03,10,0.98,0,-21,18,122,-1,-1,-1
 		// 860719028553836,CMD-T,V,DATE:151208,TIME:111333,LAT:55.1664883N,LOT:061.3897166E,Speed:001.1,1-1-0-0-81-22,000,25002-1CE9-765A,3,,0,46,-28,214,-1,-1,-1
 		// 867273021510909,Sorry Not Support,,CMD-T,A,DATE:160301,TIME:155102,LAT:55.8110733N,LOT:037.7410283E,Speed:000.0,1-0-0-0-59-31,000,25002-1E64-705E,8,1.28,0,15,30,-4,-64,-96,54
@@ -199,6 +204,13 @@ public class MessageDecoder extends ChannelHandlerAdapter {
 			m.setGx(Integer.parseInt(arr[shift + 17]));
 			m.setGy(Integer.parseInt(arr[shift + 18]));
 			m.setGz(Integer.parseInt(arr[shift + 19]));
+		}
+		
+		if (hasVIN) {
+			String vin = arr[1];
+			if (!vin.isEmpty() && !vin.contains("@") && vin.length() >= 15) {
+				m.setVin(vin);
+			}
 		}
 
 		return m;

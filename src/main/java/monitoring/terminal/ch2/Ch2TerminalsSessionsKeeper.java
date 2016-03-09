@@ -58,6 +58,7 @@ public class Ch2TerminalsSessionsKeeper {
 			demoInfosMap.put(imei, demoInfo);
 		}
 		putTerminalSession(demoInfo, ctx);
+		demoInfo.setDisconnectedDate(null);
 
 		if (message instanceof Ch2Message) {
 			Ch2Message mm = (Ch2Message) message;
@@ -201,19 +202,26 @@ public class Ch2TerminalsSessionsKeeper {
 		return demoInfosMap.get(imei);
 	}
 
+	public void deviceDisconnected(Long terminalId) {
+		Ch2DemoInfo demoInfo = demoInfosMap.get(terminalId);
+		if (demoInfo != null) {
+			demoInfo.setDisconnectedDate(new Date());
+		}
+	}
+
 	@Transactional
 	@Scheduled(cron = "0 0/1 * * * *")
 	public void demo() {
 		for (Map.Entry<Long, Ch2DemoInfo> entry : demoInfosMap.entrySet()) {
-			checkDisconnect(entry.getKey(), entry.getValue());
+			checkNeedAlarmDisconnect(entry.getKey(), entry.getValue());
 		}
 	}
 
-	private void checkDisconnect(Long imei, Ch2DemoInfo demoInfo) {
+	private void checkNeedAlarmDisconnect(Long imei, Ch2DemoInfo demoInfo) {
 		Date now = new Date();
-		long nowMs = now.getTime() - (6 * 60 * 1000);
+		long nowMs = now.getTime() - (5 * 60 * 1000);
 
-		if (nowMs > demoInfo.getLastDateCoord().getTime()) {
+		if (demoInfo.getDisconnectedDate() != null && nowMs > demoInfo.getDisconnectedDate().getTime()) {
 			if (!demoInfo.isDisconnected()) {
 				Car car = getCar(imei);
 				if (car == null) {

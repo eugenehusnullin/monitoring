@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Ch2DemoInfo {
 	private Date lastDateCoord;
+	private Date disconnectedDate;
 	private Double lat = null;
 	private Double lon = null;
 	private String vin = null;
@@ -111,5 +112,13 @@ public class Ch2DemoInfo {
 
 	public void setDisconnected(boolean disconnected) {
 		this.disconnected = disconnected;
+	}
+
+	public Date getDisconnectedDate() {
+		return disconnectedDate;
+	}
+
+	public void setDisconnectedDate(Date disconnectedDate) {
+		this.disconnectedDate = disconnectedDate;
 	}
 }

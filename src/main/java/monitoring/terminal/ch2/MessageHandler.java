@@ -18,6 +18,8 @@ public class MessageHandler extends ChannelHandlerAdapter {
 	private List<Handler> handlers;
 	private HandlerStrategy strategy;
 	private Ch2TerminalsSessionsKeeper terminalsSessionsKeeper;
+	
+	private Long terminalId = null;
 
 	public MessageHandler(List<Handler> handlers, HandlerStrategy strategy,
 			Ch2TerminalsSessionsKeeper terminalsSessionsKeeper) {
@@ -29,11 +31,23 @@ public class MessageHandler extends ChannelHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		Message m = (Message) msg;
+		if (terminalId == null) {
+			terminalId = m.getTerminalId();
+		}
 
 		terminalsSessionsKeeper.messageArrived(m, ctx);
 
 		for (Handler handler : handlers) {
 			handler.handle(m, strategy);
 		}
+	}
+	
+	@Override
+	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+		if (terminalId != null) {
+			terminalsSessionsKeeper.deviceDisconnected(terminalId);
+		}
+		
+		super.channelUnregistered(ctx);
 	}
 }

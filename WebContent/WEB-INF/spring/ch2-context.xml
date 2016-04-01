@@ -18,7 +18,7 @@
 				<ref bean="ch2WialonScoring" />
 				<ref bean="ch2AccelerometrPersist"/>
 				<ref bean="ch2Gyro" />
-				<ref bean="ch2SpeedLimit" />
+<!-- 				<ref bean="ch2SpeedLimit" /> -->
 			</list>
 		</property>
 		<property name="strategy">

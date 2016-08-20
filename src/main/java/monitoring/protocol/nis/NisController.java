@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +44,7 @@ public class NisController extends MultiActionController {
 		try {
 			String envelope = IOUtils.toString(request.getInputStream());
 			logger.debug(envelope);
+			logHeaders(request);
 
 			NisMessage m = createMessage(envelope);
 			handler.handle(m, null);
@@ -55,6 +57,21 @@ public class NisController extends MultiActionController {
 			logger.error(e.toString());
 			e.printStackTrace();
 		}
+	}
+
+	private void logHeaders(HttpServletRequest request) {
+		StringBuilder sb = new StringBuilder();
+
+		Enumeration<String> headerNames = request.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+			String headerName = headerNames.nextElement();
+			sb.append(headerName + ":");
+
+			String headerValue = request.getHeader(headerName);
+			sb.append(headerValue + ";___\n");
+		}
+		
+		logger.debug(sb.toString());
 	}
 
 	private String createResponse(String response, String objectId) {

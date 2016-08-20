@@ -51,9 +51,7 @@ public class CityGuideHandler implements Handler {
 			pointsElement.appendChild(pointElement);
 
 			HttpURLConnection con = HttpUtils.postDocumentOverHttp(doc, url, "text/plain", logger);
-			if (con.getResponseCode() == 200) {
-				logger.debug("CityGuideHandler success send point.");
-			} else {
+			if (con.getResponseCode() != 200) {
 				String reason = IOUtils.toString(con.getInputStream());
 				logger.warn("CityGuideHandler error send point. Error code=" + con.getResponseCode() + ", reason: "
 						+ reason);

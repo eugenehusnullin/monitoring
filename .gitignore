@@ -1,9 +1,10 @@
 .classpath
 .project
-.settings/*
-.gradle/*
+/.settings/
 /build
 WebContent/WEB-INF/settings/main.settings
 WebContent/lib/*
 src/main/resources/logback.xml
 /bin/
+/.gradle/
+
